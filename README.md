@@ -32,4 +32,4 @@ t4g3/
 
 #### More Info
 
-More detailed informations about the project on the wiki.
+More detailed informations about the project on the [Project's Wiki](https://gitlab.com/ldso18-19/t4g3/wikis/home).
