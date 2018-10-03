@@ -1,14 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import {
-  Button,
-  Header,
-  Icon,
-  Image,
-  Menu,
-  Segment,
-  Sidebar
-} from "semantic-ui-react";
+import { Menu, Sidebar } from "semantic-ui-react";
 
 class WHSidebar extends Component {
   constructor(props) {
@@ -24,8 +16,6 @@ class WHSidebar extends Component {
   handleSidebarHide = () => this.setState({ visible: false });
 
   render() {
-    const { visible } = this.state;
-
     return (
       <Sidebar.Pushable>
         <Sidebar
