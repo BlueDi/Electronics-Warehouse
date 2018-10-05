@@ -8,7 +8,6 @@ class TableExample extends Component {
     super(props);
     this.state = {
       isFetching: true,
-      isError: false,
       components: [
         {
           code: 0,
@@ -49,9 +48,9 @@ class TableExample extends Component {
         },
         e => {
           this.setState({
-            isFetching: false,
-            isError: true
+            isFetching: false
           });
+          throw e;
         }
       );
   }

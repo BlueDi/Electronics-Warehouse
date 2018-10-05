@@ -4,6 +4,7 @@ import "./App.css";
 import routes from "./routes";
 import WHHeader from "./Header.js";
 import WHSidebar from "./Sidebar.js";
+import ErrorBoundary from "./ErrorBoundary.js";
 
 class App extends Component {
   constructor(props) {
@@ -50,7 +51,9 @@ class App extends Component {
         visible={this.state.showSidebar}
         content={
           <Switch>
-            {routes.map((route, i) => <Route key={i} {...route} />)}
+            <ErrorBoundary>
+              {routes.map((route, i) => <Route key={i} {...route} />)}
+            </ErrorBoundary>
           </Switch>
         }
       />
