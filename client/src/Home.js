@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Link } from "react-router-dom";
+import logo from "./logo.svg";
 import "./App.css";
-import routes from "./routes";
-import WHHeader from "./Header.js";
-import WHSidebar from "./Sidebar.js";
 
-class App extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
 
@@ -43,19 +41,23 @@ class App extends Component {
     });
 
   render() {
-    return [
-      <WHHeader key={1} toggleSidebar={this.toggleSidebar} />,
-      <WHSidebar
-        key={2}
-        visible={this.state.showSidebar}
-        content={
-          <Switch>
-            {routes.map((route, i) => <Route key={i} {...route} />)}
-          </Switch>
-        }
-      />
-    ];
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
+        <p className="App-intro">{this.state.response}</p>
+        <p>
+          To get started, edit
+          <code>src/App.js</code>
+          and save to reload.
+        </p>
+        <Link to="/table/1">Table Example</Link>
+        <Link to="/table/2">Table Example2</Link>
+      </div>
+    );
   }
 }
 
-export default App;
+export default Home;
