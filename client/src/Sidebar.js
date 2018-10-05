@@ -39,7 +39,17 @@ class WHSidebar extends Component {
           </Menu.Item>
         </Sidebar>
 
-        <Sidebar.Pusher>{this.props.content}</Sidebar.Pusher>
+        <Sidebar.Pusher>
+          <div
+            style={{
+              minHeight: "100vh",
+              display: "flex",
+              flexFlow: "column nowrap"
+            }}
+          >
+            {this.props.content}
+          </div>
+        </Sidebar.Pusher>
       </Sidebar.Pushable>
     );
   }
