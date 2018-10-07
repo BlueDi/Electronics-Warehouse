@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { Dimmer, Icon, Loader, Menu, Table } from "semantic-ui-react";
 
 const urlForData = id => `/api/table/${id}`;
@@ -7,6 +8,7 @@ class TableExample extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: this.props.match.params.id,
       isFetching: true,
       components: [
         {
@@ -30,7 +32,7 @@ class TableExample extends Component {
   }
 
   componentDidMount() {
-    fetch(urlForData(this.props.match.params.id))
+    fetch(urlForData(this.state.id))
       .then(response => {
         if (!response.ok) {
           throw Error("Network request failed");
@@ -42,6 +44,7 @@ class TableExample extends Component {
         result => {
           this.setState({
             components: result,
+            pages: 50,
             isFetching: false
           });
           this.mount_table();
@@ -90,6 +93,18 @@ class TableExample extends Component {
     });
   }
 
+  mount_pagination() {
+    var pagination = [];
+    for (var i = 1; i <= this.state.pages && i <= 8; i++) {
+      pagination.push(
+        <Menu.Item key={i} as={Link} to={"/table/" + i}>
+          {i}
+        </Menu.Item>
+      );
+    }
+    return pagination;
+  }
+
   render() {
     return this.state.isFetching ? (
       <Dimmer active>
@@ -98,29 +113,21 @@ class TableExample extends Component {
         </Loader>
       </Dimmer>
     ) : (
-      <Table celled>
-        {this.state.table_header}
-        <Table.Body>{this.state.table_rows}</Table.Body>
-
-        <Table.Footer>
-          <Table.Row>
-            <Table.HeaderCell colSpan="3">
-              <Menu floated="right" pagination>
-                <Menu.Item as="a" icon>
-                  <Icon name="chevron left" />
-                </Menu.Item>
-                <Menu.Item as="a">1</Menu.Item>
-                <Menu.Item as="a">2</Menu.Item>
-                <Menu.Item as="a">3</Menu.Item>
-                <Menu.Item as="a">4</Menu.Item>
-                <Menu.Item as="a" icon>
-                  <Icon name="chevron right" />
-                </Menu.Item>
-              </Menu>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Footer>
-      </Table>
+      [
+        <Table key={"content"} celled>
+          {this.state.table_header}
+          <Table.Body>{this.state.table_rows}</Table.Body>
+        </Table>,
+        <Menu key={"pagination"} floated="right" pagination>
+          <Menu.Item as={Link} to={"/table/" + (this.state.id - 1)} icon>
+            <Icon name="chevron left" />
+          </Menu.Item>
+          {this.mount_pagination()}
+          <Menu.Item as={Link} to={"/table/" + (this.state.id + 1)} icon>
+            <Icon name="chevron right" />
+          </Menu.Item>
+        </Menu>
+      ]
     );
   }
 }
