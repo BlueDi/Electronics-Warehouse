@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { Link, Route, Switch } from "react-router-dom";
+import { Route } from "react-router-dom";
 import "./App.css";
 import routes from "./routes";
 import WHHeader from "./Header";
 import WHMenu from "./Menu";
 import ErrorBoundary from "./ErrorBoundary";
-import { Grid, Menu, Segment, Sidebar } from "semantic-ui-react";
 
 class App extends Component {
   constructor(props) {
@@ -40,8 +39,6 @@ class App extends Component {
   }
 
   render() {
-    const { activeItem } = this.state;
-
     return [
       <WHHeader key={"header"} />,
       <WHMenu
