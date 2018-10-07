@@ -53,8 +53,12 @@ class Home extends Component {
           <code>src/App.js</code>
           and save to reload.
         </p>
-        <Link to="/table/1">Table Example</Link>
-        <Link to="/table/2">Table Example2</Link>
+        <p>
+          <Link to="/table/1">Table Example</Link>
+        </p>
+        <p>
+          <Link to="/table/2">Table Example2</Link>
+        </p>
       </div>
     );
   }
