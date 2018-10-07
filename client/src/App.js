@@ -5,6 +5,7 @@ import routes from "./routes";
 import WHHeader from "./Header";
 import WHMenu from "./Menu";
 import ErrorBoundary from "./ErrorBoundary";
+import { Grid } from "semantic-ui-react";
 
 class App extends Component {
   constructor(props) {
@@ -39,13 +40,33 @@ class App extends Component {
   }
 
   render() {
-    return [
-      <WHHeader key={"header"} />,
-      <WHMenu
-        key={"menu"}
-        content={routes.map((route, i) => <Route key={i} {...route} />)}
-      />
-    ];
+    return (
+      <Grid stretched style={{ height: "100vh" }}>
+        <Grid.Row
+          style={{
+            height: "7%",
+            paddingBottom: "0px"
+          }}
+        >
+          <Grid.Column width={16}>
+            <WHHeader key={"header"} />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row
+          style={{
+            height: "93%",
+            paddingBottom: "0px"
+          }}
+        >
+          <Grid.Column width={16}>
+            <WHMenu
+              key={"menu"}
+              content={routes.map((route, i) => <Route key={i} {...route} />)}
+            />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    );
   }
 }
 

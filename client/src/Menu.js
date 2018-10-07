@@ -23,8 +23,8 @@ class HWMenu extends Component {
     const { activeIndex } = this.state;
 
     return (
-      <Grid key={2}>
-        <Grid.Column width={3}>
+      <Grid>
+        <Grid.Column width={3} color="teal">
           <Accordion as={Menu} fluid vertical>
             <Menu.Item>
               <Accordion.Title
