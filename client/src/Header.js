@@ -11,7 +11,7 @@ class WHHeader extends Component {
     const { activeItem } = this.state;
 
     return (
-      <Menu attached={true}>
+      <Menu>
         <Menu.Item
           as={Link}
           to="/"
@@ -20,14 +20,6 @@ class WHHeader extends Component {
           onClick={this.handleItemClick}
         >
           Wharehouse
-        </Menu.Item>
-
-        <Menu.Item
-          name="sidebar"
-          active={activeItem === "sidebar"}
-          onClick={this.props.toggleSidebar}
-        >
-          Show Sidebar
         </Menu.Item>
 
         <Menu.Menu position="right">

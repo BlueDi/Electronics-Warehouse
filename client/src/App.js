@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import "./App.css";
 import routes from "./routes";
-import WHHeader from "./Header.js";
-import WHSidebar from "./Sidebar.js";
-import ErrorBoundary from "./ErrorBoundary.js";
+import WHHeader from "./Header";
+import WHMenu from "./Menu";
+import ErrorBoundary from "./ErrorBoundary";
+import { Grid, Menu, Segment, Sidebar } from "semantic-ui-react";
 
 class App extends Component {
   constructor(props) {
@@ -38,24 +39,14 @@ class App extends Component {
       );
   }
 
-  toggleSidebar = e =>
-    this.setState({
-      showSidebar: !this.state.showSidebar
-    });
-
   render() {
+    const { activeItem } = this.state;
+
     return [
-      <WHHeader key={1} toggleSidebar={this.toggleSidebar} />,
-      <WHSidebar
-        key={2}
-        visible={this.state.showSidebar}
-        content={
-          <Switch>
-            <ErrorBoundary>
-              {routes.map((route, i) => <Route key={i} {...route} />)}
-            </ErrorBoundary>
-          </Switch>
-        }
+      <WHHeader key={"header"} />,
+      <WHMenu
+        key={"menu"}
+        content={routes.map((route, i) => <Route key={i} {...route} />)}
       />
     ];
   }
