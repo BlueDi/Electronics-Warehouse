@@ -11,7 +11,7 @@ class WHHeader extends Component {
     const { activeItem } = this.state;
 
     return (
-      <Menu>
+      <Menu attached={true} className="Header">
         <Menu.Item
           as={Link}
           to="/"

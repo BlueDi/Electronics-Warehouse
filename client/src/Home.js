@@ -9,7 +9,7 @@ class Home extends Component {
 
     this.state = {
       response: "",
-      showSidebar: false
+      showSidebar: true
     };
   }
 
@@ -37,7 +37,7 @@ class Home extends Component {
 
   toggleSidebar = e =>
     this.setState({
-      showSidebar: !this.state.showSidebar
+      showSidebar: this.state.showSidebar
     });
 
   render() {
