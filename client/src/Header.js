@@ -19,7 +19,7 @@ class WHHeader extends Component {
           active={activeItem === "home"}
           onClick={this.handleItemClick}
         >
-          Wharehouse
+          Warehouse
         </Menu.Item>
 
         <Menu.Menu position="right">

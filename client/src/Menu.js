@@ -24,32 +24,60 @@ class HWMenu extends Component {
 
     return (
       <Grid>
-        <Grid.Column width={3} color="teal">
-          <Accordion as={Menu} fluid vertical>
-            <Menu.Item>
-              <Accordion.Title
-                active={activeIndex === 3}
-                index={3}
-                onClick={this.handleClick}
-              >
-                Inventory
+        <Grid.Column width={3}
+          style={{
+            backgroundColor: "#CED8F8"
+          }}>
+
+          <Accordion fluid vertical
+            style={{
+              fontSize: "15pt",
+              fontWeight: "300",
+              textAlign: "center",
+            }}
+          >
+            <Accordion.Title
+              active={activeIndex === 3}
+              index={3}
+              onClick={this.handleClick}
+              style={{
+                borderBottom: "1px solid black"
+              }}
+            >
+              Inventory
                 <Icon name="dropdown" />
-              </Accordion.Title>
-              <Accordion.Content active={activeIndex === 3}>
-                Search
+            </Accordion.Title>
+            <Accordion.Content
+              active={activeIndex === 3}
+              style={{
+                fontSize: "12.5pt",
+                textAlign: "left",
+                paddingLeft: "3em"
+              }}
+            >
+              Search
               </Accordion.Content>
-            </Menu.Item>
-            <Menu.Item as={Link} to="/suppliers">
+
+            <Accordion.Title
+              style={{
+                borderBottom: "1px solid black"
+              }}
+            >
               Buy Supplies
-            </Menu.Item>
-            <Menu.Item as={Link} to="/users">
+            </Accordion.Title>
+
+            <Accordion.Title
+              style={{
+                borderBottom: "1px solid black"
+              }}
+            >
               Manage Users
-            </Menu.Item>
+            </Accordion.Title>
           </Accordion>
         </Grid.Column>
 
         <Grid.Column width={10}>{this.props.content}</Grid.Column>
-      </Grid>
+      </Grid >
     );
   }
 }

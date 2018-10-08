@@ -43,7 +43,7 @@ class WHSidebar extends Component {
         <Sidebar.Pusher>
           <div
             style={{
-              height: "400em",
+              height: "70%",
               display: "flex",
               flexFlow: "column nowrap"
             }}

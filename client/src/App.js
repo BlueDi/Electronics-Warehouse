@@ -44,18 +44,19 @@ class App extends Component {
       <Grid stretched style={{ height: "100vh" }}>
         <Grid.Row
           style={{
-            height: "7%",
-            paddingBottom: "0px"
+            height: "8%",
+            paddingBottom: "0px",
           }}
         >
-          <Grid.Column width={16}>
+          <Grid.Column width={20}>
             <WHHeader key={"header"} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row
           style={{
-            height: "93%",
-            paddingBottom: "0px"
+            height: "95%",
+            paddingBottom: "0px",
+            paddingLeft: "1em"
           }}
         >
           <Grid.Column width={16}>
@@ -65,7 +66,7 @@ class App extends Component {
             />
           </Grid.Column>
         </Grid.Row>
-      </Grid>
+      </Grid >
     );
   }
 }
