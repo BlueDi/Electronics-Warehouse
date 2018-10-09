@@ -147,9 +147,9 @@ class TableExample extends Component {
 
   render() {
     return this.state.isFetching ? (
-      <Dimmer active>
+      <Dimmer active inverted>
         <Loader indeterminate inverted>
-          Preparing Files
+          Preparing Table
         </Loader>
       </Dimmer>
     ) : (
