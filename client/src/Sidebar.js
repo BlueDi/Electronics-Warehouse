@@ -39,18 +39,6 @@ class WHSidebar extends Component {
             Manage Users
           </Menu.Item>
         </Sidebar>
-
-        <Sidebar.Pusher>
-          <div
-            style={{
-              height: "70%",
-              display: "flex",
-              flexFlow: "column nowrap"
-            }}
-          >
-            {this.props.content}
-          </div>
-        </Sidebar.Pusher>
       </Sidebar.Pushable>
     );
   }
