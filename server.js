@@ -35,7 +35,7 @@ app.get("/api/table/:id", (req, res) => {
               core_architecture: "ARM"
             },
             availability: 0,
-            price: undefined
+            price: null
           }
         ];
   res.send(response);
