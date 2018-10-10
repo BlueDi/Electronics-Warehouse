@@ -1,9 +1,21 @@
 const express = require("express");
+var pgp = require('pg-promise')
+
+var db = pgp('postgres://postgres:password@127.0.0.1:5432/postgres');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.get("/api/hello", (req, res) => {
+  db.any('SELECT * FROM category;')
+    .then(function (data) {
+      console.log(data);
+      res.send(data);
+    })
+    .catch (function (error) {
+      console.log('Error! ', error);
+      res.send('Failed to retrieve!');
+    });
   res.send({ express: "Hello From Express" });
 });
 
