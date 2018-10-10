@@ -154,7 +154,7 @@ class TableExample extends Component {
       </Dimmer>
     ) : (
         [
-          <Table key={"content"} celled>
+          <Table key={"content"} celled selectable>
             {this.state.table_header}
             <Table.Body>{this.state.table_rows}</Table.Body>
           </Table>,

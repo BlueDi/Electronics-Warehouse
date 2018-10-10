@@ -1,12 +1,22 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import "./App.css";
 import routes from "./routes";
 import WHHeader from "./Header";
 import WHMenu from "./Menu";
 import TableExample from "./Table"
+import WHSearchBar from "./SearchBar";
 import ErrorBoundary from "./ErrorBoundary";
-import { Grid, Dropdown } from "semantic-ui-react";
+import { Grid, Button, Icon, GridColumn } from "semantic-ui-react";
+
+const addAnItemButton = () => (
+  <div>
+    <Button icon labelPosition='left' style={{ backgroundColor: "#87DC8E" }}>
+      <Icon name='plus' />
+      Add an item
+    </Button>
+  </div>
+)
 
 class App extends Component {
   constructor(props) {
@@ -42,7 +52,7 @@ class App extends Component {
 
   render() {
     return (
-      <Grid stretched style={{ height: "100vh" }}>
+      <Grid style={{ height: "100vh" }}>
         <Grid.Row
           style={{
             height: "9%",
@@ -78,10 +88,16 @@ class App extends Component {
               paddingTop: "1em",
               width: "82.3%",
               height: "100%"
-            }}>
-            <Grid.Row>
-              <TableExample />
-            </Grid.Row>
+            }}
+            streteched
+          >
+            <div style={{ float: "right" }}>
+              <WHSearchBar key="searchBar" />
+            </div>
+            <Link to="/addItem">
+              {addAnItemButton()}
+            </Link>
+            <TableExample />
           </Grid.Column>
         </Grid.Row>
       </Grid >
