@@ -113,8 +113,8 @@ class TableExample extends Component {
             ) : typeof comp[param] === "object" ? (
               <DescriptionParam content={comp[param]} />
             ) : (
-              comp[param]
-            )}
+                  comp[param]
+                )}
           </Table.Cell>
         );
       }
@@ -158,13 +158,7 @@ class TableExample extends Component {
             {this.state.table_header}
             <Table.Body>{this.state.table_rows}</Table.Body>
           </Table>,
-          <Menu key={"pagination"} pagination
-            style={{
-              textAlign: "center",
-              height: "5%",
-              width: "40%",
-            }
-            }>
+          <Menu key={"pagination"} style={{ float: "right" }}>
             <Menu.Item as={Link} to={"/table/" + (this.state.id - 1)} icon>
               <Icon name="chevron left" />
             </Menu.Item>

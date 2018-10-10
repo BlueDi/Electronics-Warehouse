@@ -6,7 +6,7 @@ import WHHeader from "./Header";
 import WHMenu from "./Menu";
 import TableExample from "./Table"
 import ErrorBoundary from "./ErrorBoundary";
-import { Grid } from "semantic-ui-react";
+import { Grid, Dropdown } from "semantic-ui-react";
 
 class App extends Component {
   constructor(props) {
@@ -55,7 +55,7 @@ class App extends Component {
         </Grid.Row>
         <Grid.Row
           style={{
-            height: "95%",
+            height: "92.5%",
             paddingBottom: "0px",
             paddingLeft: "1em",
             paddingTop: "0px"
@@ -76,11 +76,12 @@ class App extends Component {
           <Grid.Column
             style={{
               paddingTop: "1em",
-              /*backgroundColor: "#D2E0E8",*/
-              width: "83%",
-              height: "20%"
+              width: "82.3%",
+              height: "100%"
             }}>
-            <TableExample />
+            <Grid.Row>
+              <TableExample />
+            </Grid.Row>
           </Grid.Column>
         </Grid.Row>
       </Grid >
