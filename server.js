@@ -6,7 +6,7 @@ var db = pgp('postgres://postgres:password@127.0.0.1:5432/postgres');
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.get("/api/hello", (req, res) => {
+app.get("/api/category/", (req, res) => {
   db.any('SELECT * FROM category;')
     .then(function (data) {
       console.log(data);
