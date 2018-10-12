@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Dimmer, Grid, Icon, Loader, Menu, Table } from "semantic-ui-react";
+import { Dimmer, Grid, Icon, Loader, Menu, Table, Divider } from "semantic-ui-react";
 
 const urlForData = id => `/api/table/${id}`;
 
@@ -37,9 +37,9 @@ class TableExample extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.match.params.id,
+      //id: this.props.match.params.id,
       isFetching: true,
-      components: [
+      /*components: [
         {
           code: 0,
           number: "Project1",
@@ -56,7 +56,7 @@ class TableExample extends Component {
           availability: 0,
           price: 0
         }
-      ]
+      ]*/
     };
   }
 
@@ -115,10 +115,10 @@ class TableExample extends Component {
               ) : typeof comp[param] === "object" ? (
                 <DescriptionParam content={comp[param]} />
               ) : (
-                <Link to={`/item/${comp[param].id}`} style={{ color: "black" }}>
-                  {comp[param]}
-                </Link>
-              )}
+                    <Link to={`/item/${comp[param].id}`} style={{ color: "black" }}>
+                      {comp[param]}
+                    </Link>
+                  )}
             </Table.Cell>
           );
       }
@@ -157,22 +157,22 @@ class TableExample extends Component {
         </Loader>
       </Dimmer>
     ) : (
-      [
-        <Table key={"content"} celled selectable>
-          {this.state.table_header}
-          <Table.Body>{this.state.table_rows}</Table.Body>
-        </Table>,
-        <Menu key={"menu"} compact pagination>
-          <Menu.Item as={Link} to={"/table/" + (this.state.id - 1)} icon>
-            <Icon name="chevron left" />
-          </Menu.Item>
-          {this.mount_pagination()}
-          <Menu.Item as={Link} to={"/table/" + (this.state.id + 1)} icon>
-            <Icon name="chevron right" />
-          </Menu.Item>
-        </Menu>
-      ]
-    );
+        [
+          <Table key={"content"} celled selectable>
+            {this.state.table_header}
+            <Table.Body>{this.state.table_rows}</Table.Body>
+          </Table>,
+          <Menu key={"menu"} compact pagination style={{ float: "right" }}>
+            <Menu.Item as={Link} to={"/table/" + (this.state.id - 1)} icon>
+              <Icon name="chevron left" />
+            </Menu.Item>
+            {this.mount_pagination()}
+            <Menu.Item as={Link} to={"/table/" + (this.state.id + 1)} icon>
+              <Icon name="chevron right" />
+            </Menu.Item>
+          </Menu>
+        ]
+      );
   }
 }
 

@@ -10,21 +10,12 @@ class App extends Component {
   render() {
     return (
       <Grid stretched style={{ height: "100vh" }}>
-        <Grid.Row
-          style={{
-            height: "9%"
-          }}
-        >
+        <Grid.Row style={{ height: "9%" }} >
           <Grid.Column width={16}>
             <WHHeader />
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row
-          style={{
-            height: "91%",
-            padding: "0px"
-          }}
-        >
+        <Grid.Row style={{ height: "90%", padding: "0px" }} >
           <Grid.Column width={16}>
             <WHMenu
               content={routes.map((route, i) => <Route key={i} {...route} />)}

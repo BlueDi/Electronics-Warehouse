@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Accordion, Grid, Icon, Menu, Search } from "semantic-ui-react";
+import { Accordion, Grid, Icon, Select } from "semantic-ui-react";
 
 class HWMenu extends Component {
   constructor(props) {
@@ -32,39 +32,44 @@ class HWMenu extends Component {
 
     return (
       <Grid padded="horizontally">
-        <Grid.Column width={3} color="teal">
-          <Accordion as={Menu} vertical>
-            <Menu.Item>
-              <Accordion.Title
-                id="sidebarInventory"
-                active={activeIndex === 3}
-                index={3}
-                onClick={this.handleClick}
-              >
+        <Grid.Column width={3} style={{ backgroundColor: "#D2E0E8", paddingTop: "0px" }}>
+          <Accordion id="sidebarC" fluid vertical style={{ fontSize: "15pt", fontWeight: "300", textAlign: "center", paddingTop: "none" }} >
+            <Accordion.Title
+              class="a"
+              id="sidebarInventory"
+              active={activeIndex === 3}
+              index={3}
+              onClick={this.handleClick}
+              style={{ borderBottom: "1px solid grey", paddingTop: "1em", paddingBottom: "1em" }}
+            >
+              <Link to="/table/1" style={{ color: "black", textDecoration: "none" }}>
                 Inventory
-                <Icon name="dropdown" />
-              </Accordion.Title>
-              <Accordion.Content id="sidebarSearch" active={activeIndex === 3}>
-                <Search fluid input={{ fluid: true }} />
-              </Accordion.Content>
-            </Menu.Item>
+                </Link>
+              <Icon name="dropdown" />
+            </Accordion.Title>
+            <Accordion.Content
+              id="sidebarSearch"
+              active={activeIndex === 3}
+              style={{ fontSize: "12.5pt", textAlign: "center" }}
+            >
+              <div class="ui category search">
+                <div class="ui icon input">
+                  <input class="prompt" placeholder="Search filters..." type="text" style={{ width: "10%" }} />
+                </div>
+              </div>
+            </Accordion.Content>
 
-            <Menu.Item as={Link} to="/suppliers">
+            <Accordion.Title class="a" style={{ borderBottom: "1px solid grey", paddingTop: "1em", paddingBottom: "1em" }}>
               Buy Supplies
-            </Menu.Item>
+            </Accordion.Title>
 
-            <Menu.Item as={Link} to="/users">
+            <Accordion.Title style={{ borderBottom: "1px solid grey", paddingTop: "1em", paddingBottom: "1em" }}>
               Manage Users
-            </Menu.Item>
+            </Accordion.Title>
           </Accordion>
         </Grid.Column>
 
-        <Grid.Column
-          width={13}
-          style={{
-            backgroundColor: "#D2E0E8"
-          }}
-        >
+        <Grid.Column width={13}>
           {this.props.content}
         </Grid.Column>
       </Grid>

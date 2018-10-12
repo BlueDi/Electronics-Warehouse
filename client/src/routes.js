@@ -1,5 +1,6 @@
 import Home from "./Home";
-import TableExample from "./Table";
+import WHInventory from "./Inventory";
+import AddItem from "./AddItem";
 
 const routes = [
   {
@@ -9,7 +10,11 @@ const routes = [
   },
   {
     path: "/table/:id",
-    component: TableExample
+    component: WHInventory
+  },
+  {
+    path: "/addItem",
+    component: AddItem
   }
 ];
 
