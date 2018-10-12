@@ -37,7 +37,7 @@ class TableExample extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.id,
+      id: this.props.match.params.id,
       isFetching: true,
       components: [
         {
@@ -113,8 +113,8 @@ class TableExample extends Component {
             ) : typeof comp[param] === "object" ? (
               <DescriptionParam content={comp[param]} />
             ) : (
-                  comp[param]
-                )}
+              comp[param]
+            )}
           </Table.Cell>
         );
       }
@@ -153,22 +153,22 @@ class TableExample extends Component {
         </Loader>
       </Dimmer>
     ) : (
-        [
-          <Table key={"content"} celled selectable>
-            {this.state.table_header}
-            <Table.Body>{this.state.table_rows}</Table.Body>
-          </Table>,
-          <Menu key={"pagination"} style={{ float: "right" }}>
-            <Menu.Item as={Link} to={"/table/" + (this.state.id - 1)} icon>
-              <Icon name="chevron left" />
-            </Menu.Item>
-            {this.mount_pagination()}
-            <Menu.Item as={Link} to={"/table/" + (this.state.id + 1)} icon>
-              <Icon name="chevron right" />
-            </Menu.Item>
-          </Menu >
-        ]
-      );
+      [
+        <Table key={"content"} celled selectable>
+          {this.state.table_header}
+          <Table.Body>{this.state.table_rows}</Table.Body>
+        </Table>,
+        <Menu key={"menu"} compact pagination>
+          <Menu.Item as={Link} to={"/table/" + (this.state.id - 1)} icon>
+            <Icon name="chevron left" />
+          </Menu.Item>
+          {this.mount_pagination()}
+          <Menu.Item as={Link} to={"/table/" + (this.state.id + 1)} icon>
+            <Icon name="chevron right" />
+          </Menu.Item>
+        </Menu>
+      ]
+    );
   }
 }
 
