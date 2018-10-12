@@ -106,17 +106,21 @@ class TableExample extends Component {
     this.state.components.forEach((comp, cindex) => {
       var row_cells = [];
       for (var param in comp) {
-        row_cells.push(
-          <Table.Cell key={param}>
-            {comp[param] === null ? (
-              "-"
-            ) : typeof comp[param] === "object" ? (
-              <DescriptionParam content={comp[param]} />
-            ) : (
-              comp[param]
-            )}
-          </Table.Cell>
-        );
+        console.log(param);
+        if (param !== "id")
+          row_cells.push(
+            <Table.Cell key={param}>
+              {comp[param] === null ? (
+                "-"
+              ) : typeof comp[param] === "object" ? (
+                <DescriptionParam content={comp[param]} />
+              ) : (
+                <Link to={`/item/${comp[param].id}`} style={{ color: "black" }}>
+                  {comp[param]}
+                </Link>
+              )}
+            </Table.Cell>
+          );
       }
       table_rows.push(<Table.Row key={cindex}>{row_cells}</Table.Row>);
     });
