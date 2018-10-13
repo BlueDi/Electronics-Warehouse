@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Accordion, Grid, Icon, Search, Select } from "semantic-ui-react";
+import { Accordion, Grid, Icon, Menu, Search, Select } from "semantic-ui-react";
 
 class HWMenu extends Component {
   constructor(props) {
@@ -15,14 +15,6 @@ class HWMenu extends Component {
     const { index } = titleProps;
     const { activeIndex } = this.state;
     const newIndex = activeIndex === index ? -1 : index;
-    const inventory = document.getElementById("sidebarInventory");
-
-    if (inventory.style.borderBottom === "1px solid grey")
-      inventory.style.borderBottom = "none";
-    else inventory.style.borderBottom = "1px solid grey";
-
-    const search = document.getElementById("sidebarSearch");
-    search.style.borderBottom = "1px solid grey";
 
     this.setState({ activeIndex: newIndex });
   };
@@ -32,46 +24,45 @@ class HWMenu extends Component {
 
     return (
       <Grid padded="horizontally">
-        <Grid.Column width={3} style={{ backgroundColor: "#D2E0E8", paddingTop: "0px" }}>
-          <Accordion id="sidebarC" fluid vertical style={{ fontSize: "15pt", fontWeight: "300", textAlign: "center", paddingTop: "none" }} >
-            <Accordion.Title
-              class="a"
-              id="sidebarInventory"
-              active={activeIndex === 3}
-              index={3}
-              onClick={this.handleClick}
-              style={{ borderBottom: "1px solid grey", paddingTop: "1em", paddingBottom: "1em" }}
-            >
-              <Link to="/table/1" style={{ color: "black", textDecoration: "none" }}>
-                Inventory
-                </Link>
-              <Icon name="dropdown" />
-            </Accordion.Title>
-            <Accordion.Content
-              id="sidebarSearch"
-              active={activeIndex === 3}
-              style={{ fontSize: "12.5pt", textAlign: "center" }}
-            >
-              <Search
-                fluid
-                input={{ fluid: true }}
-                placeholder="Search filters..."
+        <Grid.Column width={3} style={{ backgroundColor: "#D2E0E8" }}>
+          <Accordion as={Menu} secondary size="huge" vertical>
+            <Menu.Item link>
+              <Accordion.Title
+                as={Menu.Header}
+                id="sidebarInventory"
+                active={activeIndex === 1}
+                index={1}
+                onClick={this.handleClick}
+                content={
+                  <Link to="/table/1" style={{ color: "black" }}>
+                    Inventory
+                  </Link>
+                }
               />
-            </Accordion.Content>
+              <Accordion.Content active={activeIndex === 1}>
+                <Search
+                  fluid
+                  input={{ fluid: true }}
+                  placeholder="Search filters..."
+                />
+              </Accordion.Content>
+            </Menu.Item>
 
-            <Accordion.Title class="a" style={{ borderBottom: "1px solid grey", paddingTop: "1em", paddingBottom: "1em" }}>
-              Buy Supplies
-            </Accordion.Title>
+            <Menu.Item link>
+              <Link to="/supplies" style={{ color: "black" }}>
+                Buy Supplies
+              </Link>
+            </Menu.Item>
 
-            <Accordion.Title style={{ borderBottom: "1px solid grey", paddingTop: "1em", paddingBottom: "1em" }}>
-              Manage Users
-            </Accordion.Title>
+            <Menu.Item link>
+              <Link to="/users" style={{ color: "black" }}>
+                Manage Users
+              </Link>
+            </Menu.Item>
           </Accordion>
         </Grid.Column>
 
-        <Grid.Column width={13}>
-          {this.props.content}
-        </Grid.Column>
+        <Grid.Column width={13}>{this.props.content}</Grid.Column>
       </Grid>
     );
   }
