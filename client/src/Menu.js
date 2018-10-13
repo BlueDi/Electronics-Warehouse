@@ -28,7 +28,6 @@ class HWMenu extends Component {
           <Accordion as={Menu} secondary size="huge" vertical>
             <Menu.Item link>
               <Accordion.Title
-                as={Menu.Header}
                 id="sidebarInventory"
                 active={activeIndex === 1}
                 index={1}
