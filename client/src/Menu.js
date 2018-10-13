@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Accordion, Grid, Icon, Select } from "semantic-ui-react";
+import { Accordion, Grid, Icon, Search, Select } from "semantic-ui-react";
 
 class HWMenu extends Component {
   constructor(props) {
@@ -52,11 +52,11 @@ class HWMenu extends Component {
               active={activeIndex === 3}
               style={{ fontSize: "12.5pt", textAlign: "center" }}
             >
-              <div class="ui category search">
-                <div class="ui icon input">
-                  <input class="prompt" placeholder="Search filters..." type="text" style={{ width: "10%" }} />
-                </div>
-              </div>
+              <Search
+                fluid
+                input={{ fluid: true }}
+                placeholder="Search filters..."
+              />
             </Accordion.Content>
 
             <Accordion.Title class="a" style={{ borderBottom: "1px solid grey", paddingTop: "1em", paddingBottom: "1em" }}>
