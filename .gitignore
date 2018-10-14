@@ -7,5 +7,3 @@ public
 *.map
 *-built.js
 config-properties.*
-
-package-lock.json

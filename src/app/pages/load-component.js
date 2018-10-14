@@ -1,5 +1,5 @@
 import universal from 'react-universal-component';
-import { Loader } from '@common/components';
+import { Loader } from 'semantic-ui-react';
 import config from '@config';
 
 export default function loadComponent(page) {
