@@ -35,7 +35,16 @@
       "pre-commit": "lint-staged"
     }
   },
-  "lint-staged": {},
+  "lint-staged": {
+    "*.js": [
+      "npm run lint:js",
+      "git add"
+    ],
+    "*.scss": [
+      "npm run lint:style",
+      "git add"
+    ]
+  },
   "keywords": [
     "ssr",
     "express",
