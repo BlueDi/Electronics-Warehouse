@@ -1,4 +1,4 @@
-import Layout, { NotFound, Home, TableExample } from '@pages';
+import Layout, { NotFound, Home, TableExample, AddItem } from '@pages';
 
 export const routes = [
   {
@@ -11,6 +11,11 @@ export const routes = [
     path: '/table/:id',
     menu: 'Table',
     component: TableExample
+  },
+  {
+    path: '/addNewItem/',
+    menu: 'AddItem',
+    component: AddItem
   },
   {
     path: '/*',
