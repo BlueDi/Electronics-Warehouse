@@ -45,7 +45,7 @@ module.exports = {
   optimization: {
     // can provide uglify-js options for more controls
     // @see: https://webpack.js.org/plugins/uglifyjs-webpack-plugin/
-    minimizer: [new UglifyJsPlugin(), new OptimizeCssAssetsPlugin()],
+    minimizer: [new UglifyJsPlugin()],
     runtimeChunk: {
       name: 'bootstrap'
     },
@@ -64,7 +64,6 @@ module.exports = {
   plugins: [
     new ExtractCssChunks({
       hot: isDev,
-      cssModules: true,
       filename: isDev ? '[name].css' : '[name].[contenthash].css',
       chunkFilename: isDev ? '[id].css' : '[id].[contenthash].css'
     }),
@@ -83,6 +82,7 @@ module.exports = {
       ? [new webpack.HotModuleReplacementPlugin()]
       : [
           new StatsWebpackPlugin('stats.json'),
+          new OptimizeCssAssetsPlugin(),
           // moved to public and with minification only
           new HtmlWebpackPlugin({
             inject: false,
