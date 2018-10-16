@@ -11,23 +11,18 @@ class WHHeader extends Component {
     const { activeItem } = this.state;
 
     return (
-      <Menu attached={true}>
+      <Menu attached borderless>
         <Menu.Item
           as={Link}
           to="/"
           name="home"
           active={activeItem === "home"}
           onClick={this.handleItemClick}
+          style={{
+            fontSize: "16pt"
+          }}
         >
-          Wharehouse
-        </Menu.Item>
-
-        <Menu.Item
-          name="sidebar"
-          active={activeItem === "sidebar"}
-          onClick={this.props.toggleSidebar}
-        >
-          Show Sidebar
+          Warehouse
         </Menu.Item>
 
         <Menu.Menu position="right">
@@ -35,8 +30,25 @@ class WHHeader extends Component {
             name="signup"
             active={activeItem === "signup"}
             onClick={this.handleItemClick}
+            style={{
+              fontSize: "11pt",
+              textDecoration: "underline",
+              borderRight: "1px solid grey"
+            }}
           >
             Sign Up
+          </Menu.Item>
+
+          <Menu.Item
+            name="signin"
+            active={activeItem === "signin"}
+            onClick={this.handleItemClick}
+            style={{
+              fontSize: "11pt",
+              textDecoration: "underline"
+            }}
+          >
+            Sign In
           </Menu.Item>
         </Menu.Menu>
       </Menu>

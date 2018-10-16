@@ -1,70 +1,29 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import logo from "./logo.svg";
+import { Route } from "react-router-dom";
 import "./App.css";
-import WHHeader from "./Header.js";
-import WHSidebar from "./Sidebar.js";
+import routes from "./routes";
+import WHHeader from "./Header";
+import WHMenu from "./Menu";
+import { Grid } from "semantic-ui-react";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      response: "",
-      showSidebar: false
-    };
-  }
-
-  componentDidMount() {
-    fetch("/api/hello")
-      .then(response => {
-        if (!response.ok) {
-          throw Error("Network request failed");
-        }
-        return response;
-      })
-      .then(result => result.json())
-      .then(
-        result => {
-          this.setState({
-            response: result.express,
-            isFetching: false
-          });
-        },
-        e => {
-          console.log(e, "Failed to fetch service data.");
-        }
-      );
-  }
-
-  toggleSidebar = e =>
-    this.setState({
-      showSidebar: !this.state.showSidebar
-    });
-
   render() {
-    return [
-      <WHHeader toggleSidebar={this.toggleSidebar} />,
-      <WHSidebar
-        visible={this.state.showSidebar}
-        content={
-          <div className="App">
-            <header className="App-header">
-              <img src={logo} className="App-logo" alt="logo" />
-              <h1 className="App-title">Welcome to React</h1>
-            </header>
-            <p className="App-intro">{this.state.response}</p>
-            <p>
-              To get started, edit
-              <code>src/App.js</code>
-              and save to reload.
-            </p>
-            <Link to="/table/1">Table Example</Link>
-            <Link to="/table/2">Table Example2</Link>
-          </div>
-        }
-      />
-    ];
+    return (
+      <Grid stretched style={{ height: "100vh" }}>
+        <Grid.Row style={{ height: "10%" }}>
+          <Grid.Column width={16}>
+            <WHHeader />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row style={{ height: "90%", padding: "0px" }}>
+          <Grid.Column width={16}>
+            <WHMenu
+              content={routes.map((route, i) => <Route key={i} {...route} />)}
+            />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    );
   }
 }
 
