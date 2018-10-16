@@ -1,4 +1,4 @@
-const chalk = require('chalk');
+let chalk = require('chalk');
 
 // simple print colorful consoles util for universal usage
 const print = {
