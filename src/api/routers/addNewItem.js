@@ -9,20 +9,13 @@ addNewItemRouter.get('/hello', (req, res) => {
 
 addNewItemRouter.post('/addNewItem', async (req, res) => {
   var body = req.body;
-
-  var query = `INSERT INTO item (name, imageurl, count, condition, details, manufacturer, reference, category_id)
-                VALUES ('${body.name}', '${body.imageurl}', ${body.count}, '${
-    body.manufacturer
-  }', '${body.condition}', '${body.details}', '${body.reference}', ${
-    body.category_id
-  });`;
-
-  console.log(query);
+  var query =
+    'INSERT INTO item (name, imageurl, count, condition, details, manufacturer, reference, category_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
 
   try {
-    const data = await db.any(query, [true]);
+    const data = await db.one(query, body);
     res.send(data);
-  } catch {
+  } catch (e) {
     res.send('Failed to retrieve items!');
   }
 });
