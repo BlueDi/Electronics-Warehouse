@@ -1,3 +1,4 @@
 import tablesRouter from './tables';
+import addNewItemRouter from './addNewItem';
 
-export default [tablesRouter];
+export default [tablesRouter, addNewItemRouter];

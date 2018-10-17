@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Button, Image, Form } from 'semantic-ui-react';
 import NumericInput from 'react-numeric-input';
 import { PageTitle } from '@common/components';
+import { service } from '@utils';
 
 const ImageExampleLink = () => (
   <div style={{ paddingTop: '1em' }}>
@@ -9,16 +10,6 @@ const ImageExampleLink = () => (
     <div style={{ paddingLeft: '6.5em', paddingTop: '1em' }}>
       <Button>Upload Image</Button>
     </div>
-  </div>
-);
-
-const ButtonExampleLabeledIcon = () => (
-  <div style={{ paddingTop: '2em', float: 'right' }}>
-    <Button.Group>
-      <Button positive>Save</Button>
-      <Button.Or />
-      <Button>Cancel</Button>
-    </Button.Group>
   </div>
 );
 
@@ -72,6 +63,60 @@ const FormExampleForm = () => (
 );
 
 class AddItem extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      id: this.props.match.params.id,
+      name: 'NAME',
+      imageurl: 'IMAGE',
+      count: 50,
+      condition: 'COND',
+      manufacturer: 'SUPP',
+      details: 'cenas',
+      reference: '12785612',
+      category_id: 1
+    };
+
+    this.editItem = this.editItem.bind(this);
+  }
+
+  editItem() {
+    //get item's category
+    /*const apiUrl = `/addNewItem`;
+        fetch(apiUrl, {
+          method: 'POST',
+          body: JSON.stringify(this.state),
+          headers: { "Content-Type": "application/json" }
+        })
+          .then(
+            response => {
+              if (!response.ok) {
+                throw Error("Network request failed");
+              }
+              return response;
+            })
+          .then(response => response.json())
+          .then(
+            response => {
+            },
+            e => {
+              throw e;
+            }
+          );*/
+    service
+      .post('/addNewItem', this.state)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(e => {
+        this.setState({
+          isFetching: false
+        });
+        throw e;
+      });
+  }
+
   render() {
     return (
       <PageTitle title="Add an Item">
@@ -79,7 +124,15 @@ class AddItem extends Component {
           <div style={{ paddingLeft: '2em' }}>{ImageExampleLink()}</div>
           <div style={{ width: '50%' }}>
             {FormExampleForm()}
-            {ButtonExampleLabeledIcon()}
+            <div style={{ paddingTop: '2em', float: 'right' }}>
+              <Button.Group>
+                <Button positive onClick={this.editItem}>
+                  Save
+                </Button>
+                <Button.Or />
+                <Button>Cancel</Button>
+              </Button.Group>
+            </div>
           </div>
         </Grid>
       </PageTitle>
