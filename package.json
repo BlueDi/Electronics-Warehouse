@@ -1,17 +1,210 @@
 {
-  "name": "ldso-t4g3",
-  "version": "1.0.0",
+  "name": "LDSOt4g3",
+  "version": "0.2.0",
+  "description": "LDSO - T4G3 - Warehouse",
+  "main": "app.js",
   "scripts": {
-    "client": "cd client && npm start",
-    "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "config": "node build/scripts/config.js",
+    "clean": "rimraf public resources/config/*.json src/**/*-built.*",
+    "build": "npm-run-all clean config && cross-env NODE_ENV=production webpack --config build/webpack --progress --hide-modules",
+    "build:analyze": "cross-env ANALYZE_MODE=enabled npm run build",
+    "postinstall": "npm run build",
+    "dev:app": "cross-env NODE_ENV=development node app.js",
+    "dev:api": "nodemon --exec node api.js",
+    "dev": "npm-run-all clean config && run-p dev:api dev:app",
+    "start:app": "cross-env NODE_ENV=production node app.js",
+    "start:api": "cross-env NODE_ENV=production node api.js",
+    "start": "run-p start:api start:app",
+    "lint": "npm-run-all lint:js lint:style",
+    "lint:style": "stylelint *.scss --syntax=scss --fix",
+    "lint:js": "eslint . --fix",
+    "test": "npm run lint:js && cross-env NODE_ENV=test jest --detectOpenHandles",
+    "test:watch": "npm test -- --watch",
+    "test:coverage": "rimraf coverage && npm test -- --coverage"
+  },
+  "verbose": true,
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/ldso18-19/t4g3.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.scss": [
+      "npm run lint:style",
+      "git add"
+    ]
+  },
+  "keywords": [
+    "ssr",
+    "express",
+    "react",
+    "ldso",
+    "feup"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "babel-plugin-react-css-modules": "^3.4.2",
+    "classnames": "^2.2.6",
+    "compression": "^1.7.3",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "csurf": "^1.9.0",
+    "detect-node": "^2.0.4",
+    "dotenv": "^6.1.0",
+    "dotenv-parse-variables": "^0.2.0",
+    "ejs": "^2.6.1",
+    "esm": "^3.0.84",
+    "express": "^4.16.4",
+    "extend": "^3.0.2",
+    "helmet": "^3.14.0",
+    "hpp": "^0.2.2",
+    "http-proxy": "^1.17.0",
+    "isdev": "^1.0.1",
+    "make-promises-safe": "^1.1.0",
+    "module-alias": "^2.1.0",
+    "morgan": "^1.9.1",
+    "nock": "^10.0.1",
+    "pg-promise": "^8.5.0",
+    "precommit": "^1.2.2",
+    "prop-types": "^15.6.2",
+    "react": "^16.5.2",
+    "react-document-title": "^2.0.3",
+    "react-dom": "^16.5.2",
+    "react-numeric-input": "^2.2.3",
+    "react-router-config": "^4.4.0-beta.1",
+    "react-router-dom": "^4.4.0-beta.4",
+    "react-s-alert": "^1.4.1",
+    "react-universal-component": "^3.0.3",
+    "rimraf": "^2.6.2",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.82.5",
+    "serialize-javascript": "^1.5.0",
+    "serve-favicon": "^2.5.0",
+    "slash": "^2.0.0",
+    "uuid": "^3.3.2",
+    "webpack-flush-chunks": "^2.0.3"
   },
   "devDependencies": {
-    "concurrently": "^3.5.0",
-    "nodemon": "^1.18.4"
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-transform-strict-mode": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "autoprefixer": "^9.2.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.19",
+    "babel-plugin-universal-import": "^3.1.2",
+    "babel-plugin-webpack-alias": "^2.1.2",
+    "copy-webpack-plugin": "^4.5.3",
+    "cross-env": "^5.2.0",
+    "css-loader": "^1.0.0",
+    "enzyme": "^3.7.0",
+    "eslint": "^5.7.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-jest": "^21.25.1",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.1",
+    "eventsource-polyfill": "^0.9.6",
+    "extract-css-chunks-webpack-plugin": "^3.2.0",
+    "file-loader": "^2.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "husky": "^1.1.2",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^23.6.0",
+    "lint-staged": "^7.3.0",
+    "node-sass": "^4.9.4",
+    "nodemon": "^1.18.4",
+    "npm-run-all": "^4.1.3",
+    "offline-plugin": "^5.0.5",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "postcss-loader": "^3.0.0",
+    "postcss-nested": "^4.1.0",
+    "postcss-scss": "^2.0.0",
+    "prettier": "^1.14.3",
+    "raw-loader": "^0.5.1",
+    "react-hot-loader": "^4.3.11",
+    "react-test-renderer": "^16.5.2",
+    "regenerator-runtime": "^0.12.1",
+    "sass-loader": "^7.1.0",
+    "stats-webpack-plugin": "^0.7.0",
+    "style-loader": "^0.23.1",
+    "stylelint": "^9.6.0",
+    "stylelint-config-sass-guidelines": "^5.2.0",
+    "stylelint-order": "^1.0.0",
+    "stylelint-scss": "^3.3.1",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.20.2",
+    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-middleware": "^3.4.0",
+    "webpack-hot-middleware": "^2.24.3",
+    "webpack-hot-server-middleware": "^0.5.0"
   },
-  "dependencies": {
-    "express": "^4.16.3",
-    "pg-promise": "^8.5.0"
+  "nodemonConfig": {
+    "watch": [
+      "src/api/*"
+    ],
+    "debug": true,
+    "ext": "js jsx",
+    "env": {
+      "NODE_ENV": "development"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 10"
+  ],
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/resources/mocks/file-mock.js",
+      "\\.(css|scss)$": "<rootDir>/resources/mocks/style-mock.js"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.jsx?$",
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/"
+    ]
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@bin": "bin",
+    "@build": "build",
+    "@public": "public",
+    "@resources": "resources",
+    "@assets": "resources/assets",
+    "@config": "resources/config",
+    "@utils": "src/utils",
+    "@api": "src/api",
+    "@app": "src/app",
+    "@common": "src/app/common",
+    "@pages": "src/app/pages",
+    "@middlewares": "src/middlewares"
   }
 }

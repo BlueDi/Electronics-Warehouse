@@ -1,0 +1,5 @@
+/* import vendor CSS as global styles */
+
+@import '~react-s-alert/dist/s-alert-default.css';
+@import '~react-s-alert/dist/s-alert-css-effects/flip.css';
+@import '~semantic-ui-css/semantic.css';

@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+import 'make-promises-safe';
+import http from 'http';
+import api from '@api';
+import config from '@config';
+
+const server = http.createServer(api);
+const serverPort = process.env.API_PORT || config['API_PORT'];
+
+server.listen(serverPort);
+
+server.on('listening', () => {
+  console.log(`API server is listening PORT: ${serverPort}`);
+});
+
+server.on('error', err => {
+  switch (err.code) {
+    case 'EACCES':
+      console.log('Not enough privileges to run API server.', 1);
+      break;
+    case 'EADDRINUSE':
+      console.log(`${serverPort} is already in use.`, 1);
+      break;
+    default:
+      throw err;
+  }
+});
+
+process.on('SIGINT', () => {
+  process.exit(0);
+});

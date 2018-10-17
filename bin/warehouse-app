@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+import 'make-promises-safe';
+import http from 'http';
+import app from '@app';
+import config, { DEV } from '@config';
+
+const server = http.createServer(app);
+const serverPort = process.env.PORT || config['PORT'];
+
+server.listen(serverPort);
+
+server.on('listening', () => {
+  console.log(`App server is listening PORT: ${serverPort}`);
+  DEV && console.log(`App is started at: http://localhost:${serverPort}`);
+});
+
+server.on('error', err => {
+  switch (err.code) {
+    case 'EACCES':
+      console.log('Not enough privileges to run app server.', 1);
+      break;
+    case 'EADDRINUSE':
+      console.log(`${serverPort} is already in use.`, 1);
+      break;
+    default:
+      throw err;
+  }
+});
+
+process.on('SIGINT', () => {
+  process.exit(0);
+});
