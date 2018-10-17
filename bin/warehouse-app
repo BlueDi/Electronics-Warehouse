@@ -4,7 +4,6 @@ import 'make-promises-safe';
 import http from 'http';
 import app from '@app';
 import config, { DEV } from '@config';
-import { print } from '@utils';
 
 const server = http.createServer(app);
 const serverPort = process.env.PORT || config['PORT'];
@@ -12,17 +11,17 @@ const serverPort = process.env.PORT || config['PORT'];
 server.listen(serverPort);
 
 server.on('listening', () => {
-  print.info(`App server is listening PORT: ${serverPort}`);
-  DEV && print.success(`App is started at: http://localhost:${serverPort}`);
+  console.log(`App server is listening PORT: ${serverPort}`);
+  DEV && console.log(`App is started at: http://localhost:${serverPort}`);
 });
 
 server.on('error', err => {
   switch (err.code) {
     case 'EACCES':
-      print.error('Not enough privileges to run app server.', 1);
+      console.log('Not enough privileges to run app server.', 1);
       break;
     case 'EADDRINUSE':
-      print.error(`${serverPort} is already in use.`, 1);
+      console.log(`${serverPort} is already in use.`, 1);
       break;
     default:
       throw err;
