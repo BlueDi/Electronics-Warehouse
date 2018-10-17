@@ -1,4 +1,4 @@
-import Layout, { NotFound, Home, TableExample, AddItem } from '@pages';
+import Layout, { NotFound, Home, WHTable, AddItem } from '@pages';
 
 export const routes = [
   {
@@ -10,7 +10,7 @@ export const routes = [
   {
     path: '/table/:id',
     menu: 'Table',
-    component: TableExample
+    component: WHTable
   },
   {
     path: '/addNewItem/',

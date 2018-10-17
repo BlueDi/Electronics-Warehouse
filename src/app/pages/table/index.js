@@ -114,8 +114,6 @@ class GeneralParam extends Component {
     };
   }
 
-  isImage() {}
-
   render() {
     var value = this.state.value;
     var param = this.state.parameter;
@@ -140,7 +138,7 @@ class GeneralParam extends Component {
   }
 }
 
-class TableExample extends Component {
+class WHTable extends Component {
   constructor(props) {
     super(props);
 
@@ -281,4 +279,4 @@ class TableExample extends Component {
   }
 }
 
-export default TableExample;
+export default WHTable;
