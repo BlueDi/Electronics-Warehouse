@@ -1,8 +1,7 @@
 const express = require('express');
-var pgp = require('pg-promise')();
+const db = require('@api/db.js');
 
 const tablesRouter = express.Router();
-var db = pgp('postgres://postgres:password@localhost:5432/postgres');
 
 const items_query = 'SELECT * FROM item;';
 
