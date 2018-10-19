@@ -19,17 +19,18 @@ class AddItem extends Component {
     this.state = {
       name: '',
       imageurl: 'https://picsum.photos/300',
+      count: 1,
+      condition: 'bad',
+      details: '',
       manufacturer: '',
       reference: '',
-      count: 1,
-      details: 'There are no additional details.',
-      condition: 'bad',
       category_id: 1,
       sName: '',
-      sManufacturer: '',
-      sReference: '',
       sCount: 1,
-      sDetails: ''
+      sCondition: '',
+      sDetails: 'There are no additional details.',
+      sManufacturer: '',
+      sReference: ''
     };
 
     this.addItem = this.addItem.bind(this);
@@ -44,10 +45,10 @@ class AddItem extends Component {
 
     this.setState({
       sName: name,
-      sManufacturer: manufacturer,
-      sReference: reference,
+      sCount: count,
       sDetails: details,
-      sCount: count
+      sManufacturer: manufacturer,
+      sReference: reference
     });
 
     service
