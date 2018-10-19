@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, Menu, Table } from 'semantic-ui-react';
+import { Grid, Icon, Menu, Table } from 'semantic-ui-react';
 import { service } from '@utils';
 import {
   AddItemButton,
@@ -103,15 +103,14 @@ class WHTable extends Component {
       <Loader text="Preparing Table" />
     ) : (
       <PageTitle title="Table">
-        <div style={{ marginTop: '0.5em' }}>
-          <div style={{ float: 'right' }}>
-            <SearchBar />
-          </div>
-
-          <div style={{ float: 'left' }}>
+        <Grid>
+          <Grid.Column floated="left" width={5}>
             <AddItemButton />
-          </div>
-        </div>
+          </Grid.Column>
+          <Grid.Column floated="right" width={5}>
+            <SearchBar />
+          </Grid.Column>
+        </Grid>
         <Table
           key={'content'}
           celled
