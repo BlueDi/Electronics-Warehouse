@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Grid,
-  Icon,
-  Image,
-  Menu,
-  Table,
-  Button,
-  Search
-} from 'semantic-ui-react';
+import { Grid, Icon, Menu, Table, Button, Search } from 'semantic-ui-react';
 import _ from 'lodash';
 import { service } from '@utils';
 import { Loader, PageTitle } from '@common/components';
+import GeneralParam from './GeneralParam';
 
 const urlForData = id => `/table/${id}`;
 
@@ -69,69 +62,6 @@ class SearchBar extends Component {
           />
         </Grid.Column>
       </Grid>
-    );
-  }
-}
-
-class DescriptionParam extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      content: this.props.content
-    };
-  }
-
-  mount_content() {
-    var organized_content = [];
-    for (var param in this.state.content) {
-      organized_content.push(
-        <Grid.Row key={param}>
-          {param + ': ' + this.state.content[param]}
-        </Grid.Row>
-      );
-    }
-    return organized_content;
-  }
-
-  render() {
-    return (
-      <Grid celled="internally" textAlign="center">
-        {this.mount_content()}
-      </Grid>
-    );
-  }
-}
-
-class GeneralParam extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: this.props.id,
-      parameter: this.props.parameter,
-      value: this.props.value
-    };
-  }
-
-  render() {
-    var value = this.state.value;
-    var param = this.state.parameter;
-
-    return (
-      <Table.Cell key={param}>
-        {value === null ? (
-          '-'
-        ) : typeof value === 'object' ? (
-          <DescriptionParam content={value} />
-        ) : (
-          <Link to={`/item/${this.state.id}`} style={{ color: 'black' }}>
-            {this.state.parameter.match(/image/gi) ? (
-              <Image src={this.state.value} size="small" />
-            ) : (
-              this.state.value
-            )}
-          </Link>
-        )}
-      </Table.Cell>
     );
   }
 }
