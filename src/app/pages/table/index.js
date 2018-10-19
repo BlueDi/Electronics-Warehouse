@@ -47,18 +47,19 @@ class WHTable extends Component {
   handleSort = clickedColumn => () => {
     const { column, components, direction } = this.state;
 
-    column !== clickedColumn
-      ? this.setState({
-          column: clickedColumn,
-          components: _.sortBy(components, [clickedColumn]),
-          direction: 'ascending'
-        })
-      : this.setState({
-          components: components.reverse(),
-          direction: direction === 'ascending' ? 'descending' : 'ascending'
-        });
-
-    this.mount_table();
+    this.setState(
+      column !== clickedColumn
+        ? {
+            column: clickedColumn,
+            components: _.sortBy(components, [clickedColumn]),
+            direction: 'ascending'
+          }
+        : {
+            components: components.reverse(),
+            direction: direction === 'ascending' ? 'descending' : 'ascending'
+          },
+      () => this.mount_table()
+    );
   };
 
   mount_header() {
