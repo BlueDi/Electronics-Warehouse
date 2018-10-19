@@ -1,20 +1,148 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  Dimmer,
+  Grid,
+  Icon,
+  Image,
+  Loader,
+  Menu,
+  Table,
+  Button,
+  Search
+} from 'semantic-ui-react';
 import _ from 'lodash';
-import { Grid, Icon, Menu, Table } from 'semantic-ui-react';
 import { service } from '@utils';
-import { Loader, PageTitle } from '@common/components';
-import GeneralParam from './GeneralParam';
+import { PageTitle } from '@common/components';
 
 const urlForData = id => `/table/${id}`;
+
+const source = _.times(5, () => ({
+  title: 'Facebook',
+  description: 'Stealling your info since 1995'
+}));
+
+class SearchBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: this.props.value
+    };
+  }
+
+  resetComponent = () =>
+    this.setState({ isLoading: false, results: [], value: '' });
+
+  handleResultSelect = (e, { result }) =>
+    this.setState({ value: result.title });
+
+  handleSearchChange = (e, { value }) => {
+    this.setState({ isLoading: true, value });
+
+    setTimeout(() => {
+      if (this.state.value.length < 1) return this.resetComponent();
+
+      const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
+      const isMatch = result => re.test(result.title);
+
+      this.setState({
+        isLoading: false,
+        results: _.filter(source, isMatch)
+      });
+    }, 300);
+  };
+
+  render() {
+    const { isLoading, value, results } = this.state;
+    console.log(this.state.components);
+
+    return (
+      <Grid>
+        <Grid.Column width={6}>
+          <Search
+            loading={isLoading}
+            onResultSelect={this.handleResultSelect}
+            onSearchChange={_.debounce(this.handleSearchChange, 500, {
+              leading: true
+            })}
+            results={results}
+            value={value}
+            {...this.props}
+          />
+        </Grid.Column>
+      </Grid>
+    );
+  }
+}
+
+class DescriptionParam extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      content: this.props.content
+    };
+  }
+
+  mount_content() {
+    var organized_content = [];
+    for (var param in this.state.content) {
+      organized_content.push(
+        <Grid.Row key={param}>
+          {param + ': ' + this.state.content[param]}
+        </Grid.Row>
+      );
+    }
+    return organized_content;
+  }
+
+  render() {
+    return (
+      <Grid celled="internally" textAlign="center">
+        {this.mount_content()}
+      </Grid>
+    );
+  }
+}
+
+class GeneralParam extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: this.props.id,
+      parameter: this.props.parameter,
+      value: this.props.value
+    };
+  }
+
+  render() {
+    var value = this.state.value;
+    var param = this.state.parameter;
+
+    return (
+      <Table.Cell key={param}>
+        {value === null ? (
+          '-'
+        ) : typeof value === 'object' ? (
+          <DescriptionParam content={value} />
+        ) : (
+          <Link to={`/item/${this.state.id}`} style={{ color: 'black' }}>
+            {this.state.parameter.match(/image/gi) ? (
+              <Image src={this.state.value} size="small" />
+            ) : (
+              this.state.value
+            )}
+          </Link>
+        )}
+      </Table.Cell>
+    );
+  }
+}
 
 class WHTable extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      column: null,
-      direction: null,
       id: this.props.match.params.id,
       isFetching: true
     };
@@ -39,38 +167,12 @@ class WHTable extends Component {
       });
   }
 
-  handleSort = clickedColumn => () => {
-    const { column, components, direction } = this.state;
-    console.log(clickedColumn, components);
-
-    if (column !== clickedColumn) {
-      this.setState({
-        column: clickedColumn,
-        components: _.sortBy(components, [clickedColumn]),
-        direction: 'ascending'
-      });
-
-      return;
-    }
-
-    this.setState({
-      components: components.reverse(),
-      direction: direction === 'ascending' ? 'descending' : 'ascending'
-    });
-  };
-
   mount_header() {
     var header_params = [];
     for (var param in this.state.components[0]) {
       if (param !== 'id')
         header_params.push(
-          <Table.HeaderCell
-            key={param}
-            sorted={this.state.column === param ? this.state.direction : null}
-            onClick={this.handleSort(param)}
-          >
-            {param}
-          </Table.HeaderCell>
+          <Table.HeaderCell key={param}>{param}</Table.HeaderCell>
         );
     }
     return (
@@ -124,14 +226,33 @@ class WHTable extends Component {
 
   render() {
     return this.state.isFetching ? (
-      <Loader text="Preparing Table" />
+      <Dimmer active inverted>
+        <Loader indeterminate inverted>
+          Preparing Table
+        </Loader>
+      </Dimmer>
     ) : (
       <PageTitle title="Table">
-        <Grid>
-          <Grid.Column floated="left" width={5} />
-          <Grid.Column floated="right" width={5} />
-        </Grid>
+        <div style={{ marginTop: '0.5em' }}>
+          <div style={{ float: 'right' }}>
+            <SearchBar />
+          </div>
 
+          <div style={{ float: 'left' }}>
+            <Link to="/addNewItem">
+              <div>
+                <Button
+                  icon
+                  labelPosition="left"
+                  style={{ backgroundColor: '#87DC8E' }}
+                >
+                  <Icon name="plus" />
+                  Add an item
+                </Button>
+              </div>
+            </Link>
+          </div>
+        </div>
         <Table
           key={'content'}
           celled
