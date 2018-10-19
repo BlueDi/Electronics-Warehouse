@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Grid, Button, Image, Form } from 'semantic-ui-react';
-import NumericInput from 'react-numeric-input';
 import { PageTitle } from '@common/components';
 import { service } from '@utils';
 
@@ -13,97 +12,44 @@ const ImageExampleLink = () => (
   </div>
 );
 
-const FormExampleForm = () => (
-  <Form>
-    <Form.Field required>
-      <label>Item Name</label>
-      <input placeholder="Item's Name" />
-    </Form.Field>
-
-    <Form.Field required>
-      <label>Manufacturer</label>
-      <input placeholder="Manufacturer" />
-    </Form.Field>
-
-    <Form.Group required>
-      <Form.Field required>
-        <label>Quantity</label>
-        <NumericInput min={1} value={1} />
-      </Form.Field>
-      <span style={{ paddingLeft: '1em', paddingTop: '0.5em' }}>
-        <Form.Field
-          label="meters"
-          control="input"
-          type="radio"
-          name="radios"
-          selected
-        />
-        <Form.Field
-          label="kilograms"
-          control="input"
-          type="radio"
-          name="radios"
-        />
-        <Form.Field label="units" control="input" type="radio" name="radios" />
-      </span>
-
-      <div style={{ marginLeft: '3em', width: '50%' }}>
-        <Form.Field required>
-          <label>Reference Number</label>
-          <input placeholder="Reference Number" />
-        </Form.Field>
-      </div>
-    </Form.Group>
-
-    <Form.TextArea
-      label="Details"
-      placeholder="Specify the item's characteristics..."
-    />
-  </Form>
-);
-
 class AddItem extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      id: this.props.match.params.id,
-      name: 'NAME',
-      imageurl: 'IMAGE',
-      count: 50,
-      condition: 'COND',
-      manufacturer: 'SUPP',
-      details: 'cenas',
-      reference: '12785612',
-      category_id: 1
+      name: '',
+      imageurl: 'https://picsum.photos/300',
+      manufacturer: '',
+      reference: '',
+      count: 1,
+      details: 'There are no additional details.',
+      condition: 'bad',
+      category_id: 1,
+      sName: '',
+      sManufacturer: '',
+      sReference: '',
+      sCount: 1,
+      sDetails: ''
     };
 
-    this.editItem = this.editItem.bind(this);
+    this.addItem = this.addItem.bind(this);
   }
 
-  editItem() {
-    //get item's category
-    /*const apiUrl = `/addNewItem`;
-        fetch(apiUrl, {
-          method: 'POST',
-          body: JSON.stringify(this.state),
-          headers: { "Content-Type": "application/json" }
-        })
-          .then(
-            response => {
-              if (!response.ok) {
-                throw Error("Network request failed");
-              }
-              return response;
-            })
-          .then(response => response.json())
-          .then(
-            response => {
-            },
-            e => {
-              throw e;
-            }
-          );*/
+  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+
+  addItem() {
+    console.log(this.state);
+
+    const { name, manufacturer, reference, count, details } = this.state;
+
+    this.setState({
+      sName: name,
+      sManufacturer: manufacturer,
+      sReference: reference,
+      sDetails: details,
+      sCount: count
+    });
+
     service
       .post('/addNewItem', this.state)
       .then(response => {
@@ -118,21 +64,126 @@ class AddItem extends Component {
   }
 
   render() {
+    const { name, manufacturer, reference, supplier, details } = this.state;
+    const options = [
+      { key: 'angular', text: 'Angular', value: 'angular' },
+      { key: 'css', text: 'CSS', value: 'css' },
+      { key: 'design', text: 'Graphic Design', value: 'design' },
+      { key: 'ember', text: 'Ember', value: 'ember' },
+      { key: 'html', text: 'HTML', value: 'html' },
+      { key: 'ia', text: 'Information Architecture', value: 'ia' },
+      { key: 'javascript', text: 'Javascript', value: 'javascript' },
+      { key: 'mech', text: 'Mechanical Engineering', value: 'mech' },
+      { key: 'meteor', text: 'Meteor', value: 'meteor' },
+      { key: 'node', text: 'NodeJS', value: 'node' },
+      { key: 'plumbing', text: 'Plumbing', value: 'plumbing' },
+      { key: 'python', text: 'Python', value: 'python' },
+      { key: 'rails', text: 'Rails', value: 'rails' },
+      { key: 'react', text: 'React', value: 'react' },
+      { key: 'repair', text: 'Kitchen Repair', value: 'repair' },
+      { key: 'ruby', text: 'Ruby', value: 'ruby' },
+      { key: 'ui', text: 'UI Design', value: 'ui' },
+      { key: 'ux', text: 'User Experience', value: 'ux' }
+    ];
+
     return (
       <PageTitle title="Add an Item">
         <Grid style={{ paddingTop: '2em' }}>
           <div style={{ paddingLeft: '2em' }}>{ImageExampleLink()}</div>
-          <div style={{ width: '50%' }}>
-            {FormExampleForm()}
-            <div style={{ paddingTop: '2em', float: 'right' }}>
-              <Button.Group>
-                <Button positive onClick={this.editItem}>
-                  Save
-                </Button>
-                <Button.Or />
-                <Button>Cancel</Button>
-              </Button.Group>
-            </div>
+          <div style={{ width: '70%' }}>
+            <Form success onSubmit={this.addItem}>
+              <Form.Input
+                required
+                placeholder="Item's Name"
+                label="Item's Name"
+                name="name"
+                value={name}
+                onChange={this.handleChange}
+              />
+
+              <Form.Group widths="equal">
+                <Form.Input
+                  required
+                  placeholder="Manufacturer"
+                  label="Manufacturer"
+                  name="manufacturer"
+                  value={manufacturer}
+                  onChange={this.handleChange}
+                />
+                <Form.Input
+                  required
+                  placeholder="Manufacturer's Reference Number"
+                  label="Manufacturer's Reference Number"
+                  name="reference"
+                  value={reference}
+                  onChange={this.handleChange}
+                />
+                <Form.Input
+                  placeholder="Supplier"
+                  label="Supplier"
+                  name="supplier"
+                  value={supplier}
+                  onChange={this.handleChange}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Input
+                  required
+                  label="Quantity"
+                  type="number"
+                  min={1}
+                  name="count"
+                  value={this.state.count}
+                  onChange={this.handleChange}
+                />
+
+                <Form.Dropdown
+                  width={4}
+                  category="category"
+                  placeholder="Search for a Category"
+                  label="Category"
+                  search
+                  selection
+                  options={options}
+                />
+
+                <Form.Dropdown
+                  width={4}
+                  properties="properties"
+                  placeholder="Search for Properties"
+                  label="Properties"
+                  search
+                  multiple
+                  selection
+                  options={options}
+                />
+              </Form.Group>
+
+              <Form.Group>
+                <Form.Input width={4} placeholder="Block" label="Block" />
+                <Form.Input width={4} placeholder="Column" label="Column" />
+                <Form.Input width={4} placeholder="Row" label="Row" />
+              </Form.Group>
+
+              <Form.TextArea
+                label="Details"
+                placeholder="Specify the item's characteristics..."
+                name="details"
+                value={details}
+                onChange={this.handleChange}
+              />
+
+              <div style={{ paddingTop: '2em', float: 'right' }}>
+                <Button.Group>
+                  <Button type="submit" positive>
+                    Save
+                  </Button>
+                  <Button.Or />
+                  <Button>Cancel</Button>
+                </Button.Group>
+              </div>
+            </Form>
           </div>
         </Grid>
       </PageTitle>

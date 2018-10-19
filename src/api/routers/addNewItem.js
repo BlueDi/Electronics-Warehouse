@@ -11,11 +11,10 @@ addNewItemRouter.post('/addNewItem', async (req, res) => {
   var body = req.body;
 
   var query = `INSERT INTO item (name, imageurl, count, condition, details, manufacturer, reference, category_id)
-                VALUES ('${body.name}', '${body.imageurl}', ${body.count}, '${
-    body.manufacturer
-  }', '${body.condition}', '${body.details}', '${body.reference}', ${
-    body.category_id
-  });`;
+                VALUES ('${body.name}', '${body.imageurl}', ${body.count},
+                 '${body.manufacturer}', '${body.condition}', '${
+    body.details
+  }', '${body.reference}', ${body.category_id});`;
 
   console.log(query);
 
@@ -23,7 +22,7 @@ addNewItemRouter.post('/addNewItem', async (req, res) => {
     const data = await db.any(query, [true]);
     res.send(data);
   } catch {
-    res.send('Failed to retrieve items!');
+    res.send('Failed to insert item!');
   }
 });
 
