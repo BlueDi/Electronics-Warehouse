@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Dimmer,
   Grid,
   Icon,
   Image,
-  Loader,
   Menu,
   Table,
   Button,
@@ -13,7 +11,7 @@ import {
 } from 'semantic-ui-react';
 import _ from 'lodash';
 import { service } from '@utils';
-import { PageTitle } from '@common/components';
+import { Loader, PageTitle } from '@common/components';
 
 const urlForData = id => `/table/${id}`;
 
@@ -226,11 +224,7 @@ class WHTable extends Component {
 
   render() {
     return this.state.isFetching ? (
-      <Dimmer active inverted>
-        <Loader indeterminate inverted>
-          Preparing Table
-        </Loader>
-      </Dimmer>
+      <Loader text="Preparing Table" />
     ) : (
       <PageTitle title="Table">
         <div style={{ marginTop: '0.5em' }}>
