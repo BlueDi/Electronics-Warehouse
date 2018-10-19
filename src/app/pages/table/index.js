@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, Menu, Table, Button } from 'semantic-ui-react';
+import { Icon, Menu, Table } from 'semantic-ui-react';
 import { service } from '@utils';
-import { Loader, PageTitle, SearchBar } from '@common/components';
+import {
+  AddItemButton,
+  Loader,
+  PageTitle,
+  SearchBar
+} from '@common/components';
 import GeneralParam from './GeneralParam';
 
 const urlForData = id => `/table/${id}`;
@@ -104,18 +109,7 @@ class WHTable extends Component {
           </div>
 
           <div style={{ float: 'left' }}>
-            <Link to="/addNewItem">
-              <div>
-                <Button
-                  icon
-                  labelPosition="left"
-                  style={{ backgroundColor: '#87DC8E' }}
-                >
-                  <Icon name="plus" />
-                  Add an item
-                </Button>
-              </div>
-            </Link>
+            <AddItemButton />
           </div>
         </div>
         <Table
