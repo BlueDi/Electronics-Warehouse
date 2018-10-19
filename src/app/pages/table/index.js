@@ -1,70 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Icon, Menu, Table, Button, Search } from 'semantic-ui-react';
-import _ from 'lodash';
+import { Icon, Menu, Table, Button } from 'semantic-ui-react';
 import { service } from '@utils';
-import { Loader, PageTitle } from '@common/components';
+import { Loader, PageTitle, SearchBar } from '@common/components';
 import GeneralParam from './GeneralParam';
 
 const urlForData = id => `/table/${id}`;
-
-const source = _.times(5, () => ({
-  title: 'Facebook',
-  description: 'Stealling your info since 1995'
-}));
-
-class SearchBar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: this.props.value
-    };
-  }
-
-  resetComponent = () =>
-    this.setState({ isLoading: false, results: [], value: '' });
-
-  handleResultSelect = (e, { result }) =>
-    this.setState({ value: result.title });
-
-  handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value });
-
-    setTimeout(() => {
-      if (this.state.value.length < 1) return this.resetComponent();
-
-      const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
-      const isMatch = result => re.test(result.title);
-
-      this.setState({
-        isLoading: false,
-        results: _.filter(source, isMatch)
-      });
-    }, 300);
-  };
-
-  render() {
-    const { isLoading, value, results } = this.state;
-    console.log(this.state.components);
-
-    return (
-      <Grid>
-        <Grid.Column width={6}>
-          <Search
-            loading={isLoading}
-            onResultSelect={this.handleResultSelect}
-            onSearchChange={_.debounce(this.handleSearchChange, 500, {
-              leading: true
-            })}
-            results={results}
-            value={value}
-            {...this.props}
-          />
-        </Grid.Column>
-      </Grid>
-    );
-  }
-}
 
 class WHTable extends Component {
   constructor(props) {
