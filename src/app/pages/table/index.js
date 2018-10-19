@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import _ from 'lodash';
 import { Grid, Icon, Menu, Table } from 'semantic-ui-react';
 import { service } from '@utils';
 import {
@@ -17,6 +18,8 @@ class WHTable extends Component {
     super(props);
 
     this.state = {
+      column: null,
+      direction: null,
       id: this.props.match.params.id,
       isFetching: true
     };
@@ -41,12 +44,35 @@ class WHTable extends Component {
       });
   }
 
+  handleSort = clickedColumn => () => {
+    const { column, components, direction } = this.state;
+
+    column !== clickedColumn
+      ? this.setState({
+          column: clickedColumn,
+          components: _.sortBy(components, [clickedColumn]),
+          direction: 'ascending'
+        })
+      : this.setState({
+          components: components.reverse(),
+          direction: direction === 'ascending' ? 'descending' : 'ascending'
+        });
+
+    this.mount_table();
+  };
+
   mount_header() {
     var header_params = [];
     for (var param in this.state.components[0]) {
       if (param !== 'id')
         header_params.push(
-          <Table.HeaderCell key={param}>{param}</Table.HeaderCell>
+          <Table.HeaderCell
+            key={param}
+            sorted={this.state.column === param ? this.state.direction : null}
+            onClick={this.handleSort(param)}
+          >
+            {param}
+          </Table.HeaderCell>
         );
     }
     return (
@@ -58,7 +84,7 @@ class WHTable extends Component {
 
   mount_rows() {
     var table_rows = [];
-    this.state.components.forEach((comp, cindex) => {
+    for (let comp of this.state.components) {
       var row_cells = [];
       for (var param in comp) {
         if (param !== 'id')
@@ -71,8 +97,8 @@ class WHTable extends Component {
             />
           );
       }
-      table_rows.push(<Table.Row key={cindex}>{row_cells}</Table.Row>);
-    });
+      table_rows.push(<Table.Row key={comp.id}>{row_cells}</Table.Row>);
+    }
     return table_rows;
   }
 
@@ -111,6 +137,7 @@ class WHTable extends Component {
             <SearchBar />
           </Grid.Column>
         </Grid>
+
         <Table
           key={'content'}
           celled
