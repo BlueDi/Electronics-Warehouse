@@ -3,53 +3,37 @@ import { Grid, Button, Image, Form } from 'semantic-ui-react';
 import { PageTitle } from '@common/components';
 import { service } from '@utils';
 
-const ImageExampleLink = () => (
-  <div style={{ paddingTop: '1em' }}>
-    <Image src="https://picsum.photos/300" bordered />
-    <div style={{ paddingLeft: '6.5em', paddingTop: '1em' }}>
-      <Button>Upload Image</Button>
-    </div>
-  </div>
-);
-
 class AddItem extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       name: '',
-      imageurl: 'https://picsum.photos/300',
+      imageurl: '0',
       count: 1,
       condition: 'bad',
       details: '',
       manufacturer: '',
       reference: '',
-      category_id: 1,
-      sName: '',
-      sCount: 1,
-      sCondition: '',
-      sDetails: 'There are no additional details.',
-      sManufacturer: '',
-      sReference: ''
+      category_id: 1
     };
 
     this.addItem = this.addItem.bind(this);
   }
 
+  Image = () => (
+    <div style={{ paddingTop: '1em' }}>
+      <Image src="https://picsum.photos/300" bordered />
+      <div style={{ paddingLeft: '5em', paddingTop: '1em' }}>
+        <input type="file" onChange={this.handleImageChange} />
+      </div>
+    </div>
+  );
+
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
   addItem() {
     console.log(this.state);
-
-    const { name, manufacturer, reference, count, details } = this.state;
-
-    this.setState({
-      sName: name,
-      sCount: count,
-      sDetails: details,
-      sManufacturer: manufacturer,
-      sReference: reference
-    });
 
     service
       .post('/addNewItem', this.state)
@@ -90,7 +74,7 @@ class AddItem extends Component {
     return (
       <PageTitle title="Add an Item">
         <Grid style={{ paddingTop: '2em' }}>
-          <div style={{ paddingLeft: '2em' }}>{ImageExampleLink()}</div>
+          <div style={{ paddingLeft: '2em' }}>{this.Image()}</div>
           <div style={{ width: '70%' }}>
             <Form success onSubmit={this.addItem}>
               <Form.Input
