@@ -8,72 +8,12 @@ import {
   Loader,
   Menu,
   Table,
-  Button,
-  Search
+  Button
 } from 'semantic-ui-react';
-import _ from 'lodash';
 import { service } from '@utils';
 import { PageTitle } from '@common/components';
 
 const urlForData = id => `/table/${id}`;
-
-const source = _.times(5, () => ({
-  title: 'Facebook',
-  description: 'Stealling your info since 1995'
-}));
-
-class SearchBar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: this.props.value
-    };
-  }
-
-  resetComponent = () =>
-    this.setState({ isLoading: false, results: [], value: '' });
-
-  handleResultSelect = (e, { result }) =>
-    this.setState({ value: result.title });
-
-  handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value });
-
-    setTimeout(() => {
-      if (this.state.value.length < 1) return this.resetComponent();
-
-      const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
-      const isMatch = result => re.test(result.title);
-
-      this.setState({
-        isLoading: false,
-        results: _.filter(source, isMatch)
-      });
-    }, 300);
-  };
-
-  render() {
-    const { isLoading, value, results } = this.state;
-    console.log(this.state.components);
-
-    return (
-      <Grid>
-        <Grid.Column width={6}>
-          <Search
-            loading={isLoading}
-            onResultSelect={this.handleResultSelect}
-            onSearchChange={_.debounce(this.handleSearchChange, 500, {
-              leading: true
-            })}
-            results={results}
-            value={value}
-            {...this.props}
-          />
-        </Grid.Column>
-      </Grid>
-    );
-  }
-}
 
 class DescriptionParam extends Component {
   constructor(props) {
@@ -146,11 +86,17 @@ class TableExample extends Component {
 
     this.state = {
       id: this.props.match.params.id,
-      isFetching: true
+      isFetching: true,
+      isLoading: false,
+      value: ''
     };
+
+    this.searchResults = this.searchResults.bind(this);
   }
 
-  componentDidMount() {
+  resetComponent = () => this.setState({ isLoading: false, value: '' });
+
+  searchResults() {
     service
       .get(urlForData(this.state.id))
       .then(response => {
@@ -159,6 +105,27 @@ class TableExample extends Component {
           pages: 50,
           isFetching: false
         });
+        this.mount_table();
+      })
+      .catch(e => {
+        this.setState({
+          isFetching: false
+        });
+        throw e;
+      });
+  }
+
+  componentDidMount() {
+    this.resetComponent();
+    service
+      .get(urlForData(this.state.id))
+      .then(response => {
+        this.setState({
+          components: response.data,
+          pages: 50,
+          isFetching: false
+        });
+        console.log(response.data);
         this.mount_table();
       })
       .catch(e => {
@@ -236,9 +203,7 @@ class TableExample extends Component {
     ) : (
       <PageTitle title="Table">
         <div style={{ marginTop: '0.5em' }}>
-          <div style={{ float: 'right' }}>
-            <SearchBar />
-          </div>
+          <div style={{ float: 'right' }} />
 
           <div style={{ float: 'left' }}>
             <Link to="/addNewItem">

@@ -24,7 +24,7 @@ class AddItem extends Component {
   Image = () => (
     <div style={{ paddingTop: '1em' }}>
       <Image src="https://picsum.photos/300" bordered />
-      <div style={{ paddingLeft: '5em', paddingTop: '1em' }}>
+      <div style={{ paddingLeft: '3em', paddingTop: '1em' }}>
         <input type="file" onChange={this.handleImageChange} />
       </div>
     </div>
