@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react';
 import { service } from '@utils';
 import { PageTitle } from '@common/components';
+import { ComboSearch } from 'react-combo-search';
 
 const urlForData = id => `/table/${id}`;
 
@@ -87,36 +88,13 @@ class TableExample extends Component {
     this.state = {
       id: this.props.match.params.id,
       isFetching: true,
-      isLoading: false,
-      value: ''
+      selectData: ['Name', 'Manufacturer', 'Reference Number', 'Category']
     };
 
-    this.searchResults = this.searchResults.bind(this);
-  }
-
-  resetComponent = () => this.setState({ isLoading: false, value: '' });
-
-  searchResults() {
-    service
-      .get(urlForData(this.state.id))
-      .then(response => {
-        this.setState({
-          components: response.data,
-          pages: 50,
-          isFetching: false
-        });
-        this.mount_table();
-      })
-      .catch(e => {
-        this.setState({
-          isFetching: false
-        });
-        throw e;
-      });
+    this.searchCallback = this.searchCallback.bind(this);
   }
 
   componentDidMount() {
-    this.resetComponent();
     service
       .get(urlForData(this.state.id))
       .then(response => {
@@ -193,6 +171,24 @@ class TableExample extends Component {
     return pagination;
   }
 
+  searchCallback(data) {
+    console.log(data[0].search);
+    service
+      .post(urlForData(this.state.id), data[0])
+      .then(response => {
+        /*this.setState({
+          components: response.data,
+          pages: 50,
+          isFetching: false
+        });
+        this.mount_table();*/
+        console.log(response.data);
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
   render() {
     return this.state.isFetching ? (
       <Dimmer active inverted>
@@ -204,7 +200,10 @@ class TableExample extends Component {
       <PageTitle title="Table">
         <div style={{ marginTop: '0.5em' }}>
           <div style={{ float: 'right' }} />
-
+          <ComboSearch
+            onSearch={this.searchCallback}
+            selectData={this.state.selectData}
+          />
           <div style={{ float: 'left' }}>
             <Link to="/addNewItem">
               <div>

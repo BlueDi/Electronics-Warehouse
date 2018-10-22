@@ -80,6 +80,7 @@
     "precommit": "^1.2.2",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
+    "react-combo-search": "^1.1.4",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.5.2",
     "react-numeric-input": "^2.2.3",
