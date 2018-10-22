@@ -1,4 +1,10 @@
-import Layout, { NotFound, Home, TableExample, AddItem } from '@pages';
+import Layout, {
+  NotFound,
+  Home,
+  TableExample,
+  AddItem,
+  InDepthItem
+} from '@pages';
 
 export const routes = [
   {
@@ -16,6 +22,10 @@ export const routes = [
     path: '/addNewItem/',
     menu: 'AddItem',
     component: AddItem
+  },
+  {
+    path: '/item/:id',
+    component: InDepthItem
   },
   {
     path: '/*',
