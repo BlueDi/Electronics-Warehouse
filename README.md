@@ -53,12 +53,6 @@ src                             # parent directory of both api & app source code
 |-- utils                       # utilities used for both client & server
 ```
 
-This project structure is organized by having feature-first approach in mind. 
-
-Thus, for any new features (the page), try to keep it as feature-based folder in `./src/app/pages`. 
-
-Things in common such as common styles or components can be kept in `./src/app/common` directory.
-
 #### More Info
 
 More detailed informations about the project on the [Project's Wiki](https://gitlab.com/ldso18-19/t4g3/wikis/home).
