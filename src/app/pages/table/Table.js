@@ -16,6 +16,8 @@ class ComponentsTable extends Component {
   }
 
   handleSort = clickedColumn => () => {
+    if (clickedColumn === 'image') return;
+
     const { column, components, direction } = this.state;
 
     this.setState(
