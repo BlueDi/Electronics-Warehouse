@@ -125,40 +125,54 @@ class WHTable extends Component {
     return pagination;
   }
 
+  renderUserFunctions() {
+    return (
+      <Grid>
+        <Grid.Column floated="left" width={5}>
+          <AddItemButton />
+        </Grid.Column>
+        <Grid.Column floated="right" width={5}>
+          <SearchBar />
+        </Grid.Column>
+      </Grid>
+    );
+  }
+  renderTable() {
+    return (
+      <Table
+        key={'content'}
+        celled
+        selectable
+        sortable
+        striped
+        style={{ marginTop: '5em' }}
+      >
+        {this.state.table_header}
+        <Table.Body>{this.state.table_rows}</Table.Body>
+      </Table>
+    );
+  }
+  renderPagination() {
+    return (
+      <Menu key={'menu'} compact pagination style={{ float: 'right' }}>
+        <Menu.Item as={Link} to={'/table/' + (this.state.id - 1)} icon>
+          <Icon name="chevron left" />
+        </Menu.Item>
+        {this.mount_pagination()}
+        <Menu.Item as={Link} to={'/table/' + (this.state.id + 1)} icon>
+          <Icon name="chevron right" />
+        </Menu.Item>
+      </Menu>
+    );
+  }
   render() {
     return this.state.isFetching ? (
       <Loader text="Preparing Table" />
     ) : (
       <PageTitle title="Table">
-        <Grid>
-          <Grid.Column floated="left" width={5}>
-            <AddItemButton />
-          </Grid.Column>
-          <Grid.Column floated="right" width={5}>
-            <SearchBar />
-          </Grid.Column>
-        </Grid>
-
-        <Table
-          key={'content'}
-          celled
-          selectable
-          sortable
-          striped
-          style={{ marginTop: '5em' }}
-        >
-          {this.state.table_header}
-          <Table.Body>{this.state.table_rows}</Table.Body>
-        </Table>
-        <Menu key={'menu'} compact pagination style={{ float: 'right' }}>
-          <Menu.Item as={Link} to={'/table/' + (this.state.id - 1)} icon>
-            <Icon name="chevron left" />
-          </Menu.Item>
-          {this.mount_pagination()}
-          <Menu.Item as={Link} to={'/table/' + (this.state.id + 1)} icon>
-            <Icon name="chevron right" />
-          </Menu.Item>
-        </Menu>
+        {this.renderUserFunctions()}
+        {this.renderTable()}
+        {this.renderPagination()}
       </PageTitle>
     );
   }
