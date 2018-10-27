@@ -3,7 +3,19 @@ const db = require('@api/db.js');
 
 const tablesRouter = express.Router();
 
-const items_query = 'SELECT * FROM item;';
+const items_query = `
+  SELECT
+    item.id,
+    item.name,
+    convert_from(item.image, 'UTF-8') as image,
+    item.count,
+    item.location,
+    item.condition,
+    item.details,
+    item.manufacturer,
+    item.reference
+  FROM item
+`;
 
 tablesRouter.get('/hello', (req, res) => {
   res.send('Hello From Express');

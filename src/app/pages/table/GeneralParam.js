@@ -21,15 +21,16 @@ class GeneralParam extends Component {
       <Table.Cell key={param}>
         {value === null ? (
           '-'
+        ) : this.state.parameter.match(/image/gi) ? (
+          <Image
+            src={`data:image/png;base64,${this.state.value}`}
+            size="small"
+          />
         ) : typeof value === 'object' ? (
           <DescriptionParam content={value} />
         ) : (
           <Link to={`/item/${this.state.id}`} style={{ color: 'black' }}>
-            {this.state.parameter.match(/image/gi) ? (
-              <Image src={this.state.value} size="small" />
-            ) : (
-              this.state.value
-            )}
+            {this.state.value}
           </Link>
         )}
       </Table.Cell>
