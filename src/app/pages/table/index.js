@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import _ from 'lodash';
-import { Grid, Icon, Menu, Table } from 'semantic-ui-react';
+import { Grid, Icon, Menu } from 'semantic-ui-react';
 import { service } from '@utils';
 import {
   AddItemButton,
@@ -9,7 +8,7 @@ import {
   PageTitle,
   SearchBar
 } from '@common/components';
-import GeneralParam from './GeneralParam';
+import ComponentsTable from './Table';
 
 const urlForData = id => `/table/${id}`;
 
@@ -34,7 +33,6 @@ class WHTable extends Component {
           pages: 50,
           isFetching: false
         });
-        this.mount_table();
       })
       .catch(e => {
         this.setState({
@@ -42,75 +40,6 @@ class WHTable extends Component {
         });
         throw e;
       });
-  }
-
-  handleSort = clickedColumn => () => {
-    const { column, components, direction } = this.state;
-
-    this.setState(
-      column !== clickedColumn
-        ? {
-            column: clickedColumn,
-            components: _.sortBy(components, [clickedColumn]),
-            direction: 'ascending'
-          }
-        : {
-            components: components.reverse(),
-            direction: direction === 'ascending' ? 'descending' : 'ascending'
-          },
-      () => this.mount_table()
-    );
-  };
-
-  mount_header() {
-    var header_params = [];
-    for (var param in this.state.components[0]) {
-      if (param !== 'id')
-        header_params.push(
-          <Table.HeaderCell
-            key={param}
-            sorted={this.state.column === param ? this.state.direction : null}
-            onClick={this.handleSort(param)}
-          >
-            {param}
-          </Table.HeaderCell>
-        );
-    }
-    return (
-      <Table.Header>
-        <Table.Row>{header_params}</Table.Row>
-      </Table.Header>
-    );
-  }
-
-  mount_rows() {
-    var table_rows = [];
-    for (let comp of this.state.components) {
-      var row_cells = [];
-      for (var param in comp) {
-        if (param !== 'id')
-          row_cells.push(
-            <GeneralParam
-              key={param}
-              id={comp['id']}
-              value={comp[param]}
-              parameter={param}
-            />
-          );
-      }
-      table_rows.push(<Table.Row key={comp.id}>{row_cells}</Table.Row>);
-    }
-    return table_rows;
-  }
-
-  mount_table() {
-    var table_header = this.mount_header();
-    var table_rows = this.mount_rows();
-
-    this.setState({
-      table_header: table_header,
-      table_rows: table_rows
-    });
   }
 
   mount_pagination() {
@@ -137,21 +66,6 @@ class WHTable extends Component {
       </Grid>
     );
   }
-  renderTable() {
-    return (
-      <Table
-        key={'content'}
-        celled
-        selectable
-        sortable
-        striped
-        style={{ marginTop: '5em' }}
-      >
-        {this.state.table_header}
-        <Table.Body>{this.state.table_rows}</Table.Body>
-      </Table>
-    );
-  }
   renderPagination() {
     return (
       <Menu key={'menu'} compact pagination style={{ float: 'right' }}>
@@ -171,7 +85,7 @@ class WHTable extends Component {
     ) : (
       <PageTitle title="Table">
         {this.renderUserFunctions()}
-        {this.renderTable()}
+        <ComponentsTable components={this.state.components} />
         {this.renderPagination()}
       </PageTitle>
     );
