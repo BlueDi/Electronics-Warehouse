@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import _ from 'lodash';
-import { Menu, Table } from 'semantic-ui-react';
+import { Table } from 'semantic-ui-react';
 import GeneralParam from './GeneralParam';
 
 class ComponentsTable extends Component {
@@ -83,18 +82,6 @@ class ComponentsTable extends Component {
       table_header: table_header,
       table_rows: table_rows
     });
-  }
-
-  mount_pagination() {
-    var pagination = [];
-    for (var i = 1; i <= this.state.pages && i <= 8; i++) {
-      pagination.push(
-        <Menu.Item key={i} as={Link} to={'/table/' + i}>
-          {i}
-        </Menu.Item>
-      );
-    }
-    return pagination;
   }
 
   render() {
