@@ -38,7 +38,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "eslint --fix",
+      "npm run lint:js",
       "git add"
     ],
     "*.scss": [
@@ -55,6 +55,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "axios": "^0.18.0",
     "babel-plugin-react-css-modules": "^3.4.2",
     "classnames": "^2.2.6",
@@ -74,6 +75,7 @@
     "http-proxy": "^1.17.0",
     "is-plain-object": "^2.0.4",
     "isdev": "^1.0.1",
+    "lodash": "^4.17.11",
     "make-promises-safe": "^1.1.0",
     "module-alias": "^2.1.0",
     "morgan": "^1.9.1",
@@ -105,7 +107,6 @@
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-transform-strict-mode": "^7.0.0",
-    "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^9.2.1",
@@ -116,7 +117,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.19",
     "babel-plugin-universal-import": "^3.1.2",
     "babel-plugin-webpack-alias": "^2.1.2",
-    "copy-webpack-plugin": "^4.5.3",
+    "copy-webpack-plugin": "^4.5.4",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
     "enzyme": "^3.7.0",
@@ -154,7 +155,7 @@
     "stylelint-scss": "^3.3.1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
-    "webpack": "^4.20.2",
+    "webpack": "^4.21.0",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
