@@ -1,53 +1,22 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import logo from '@assets/images/logo.png'; // example of import assets image
+import { Card, Image } from 'semantic-ui-react';
+import logo from '@assets/images/logo.png';
 import './styles/Home.scss';
-import { service } from '@utils';
 import { PageTitle } from '@common/components';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      response: '',
-      showSidebar: true
-    };
-  }
-
-  componentDidMount() {
-    service
-      .get('/hello')
-      .then(result => {
-        this.setState({
-          response: result.data,
-          isFetching: false
-        });
-      })
-      .catch(e => {
-        console.log(e, 'Failed to fetch service data.');
-      });
-  }
-
   render() {
     return (
       <PageTitle title="Home">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">{this.state.response}</p>
-        <p>
-          To get started, edit
-          <code>src/App.js</code>
-          and save to reload.
-        </p>
-        <p>
-          <Link to="/table/1">Table Example</Link>
-        </p>
-        <p>
-          <Link to="/table/2">Table Example2</Link>
-        </p>
+        <Card centered color="brown">
+          <Image src={logo} />
+          <Card.Content>
+            <Card.Header>Welcome to the Warehouse</Card.Header>
+            <Card.Description>
+              To get started, log in to your UP account.
+            </Card.Description>
+          </Card.Content>
+        </Card>
       </PageTitle>
     );
   }

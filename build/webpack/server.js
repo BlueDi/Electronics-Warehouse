@@ -1,15 +1,14 @@
 const fs = require('fs');
-const isDev = require('isdev');
 const webpack = require('webpack');
-const syspath = require('@config/syspath');
+const SYSPATH = require('@config/syspath');
 const webpackCommon = require('./common');
 
-const commonConfig = webpackCommon('server', isDev);
+const commonConfig = webpackCommon('server');
 
 // custom externals for node
-const externalRegExp = /\.bin|react-universal-component|require-universal-module|webpack-flush-chunks/;
+const externalRegExp = /\.bin|react-universal-component|webpack-flush-chunks/;
 const nodeExternals = fs
-  .readdirSync(`${syspath.root}/node_modules`)
+  .readdirSync(`${SYSPATH['ROOT']}/node_modules`)
   .filter(x => !externalRegExp.test(x))
   .reduce((externals, mod) => {
     externals[mod] = `commonjs ${mod}`;
@@ -24,11 +23,11 @@ module.exports = {
   devtool: commonConfig.devtool,
   resolve: commonConfig.resolve,
   externals: nodeExternals,
-  entry: { m: ['regenerator-runtime/runtime', './app/renderer.js'] },
+  entry: { m: ['regenerator-runtime/runtime', './app/server.js'] },
   output: {
-    path: `${syspath.src}/app`,
+    path: SYSPATH['BUILD'],
     libraryTarget: 'commonjs2',
-    filename: 'renderer-built.js'
+    filename: 'serverRenderer.js'
   },
   node: {
     __filename: false,

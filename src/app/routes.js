@@ -1,9 +1,10 @@
 import Layout, {
   NotFound,
   Home,
-  TableExample,
   AddItem,
-  InDepthItem
+  Course,
+  InDepthItem,
+  TableExample
 } from '@pages';
 
 export const routes = [
@@ -14,9 +15,9 @@ export const routes = [
     component: Home
   },
   {
-    path: '/table/:id',
-    menu: 'Table',
-    component: TableExample
+    path: '/course',
+    menu: 'Course',
+    component: Course
   },
   {
     path: '/addNewItem/',
@@ -26,6 +27,11 @@ export const routes = [
   {
     path: '/item/:id',
     component: InDepthItem
+  },
+  {
+    path: '/table/:id',
+    menu: 'Table',
+    component: TableExample
   },
   {
     path: '/*',

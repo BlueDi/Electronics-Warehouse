@@ -5,8 +5,9 @@
   "main": "app.js",
   "scripts": {
     "config": "node build/scripts/config.js",
-    "clean": "rimraf public resources/config/*.json src/**/*-built.*",
-    "build": "npm-run-all clean config && cross-env NODE_ENV=production webpack --config build/webpack --progress --hide-modules",
+    "clean": "rimraf public config/*.json build/serverRenderer.*",
+    "webpack": "webpack --progress --hide-modules --config build/webpack/config.js",
+    "build": "cross-env NODE_ENV=production npm-run-all clean config webpack",
     "build:analyze": "cross-env ANALYZE_MODE=enabled npm run build",
     "postinstall": "npm run build",
     "dev:app": "cross-env NODE_ENV=development node app.js",
@@ -58,7 +59,7 @@
     "babel-plugin-react-css-modules": "^3.4.2",
     "classnames": "^2.2.6",
     "compression": "^1.7.3",
-    "cookie-parser": "^1.4.3",
+    "connect-pg-simple": "^5.0.0",
     "cors": "^2.8.4",
     "csurf": "^1.9.0",
     "detect-node": "^2.0.4",
@@ -67,19 +68,20 @@
     "ejs": "^2.6.1",
     "esm": "^3.0.84",
     "express": "^4.16.4",
-    "extend": "^3.0.2",
+    "express-session": "^1.15.6",
     "helmet": "^3.14.0",
     "hpp": "^0.2.2",
     "http-proxy": "^1.17.0",
+    "is-plain-object": "^2.0.4",
     "isdev": "^1.0.1",
     "make-promises-safe": "^1.1.0",
     "module-alias": "^2.1.0",
     "morgan": "^1.9.1",
     "nock": "^10.0.1",
     "pg-promise": "^8.5.0",
-    "precommit": "^1.2.2",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
+    "react-cookie": "^3.0.4",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.5.2",
     "react-numeric-input": "^2.2.3",
@@ -93,6 +95,7 @@
     "serialize-javascript": "^1.5.0",
     "serve-favicon": "^2.5.0",
     "slash": "^2.0.0",
+    "universal-cookie-express": "^3.0.4",
     "uuid": "^3.3.2",
     "webpack-flush-chunks": "^2.0.3"
   },
@@ -148,7 +151,6 @@
     "style-loader": "^0.23.1",
     "stylelint": "^9.6.0",
     "stylelint-config-sass-guidelines": "^5.2.0",
-    "stylelint-order": "^1.0.0",
     "stylelint-scss": "^3.3.1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
@@ -160,6 +162,9 @@
     "webpack-hot-server-middleware": "^0.5.0"
   },
   "nodemonConfig": {
+    "ignore": [
+      "sessions/*"
+    ],
     "watch": [
       "src/api/*"
     ],
@@ -174,6 +179,81 @@
     "last 2 versions",
     "not ie <= 10"
   ],
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {
+        "grid": true,
+        "flexbox": "no-2009"
+      }
+    }
+  },
+  "eslintConfig": {
+    "root": true,
+    "parser": "babel-eslint",
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "prettier",
+      "prettier/react"
+    ],
+    "plugins": [
+      "prettier",
+      "jest"
+    ],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "env": {
+      "browser": true,
+      "node": true,
+      "es6": true,
+      "jest": true
+    },
+    "settings": {
+      "react": {
+        "version": "16.5.2"
+      }
+    },
+    "rules": {
+      "global-require": 0,
+      "no-global-assign": 0,
+      "no-console": 0,
+      "react/prop-types": 0,
+      "react/display-name": 0,
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "coverage",
+    "logs",
+    "public/**/*.js",
+    "build/serverRenderer.*"
+  ],
+  "stylelint": {
+    "plugins": [
+      "stylelint-scss"
+    ],
+    "extends": "stylelint-config-sass-guidelines",
+    "rules": {
+      "selector-max-id": 1,
+      "selector-class-pattern": null,
+      "property-no-unknown": [
+        true,
+        {
+          "ignoreProperties": [
+            "composes"
+          ]
+        }
+      ]
+    }
+  },
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
@@ -183,8 +263,11 @@
       "jsx"
     ],
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/resources/mocks/file-mock.js",
-      "\\.(css|scss)$": "<rootDir>/resources/mocks/style-mock.js"
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/resources/mocks/fileMock.js",
+      "\\.(css|scss)$": "<rootDir>/resources/mocks/styleMock.js"
+    },
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
     },
     "testEnvironment": "node",
     "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.jsx?$",
@@ -199,7 +282,7 @@
     "@public": "public",
     "@resources": "resources",
     "@assets": "resources/assets",
-    "@config": "resources/config",
+    "@config": "config",
     "@utils": "src/utils",
     "@api": "src/api",
     "@app": "src/app",
