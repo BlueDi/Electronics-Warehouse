@@ -1,29 +1,37 @@
 import express from 'express';
 import helmet from 'helmet';
 import favicon from 'serve-favicon';
+import cookiesMiddleware from 'universal-cookie-express';
 import compression from 'compression';
-import config, { DEV, SYSPATH } from '@config';
+import { DEV, ENV, SYSPATH } from '@config';
 import { proxy, logger, errorHandler } from '@middlewares/express';
 
 const app = express();
 
 app
-  .set('etag', !DEV)
   .set('view engine', 'ejs')
-  .set('views', [`${SYSPATH['public']}/views`, `${SYSPATH['resources']}/views`])
+  .set('views', [
+    `${SYSPATH['PUBLIC']}/views`,
+    `${SYSPATH['RESOURCES']}/views`
+  ]);
+
+app
   .use(logger.http())
   .use(helmet())
+  .use(cookiesMiddleware())
   .use(compression())
-  .use(express.static(SYSPATH['public']))
-  .use(`/api/${config['API_VERSION']}`, proxy.proxyWeb);
+  .use(express.static(SYSPATH['PUBLIC']))
+  .use(`/api/${ENV['API_VERSION']}`, proxy.proxyWeb);
 
+// use webpack compiler for development
+// otherwise, use built server renderer instead
 if (DEV) {
   require('@build/webpack/compiler')(app);
 } else {
-  const clientStats = require('@public/stats.json');
-  const serverRenderer = require('@app/renderer-built').default;
+  const clientStats = require('@public/stats');
+  const serverRenderer = require('@build/serverRenderer').default;
 
-  app.use(favicon(`${SYSPATH['public']}/icons/favicon.png`));
+  app.use(favicon(`${SYSPATH['PUBLIC']}/icons/favicon.png`));
   app.use(serverRenderer({ clientStats }));
 }
 

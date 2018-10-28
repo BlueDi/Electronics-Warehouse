@@ -5,6 +5,7 @@ import { renderToString } from 'react-dom/server';
 import { flushChunkNames } from 'react-universal-component/server';
 import { renderRoutes } from 'react-router-config';
 import { StaticRouter } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
 import routes from './routes';
 
 // export default server renderer and receiving stats
@@ -15,9 +16,11 @@ export default function serverRenderer({ clientStats }) {
       const context = {};
 
       const appString = renderToString(
-        <StaticRouter location={req.url} context={context}>
-          {renderRoutes(routes)}
-        </StaticRouter>
+        <CookiesProvider cookies={req.universalCookies}>
+          <StaticRouter location={req.url} context={context}>
+            {renderRoutes(routes)}
+          </StaticRouter>
+        </CookiesProvider>
       );
 
       const pageTitle = DocumentTitle.rewind();
