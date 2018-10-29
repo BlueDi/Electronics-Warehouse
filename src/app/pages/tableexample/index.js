@@ -103,7 +103,6 @@ class TableExample extends Component {
           pages: 50,
           isFetching: false
         });
-        console.log(response.data);
         this.mount_table();
       })
       .catch(e => {
@@ -131,7 +130,8 @@ class TableExample extends Component {
 
   mount_rows() {
     var table_rows = [];
-    this.state.components.forEach((comp, cindex) => {
+    var i;
+    this.state.components.forEach(comp => {
       var row_cells = [];
       for (var param in comp) {
         if (param !== 'id')
@@ -143,8 +143,9 @@ class TableExample extends Component {
               parameter={param}
             />
           );
+        else i = comp[param];
       }
-      table_rows.push(<Table.Row key={cindex}>{row_cells}</Table.Row>);
+      table_rows.push(<Table.Row key={i}>{row_cells}</Table.Row>);
     });
     return table_rows;
   }
@@ -172,19 +173,25 @@ class TableExample extends Component {
   }
 
   searchCallback(data) {
-    console.log(data[0].search);
-    service
-      .post(urlForData(this.state.id), data[0])
+    var sendToDB;
+
+    if (data.length != 0)
+      sendToDB = service.post(urlForData(this.state.id), data);
+    else sendToDB = service.get(urlForData(this.state.id));
+
+    sendToDB
       .then(response => {
-        /*this.setState({
+        this.setState({
           components: response.data,
           pages: 50,
           isFetching: false
         });
-        this.mount_table();*/
-        console.log(response.data);
+        this.mount_table();
       })
       .catch(e => {
+        this.setState({
+          isFetching: false
+        });
         throw e;
       });
   }
@@ -203,6 +210,7 @@ class TableExample extends Component {
           <ComboSearch
             onSearch={this.searchCallback}
             selectData={this.state.selectData}
+            datePickerCriteria="Date of birth"
           />
           <div style={{ float: 'left' }}>
             <Link to="/addNewItem">

@@ -9,23 +9,67 @@ basicSearchRouter.get('/hello', (req, res) => {
 
 basicSearchRouter.post('/table/:id', async (req, res) => {
   var body = req.body;
-  console.log(body.search);
 
-  var query = `SELECT * FROM item WHERE name LIKE %'${body.search}'%;`;
+  var allData = [],
+    query;
 
-  console.log(query);
-  const data = await db.any(query, [true]);
-  for (var i = 0; i < data.length; i++) {
-    data[i]['details'] = {
-      details: data[i]['details'],
-      manufacturer: data[i]['manufacturer'],
-      condition: data[i]['condition']
-    };
-    delete data[i]['manufacturer'];
-    delete data[i]['condition'];
+  for (var index = 0; i < body.length; index++) {
+    if (body[index].criteria === 'Name') {
+      query = `SELECT * FROM item WHERE name ILIKE '%${body[i].search}%';`;
+      const data = await db.any(query, [true]);
+      if (data.length === 0) allData = [];
+      allData = allData.concat(data);
+    }
+
+    if (body[index].criteria === 'Manufacturer') {
+      query = `SELECT * FROM item WHERE manufacturer ILIKE '%${
+        body[i].search
+      }%';`;
+      const data2 = await db.any(query, [true]);
+      if (data2.length === 0) allData = [];
+      allData = allData.concat(data2);
+    }
+
+    if (body[index].criteria === 'Reference Number') {
+      query = `SELECT * FROM item WHERE reference ILIKE '%${body[i].search}%';`;
+      const data3 = await db.any(query, [true]);
+      if (data3.length === 0) allData = [];
+      allData = allData.concat(data3);
+    }
   }
-  console.log(data);
-  res.send(data);
+
+  var stored;
+  const set = new Set();
+
+  if (body.length > 1 && allData.length != 0) {
+    for (var i = 0; i < allData.length; i++) {
+      var object = allData[i];
+      stored = object[Object.keys(object)[0]];
+      for (var j = i + 1; j < allData.length; j++) {
+        var current = allData[j][Object.keys(allData[j])[0]];
+        if (stored === current && !set.has(allData[i])) {
+          set.add(allData[i]);
+          console.log(!set.has(allData[i]));
+          break;
+        }
+      }
+    }
+    let finalResults = Array.from(set);
+    allData = finalResults;
+  }
+
+  for (var k = 0; i < allData.length; k++) {
+    if (allData[k])
+      allData[k]['details'] = {
+        details: allData[k]['details'],
+        manufacturer: allData[k]['manufacturer'],
+        condition: allData[k]['condition']
+      };
+    delete allData[k]['manufacturer'];
+    delete allData[k]['condition'];
+  }
+
+  res.send(allData);
 });
 
 export default basicSearchRouter;
