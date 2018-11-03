@@ -3,6 +3,19 @@ const db = require('@api/db.js');
 
 const itemRouter = express.Router();
 
+itemRouter.post('/add_new_item', async (req, res) => {
+  var body = req.body;
+  var query =
+    'INSERT INTO item (name, imageurl, count, condition, details, manufacturer, reference, category_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
+
+  try {
+    const data = await db.one(query, body);
+    res.send(data);
+  } catch (e) {
+    res.send('Failed to retrieve items!');
+  }
+});
+
 itemRouter.get('/item_description/:id', async (req, res) => {
   const item_description_query = `SELECT item.name, convert_from(item.image, 'UTF-8') as image, item.count, item.location, item.condition, item.details, item.manufacturer, item.reference
     FROM item
@@ -34,9 +47,7 @@ itemRouter.get('/item_properties/:id', async (req, res) => {
 });
 
 itemRouter.get('/item_category/:id', async (req, res) => {
-  //TODO: averiguar catergorias encadeadas
-
-  const in_depth_item_catg_query = `SELECT category.name
+  const in_depth_item_catg_query = `SELECT category.id, category.name
     FROM category, item
     WHERE category.id = item.category_id and item.id = ${req.params.id}`;
 
@@ -51,7 +62,7 @@ itemRouter.get('/item_category/:id', async (req, res) => {
 
 itemRouter.post('/item_edit', async (req, res) => {
   let newItem = req.body;
-
+  console.log('itemedit', newItem);
   let item_update_query = `UPDATE item
     SET name = '${newItem.name}',
         image = '${newItem.image}',
@@ -60,27 +71,23 @@ itemRouter.post('/item_edit', async (req, res) => {
         condition = '${newItem.condition}',
         details = '${newItem.details}',
         manufacturer = '${newItem.manufacturer}',
-        reference = '${newItem.reference}'
+        reference = '${newItem.reference}',
+        category_id = ${newItem.category.itemCategory.id}
     WHERE id = ${newItem.id}; \n`;
 
   for (let i = 0; i < newItem.properties.length; i++) {
     let property = newItem.properties[i];
 
-    if (!property.edited) {
-      continue;
-    }
-
-    let property_update_query = `UPDATE item_property
-      SET value = '${property.value}'
-      WHERE property_id = ${property.property_id} and item_id = ${
-      newItem.id
-    }; \n`;
+    let property_update_query = `INSERT INTO item_property (value, item_id, property_id)
+      VALUES ('${property.value}', ${newItem.id}, ${property.property_id}); \n`;
 
     item_update_query = item_update_query.concat(property_update_query);
+    console.log('query', property_update_query);
   }
 
   try {
-    db.none(item_update_query);
+    await db.none(item_update_query);
+    res.send('Item update successful');
   } catch (e) {
     console.log('Error editing item!', e);
     res.send('Failed to edit item!');
