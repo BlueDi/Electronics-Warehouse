@@ -82,37 +82,12 @@ class AddItem extends Component {
   }
 
   editItem() {
-    //get item's category
-    /*const apiUrl = `/addNewItem`;
-        fetch(apiUrl, {
-          method: 'POST',
-          body: JSON.stringify(this.state),
-          headers: { "Content-Type": "application/json" }
-        })
-          .then(
-            response => {
-              if (!response.ok) {
-                throw Error("Network request failed");
-              }
-              return response;
-            })
-          .then(response => response.json())
-          .then(
-            response => {
-            },
-            e => {
-              throw e;
-            }
-          );*/
     service
-      .post('/addNewItem', this.state)
+      .post('/add_new_item', this.state)
       .then(response => {
         console.log(response);
       })
       .catch(e => {
-        this.setState({
-          isFetching: false
-        });
         throw e;
       });
   }

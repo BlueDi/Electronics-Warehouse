@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { PageTitle, ReadjustableImage } from '@common/components';
+import { PageTitle } from '@common/components';
 import { service } from '@utils';
-
-const IMAGE_WIDTH = 400;
-const IMAGE_HEIGHT = 300;
+import { InDepthItemField } from './InDepthItemField';
+import { InDepthItemButtons } from './InDepthItemButtons';
+import '@common/styles/global.css';
+import './styles/InDepthItem.scss';
 
 class InDepthItem extends Component {
   constructor(props) {
@@ -12,29 +13,39 @@ class InDepthItem extends Component {
     this.state = {
       id: this.props.match.params.id,
       name: 'NAME',
-      image: 'BASE64_IMAGE',
+      image: '',
       count: 'STOCK',
       location: 'Block B',
       condition: 'COND',
       details: 'DET',
       manufacturer: 'SUPP',
       reference: 'REF',
-      category: 'CAT',
+      category: {
+        itemCategory: { id: 'ITEM_ID', name: 'ITEM_CAT' },
+        categoryList: ['CAT1', 'CAT2', 'CAT3']
+      },
       properties: [],
       edit: false
     };
 
+    //button handlers
     this.handleRequest = this.handleRequest.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleAcceptEdition = this.handleAcceptEdition.bind(this);
+    this.handleCancelEdition = this.handleCancelEdition.bind(this);
+
+    //form field handlers
     this.handleItemFieldChange = this.handleItemFieldChange.bind(this);
     this.handlePropertyChange = this.handlePropertyChange.bind(this);
     this.handleNewImageFile = this.handleNewImageFile.bind(this);
+    this.handleCategoryChange = this.handleCategoryChange.bind(this);
   }
 
   componentDidMount() {
     this.getItemDescription();
     this.getItemProperties();
     this.getItemCategory();
+    this.getAllCategories();
   }
 
   getItemDescription() {
@@ -76,7 +87,6 @@ class InDepthItem extends Component {
       });
   }
 
-  //TODO: averiguar catergorias encadeadas
   getItemCategory() {
     const apiUrl = `/item_category/${this.state.id}`;
 
@@ -84,8 +94,38 @@ class InDepthItem extends Component {
       .get(apiUrl)
       .then(response => {
         let result = response.data[0];
+        let itemCategory = { id: result.id, name: result.name };
+
+        let newCategory = this.state.category;
+        newCategory.itemCategory = itemCategory;
+
         this.setState({
-          category: result.name
+          category: newCategory
+        });
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
+  getAllCategories() {
+    const apiUrl = `/all_categories`;
+    service
+      .get(apiUrl)
+      .then(response => {
+        let category_list = response.data.map(category => {
+          return {
+            key: category.id,
+            value: category.name,
+            text: category.name
+          };
+        });
+
+        let newCategory = this.state.category;
+        newCategory.categoryList = category_list;
+
+        this.setState({
+          category: newCategory
         });
       })
       .catch(e => {
@@ -95,28 +135,41 @@ class InDepthItem extends Component {
 
   editItem() {
     const apiUrl = `/item_edit`;
-
-    service.post(apiUrl, this.state).catch(e => {
-      throw e;
-    });
+    service
+      .post(apiUrl, this.state)
+      .then(response => {
+        console.log('edit item response', response.data);
+      })
+      .then(response => {
+        this.componentDidMount();
+        return response;
+      })
+      .catch(e => {
+        throw e;
+      });
   }
 
-  handleRequest(event) {
-    console.log(event);
+  handleRequest() {
     //TODO: call API to create item request in database
   }
 
   handleEdit() {
-    if (this.state.edit) {
-      this.editItem();
-      this.componentDidMount();
-    }
-
-    this.setState({ edit: !this.state.edit });
+    this.setState({ edit: true });
   }
 
   handleItemFieldChange(event) {
+    console.log('itemFieldChange', event.target.name);
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleAcceptEdition() {
+    this.editItem();
+    this.setState({ edit: false });
+  }
+
+  handleCancelEdition() {
+    this.setState({ edit: false });
+    this.componentDidMount();
   }
 
   handlePropertyChange(event) {
@@ -131,6 +184,80 @@ class InDepthItem extends Component {
         });
       }
     }
+  }
+
+  handleCategoryChange(event) {
+    let categoryId;
+    let categoryName = event.target.textContent;
+    let categoryList = this.state.category.categoryList;
+
+    for (let i = 0; i < categoryList.length; i++) {
+      let currCategory = categoryList[i];
+      if (currCategory.value == categoryName) {
+        categoryId = currCategory.key;
+        break;
+      }
+    }
+
+    let apiUrl = `/item_category_properties`;
+    let categories = { itemId: this.state.id, newCategoryId: categoryId };
+    service
+      .post(apiUrl, categories)
+      .then(response => {
+        let newProperties = response.data;
+        console.log('newProperties', this.state);
+
+        let property_list = newProperties.map(property => {
+          let value = '';
+          let edited = false;
+          for (let j = 0; j < this.state.properties.length; j++) {
+            if (property.id === this.state.properties[j].property_id) {
+              value = this.state.properties[j].value;
+              edited = this.state.properties[j].edited;
+              break;
+            }
+          }
+
+          return {
+            property_id: property.id,
+            value: value,
+            unit: property.unit,
+            name: property.name,
+            edited: edited
+          };
+        });
+
+        /*for(let i = 0; i < newProperties.length; i++)
+        {
+          let flag = false;
+          for(let j = 0; j < this.state.properties.length; j++)
+          {
+            if(newProperties[i].property_id === this.state.properties[j].property_id)
+            {
+              newProperties[i].value = this.state.properties[j].value;
+              newProperties[i].edited = this.state.properties[j].edited;
+              flag = true;
+              break;
+            }
+          }
+          if(!flag) {
+            newProperties[i].value = '';
+            newProperties[i].edited = false;
+          }
+        }*/
+
+        let newCategory = this.state.category;
+        newCategory.itemCategory = { id: categoryId, name: categoryName };
+        this.setState({
+          category: newCategory,
+          properties: property_list
+        });
+
+        //console.log('category change new properties response', this.state);
+      })
+      .catch(e => {
+        throw e;
+      });
   }
 
   handleNewImageFile(event) {
@@ -153,55 +280,57 @@ class InDepthItem extends Component {
 
   renderItemFields() {
     let stateContents = Object.values(this.state);
-    stateContents = stateContents.slice(3, stateContents.length - 1); // id, name and image and edit (last index) are NOT to be accessed
+    stateContents = stateContents.slice(3, stateContents.length - 1); // id, name, image, edit and category_list are NOT to be accessed
 
     let stateFields = Object.keys(this.state);
-    stateFields = stateFields.slice(3, stateFields.length - 1); // id, name and image and edit (last index) are NOT to be accessed
+    stateFields = stateFields.slice(3, stateFields.length - 1); // id, name, image, edit and category_list are NOT to be accessed
 
-    let JSXArray = [];
+    let itemCharacteristics = [];
 
     for (let i = 0; i < stateContents.length; i++) {
       let fieldName = stateFields[i];
       let fieldContent = stateContents[i];
+      let changeHandler = this.handleItemFieldChange;
 
       if (fieldName === 'properties') {
-        JSXArray.push(
-          <InDepthItemField
-            key={fieldName}
-            fieldName={fieldName}
-            fieldContent={fieldContent}
-            editable={this.state.edit}
-            handleChange={this.handlePropertyChange}
-          />
-        );
-      } else {
-        JSXArray.push(
-          <InDepthItemField
-            key={fieldName}
-            fieldName={fieldName}
-            fieldContent={fieldContent}
-            editable={this.state.edit}
-            handleChange={this.handleItemFieldChange}
-          />
-        );
+        changeHandler = this.handlePropertyChange;
       }
+      if (fieldName === 'category' && this.state.edit) {
+        fieldContent = this.state.category;
+        changeHandler = this.handleCategoryChange;
+      } else if (fieldName === 'category' && !this.state.edit) {
+        fieldContent = this.state.category.itemCategory.name;
+      }
+
+      itemCharacteristics.push(
+        <div>
+          <InDepthItemField
+            key={fieldName}
+            fieldName={fieldName}
+            fieldContent={fieldContent}
+            editable={this.state.edit}
+            handleChange={changeHandler}
+          />
+        </div>
+      );
     }
 
     return (
       <div>
         <InDepthItemField
+          style={{ textAlign: 'left', float: 'left' }}
           fieldName="name"
           fieldContent={this.state.name}
           editable={this.state.edit}
           handleChange={this.handleItemFieldChange}
         />
 
-        <div
-          className="Item"
-          style={{ textAlign: 'center', marginLeft: '35%' }}
-        >
+        <div className="Item" style={{ textAlign: 'left' }}>
           <column style={{ columnWidth: '50%' }}>
-            <div className="ComponentImage" style={{ float: 'left' }}>
+            <div
+              className="ComponentImage"
+              style={{ float: 'left', marginLeft: '5%' }}
+            >
               <InDepthItemField
                 fieldName="image"
                 fieldContent={this.state.image}
@@ -210,41 +339,22 @@ class InDepthItem extends Component {
               />
             </div>
           </column>
+
           <column style={{ columnWidth: '50%' }}>
             <div
               className="Information"
-              style={{ float: 'left', textAlign: 'left' }}
+              style={{ float: 'left', textAlign: 'left', marginLeft: '5%' }}
             >
-              {JSXArray}
+              {itemCharacteristics}
 
               <div className="Buttons" style={{ columnCount: '2' }}>
-                <div className="RequestButton" style={{ textAlign: 'right' }}>
-                  <button
-                    onClick={this.handleRequest}
-                    style={{
-                      backgroundColor: '#89DF89',
-                      padding: '10px 15px',
-                      borderRadius: '10px',
-                      border: '0px'
-                    }}
-                  >
-                    Request
-                  </button>
-                </div>
-
-                <div className="EditButton" style={{ textAlign: 'left' }}>
-                  <button
-                    onClick={this.handleEdit}
-                    style={{
-                      backgroundColor: '#D2E0E8',
-                      padding: '10px 15px',
-                      borderRadius: '10px',
-                      border: '0px'
-                    }}
-                  >
-                    Edit
-                  </button>
-                </div>
+                <InDepthItemButtons
+                  editing={this.state.edit}
+                  handleRequest={this.handleRequest}
+                  handleEdit={this.handleEdit}
+                  handleAccept={this.handleAcceptEdition}
+                  handleCancel={this.handleCancelEdition}
+                />
               </div>
             </div>
           </column>
@@ -259,142 +369,6 @@ class InDepthItem extends Component {
         {this.renderItemFields()}
       </PageTitle>
     ];
-  }
-}
-
-class InDepthItemField extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  getRender() {
-    if (this.props.editable) {
-      return this.props.fieldName === 'properties'
-        ? this.editablePropertiesField()
-        : this.editableGeneralField();
-    } else {
-      return this.props.fieldName === 'properties'
-        ? this.nonEditablePropertiesField()
-        : this.nonEditableGeneralField();
-    }
-  }
-
-  nonEditablePropertiesField() {
-    let property_list = this.props.fieldContent.map(property => {
-      return (
-        <li key={property.property_id}>
-          {property.name} : {property.value} {property.unit}
-        </li>
-      );
-    });
-    return (
-      <div>
-        <span>Specifications</span>
-        <ul>{property_list}</ul>
-      </div>
-    );
-  }
-
-  // A general non-editable field is any field that is NOT a property
-  nonEditableGeneralField() {
-    switch (this.props.fieldName) {
-      case 'image': {
-        let image_src = `data:image/png;base64,${this.props.fieldContent}`;
-        return (
-          <ReadjustableImage
-            src={image_src}
-            maxWidth={IMAGE_WIDTH}
-            maxHeight={IMAGE_HEIGHT}
-          />
-        );
-      }
-
-      case 'name': {
-        return (
-          <h1 className="Title" style={{ textAlign: 'center' }}>
-            {this.props.fieldContent}
-          </h1>
-        );
-      }
-
-      default:
-        return `${this.props.fieldName}: ${this.props.fieldContent}`;
-    }
-  }
-
-  editablePropertiesField() {
-    let property_list = this.props.fieldContent.map(property => {
-      return (
-        <li key={property.property_id}>
-          {property.name} :{' '}
-          <input
-            type="text"
-            name={property.name}
-            value={property.value}
-            onChange={this.props.handleChange}
-          />{' '}
-          {property.unit}
-        </li>
-      );
-    });
-
-    return (
-      <div>
-        <span>Specifications</span>
-        <ul>{property_list}</ul>
-      </div>
-    );
-  }
-
-  // A general editable field is any field that is NOT a property
-  editableGeneralField() {
-    switch (this.props.fieldName) {
-      case 'name': {
-        return (
-          <h1 className="Title" style={{ textAlign: 'center' }}>
-            {this.props.fieldName}:{' '}
-            <input
-              type="text"
-              name={this.props.fieldName}
-              value={this.props.fieldContent}
-              onChange={this.props.handleChange}
-            />
-          </h1>
-        );
-      }
-
-      case 'image': {
-        let image_src = `data:image/png;base64,${this.props.fieldContent}`;
-        return (
-          <div>
-            <ReadjustableImage
-              src={image_src}
-              maxWidth={IMAGE_WIDTH}
-              maxHeight={IMAGE_HEIGHT}
-            />
-            <input type="file" value="" onChange={this.props.handleChange} />
-          </div>
-        );
-      }
-
-      default: {
-        return (
-          <span>
-            {this.props.fieldName}:{' '}
-            <input
-              type="text"
-              name={this.props.fieldName}
-              value={this.props.fieldContent}
-              onChange={this.props.handleChange}
-            />
-          </span>
-        );
-      }
-    }
-  }
-
-  render() {
-    return this.getRender();
   }
 }
 
