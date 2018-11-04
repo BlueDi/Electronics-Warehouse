@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { hot } from 'react-hot-loader';
 import { renderRoutes } from 'react-router-config';
+import { withCookies } from 'react-cookie';
 import { routes } from '@app/routes';
 import { WHHeader, WHMenu } from '@pages';
 import '@common/styles/global.css';
@@ -25,4 +26,4 @@ class Layout extends Component {
   }
 }
 
-export default hot(module)(Layout);
+export default hot(module)(withCookies(Layout));

@@ -36,14 +36,11 @@ class AddItem extends Component {
     console.log(this.state);
 
     service
-      .post('/addNewItem', this.state)
+      .post('/add_new_item', this.state)
       .then(response => {
         console.log(response);
       })
       .catch(e => {
-        this.setState({
-          isFetching: false
-        });
         throw e;
       });
   }

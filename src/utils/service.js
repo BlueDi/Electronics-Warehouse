@@ -1,42 +1,56 @@
 import axios from 'axios';
-import extend from 'extend';
-import config, { NODE } from '@config';
+import isPlainObject from 'is-plain-object';
+import { ENV, NODE } from '@config';
+
+let req = null;
 
 export default class Service {
+  constructor(axiosConfig) {
+    if (!isPlainObject(axiosConfig)) {
+      throw new TypeError(
+        'Invalid data type of axios config. It must be a plain object.'
+      );
+    }
+
+    this.axiosConfig = axiosConfig;
+
+    this.defaultConfig = {
+      baseURL: this.getBaseURL(),
+      timeout: ENV['REQUEST_TIMEOUT']
+    };
+
+    this.axios = axios.create(
+      Object.assign({}, this.defaultConfig, this.axiosConfig)
+    );
+  }
+
   static create(axiosConfig = {}) {
     return new Service(axiosConfig);
   }
 
-  constructor(axiosConfig) {
-    if (typeof axiosConfig !== 'object') {
-      throw new TypeError(
-        'Invalid axios config. Expecting object data type to be provided.'
-      );
-    }
+  static get req() {
+    return req;
+  }
 
-    this.axios = axios.create(
-      extend(
-        {
-          baseURL: this.getBaseURL(),
-          timeout: config['REQUEST_TIMEOUT']
-        },
-        axiosConfig
-      )
-    );
+  static set req(value) {
+    req = value;
   }
 
   getBaseURL() {
-    const api = `/api/${config['API_VERSION']}`;
+    const api = `/api/${ENV['API_VERSION']}`;
 
     // use it if request base URL is explicitly defined (eg: domain name)
-    if (config['REQUEST_BASEURL'].trim()) {
-      return `${config['REQUEST_BASEURL']}${api}`;
+    if (ENV['REQUEST_BASEURL'].trim()) {
+      return `${ENV['REQUEST_BASEURL']}${api}`;
     }
 
-    // else, construct base URL based on platform
-    return NODE
-      ? `${config['PROTOCOL']}://${config['HOST']}:${config['PORT']}${api}`
-      : api;
+    // else, construct base URL when is on server side
+    if (NODE) {
+      return `${ENV['PROTOCOL']}://${ENV['HOST']}:${ENV['PORT']}${api}`;
+    }
+
+    // or return as it is
+    return api;
   }
 
   interceptRequest(resolve, reject) {
@@ -70,7 +84,12 @@ export const service = Service.create();
 
 service.interceptRequest(
   config => {
-    // we may do something here before request is sent
+    // set the cookie header for server
+    if (NODE && Service.req && Service.req.header) {
+      config.headers.Cookie = Service.req.header('cookie') || '';
+      Service.req = null;
+    }
+
     return config;
   },
   err => Promise.reject(err)

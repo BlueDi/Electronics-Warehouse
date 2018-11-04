@@ -1,5 +1,15 @@
 import tablesRouter from './tables';
-import addNewItemRouter from './addNewItem';
+import itemRouter from './item';
+import categoryRouter from './category';
+import propertyRouter from './property';
+import loginRouter from './login';
 import basicSearchRouter from './basicSearch';
 
-export default [tablesRouter, addNewItemRouter, basicSearchRouter];
+export default [
+  tablesRouter,
+  itemRouter,
+  categoryRouter,
+  propertyRouter,
+  loginRouter,
+  basicSearchRouter
+];

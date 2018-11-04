@@ -13,9 +13,9 @@ basicSearchRouter.post('/table/:id', async (req, res) => {
   var allData = [],
     query;
 
-  for (var index = 0; i < body.length; index++) {
+  for (var index = 0; index < body.length; index++) {
     if (body[index].criteria === 'Name') {
-      query = `SELECT * FROM item WHERE name ILIKE '%${body[i].search}%';`;
+      query = `SELECT * FROM item WHERE name ILIKE '%${body[index].search}%';`;
       const data = await db.any(query, [true]);
       if (data.length === 0) allData = [];
       allData = allData.concat(data);
@@ -23,7 +23,7 @@ basicSearchRouter.post('/table/:id', async (req, res) => {
 
     if (body[index].criteria === 'Manufacturer') {
       query = `SELECT * FROM item WHERE manufacturer ILIKE '%${
-        body[i].search
+        body[index].search
       }%';`;
       const data2 = await db.any(query, [true]);
       if (data2.length === 0) allData = [];
@@ -31,7 +31,9 @@ basicSearchRouter.post('/table/:id', async (req, res) => {
     }
 
     if (body[index].criteria === 'Reference Number') {
-      query = `SELECT * FROM item WHERE reference ILIKE '%${body[i].search}%';`;
+      query = `SELECT * FROM item WHERE reference ILIKE '%${
+        body[index].search
+      }%';`;
       const data3 = await db.any(query, [true]);
       if (data3.length === 0) allData = [];
       allData = allData.concat(data3);
