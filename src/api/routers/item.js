@@ -5,11 +5,13 @@ const itemRouter = express.Router();
 
 itemRouter.post('/add_new_item', async (req, res) => {
   var body = req.body;
-  var query =
-    'INSERT INTO item (name, imageurl, count, condition, details, manufacturer, reference, category_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
+  var query = `INSERT INTO item (name, image, count, condition, details, manufacturer, reference, category_id)
+    VALUES ('${body.name}', '${body.image}', ${body.count}, '${body.condition}',
+     '${body.details}', '${body.manufacturer}', '${body.reference}',
+      ${body.category_id});`;
 
   try {
-    const data = await db.one(query, body);
+    const data = await db.one(query, [true]);
     res.send(data);
   } catch (e) {
     res.send('Failed to retrieve items!');

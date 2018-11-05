@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Button, Image, Form } from 'semantic-ui-react';
 import { PageTitle } from '@common/components';
 import { service } from '@utils';
+import { Link } from 'react-router-dom';
 
 class AddItem extends Component {
   constructor(props) {
@@ -9,7 +10,7 @@ class AddItem extends Component {
 
     this.state = {
       name: '',
-      imageurl: '0',
+      image: '0',
       count: 1,
       condition: 'bad',
       details: '',
@@ -19,6 +20,7 @@ class AddItem extends Component {
     };
 
     this.addItem = this.addItem.bind(this);
+    this.createNotification = this.createNotification.bind(this);
   }
 
   Image = () => (
@@ -73,7 +75,7 @@ class AddItem extends Component {
         <Grid style={{ paddingTop: '2em' }}>
           <div style={{ paddingLeft: '2em' }}>{this.Image()}</div>
           <div style={{ width: '70%' }}>
-            <Form success onSubmit={this.addItem}>
+            <Form>
               <Form.Input
                 required
                 placeholder="Item's Name"
@@ -158,11 +160,13 @@ class AddItem extends Component {
 
               <div style={{ paddingTop: '2em', float: 'right' }}>
                 <Button.Group>
-                  <Button type="submit" positive>
+                  <Button type="submit" positive onClick={this.addItem}>
                     Save
                   </Button>
                   <Button.Or />
-                  <Button>Cancel</Button>
+                  <Link to={'../table/1'}>
+                    <Button>Cancel</Button>
+                  </Link>
                 </Button.Group>
               </div>
             </Form>
