@@ -236,7 +236,7 @@
     "coverage",
     "logs",
     "public/**/*.js",
-    "build/serverRenderer.*"
+    "app/build/serverRenderer.*"
   ],
   "stylelint": {
     "plugins": [
