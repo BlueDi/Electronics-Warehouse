@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ReadjustableImage } from '@common/components';
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Input } from 'semantic-ui-react';
 
 const IMAGE_WIDTH = 400;
 const IMAGE_HEIGHT = 300;
@@ -70,7 +70,7 @@ export class InDepthItemField extends Component {
       return (
         <li key={property.property_id}>
           {property.name} :{' '}
-          <input
+          <Input
             type="text"
             name={property.name}
             value={property.value}
@@ -96,7 +96,7 @@ export class InDepthItemField extends Component {
         return (
           <h1 className="Title" style={{ textAlign: 'left', marginLeft: '5%' }}>
             {this.props.fieldName}:{' '}
-            <input
+            <Input
               type="text"
               name={this.props.fieldName}
               value={this.props.fieldContent}
@@ -115,7 +115,7 @@ export class InDepthItemField extends Component {
               maxWidth={IMAGE_WIDTH}
               maxHeight={IMAGE_HEIGHT}
             />
-            <input
+            <Input
               type="file"
               value=""
               onChange={this.props.handleChange}
@@ -148,7 +148,7 @@ export class InDepthItemField extends Component {
         return (
           <span>
             {this.props.fieldName}:{' '}
-            <input
+            <Input
               type="text"
               name={this.props.fieldName}
               value={this.props.fieldContent}

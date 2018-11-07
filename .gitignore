@@ -8,3 +8,4 @@ public
 build/serverRenderer.*
 *-properties.*
 sessions
+src/api/db.js
