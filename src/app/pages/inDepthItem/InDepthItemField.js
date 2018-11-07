@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ReadjustableImage } from '@common/components';
-import { Dropdown, Input } from 'semantic-ui-react';
+import { Dropdown, Input, Button } from 'semantic-ui-react';
 
 const IMAGE_WIDTH = 400;
 const IMAGE_HEIGHT = 300;
@@ -115,11 +115,17 @@ export class InDepthItemField extends Component {
               maxWidth={IMAGE_WIDTH}
               maxHeight={IMAGE_HEIGHT}
             />
+            <Button style={{ display: 'block', margin: '0 auto' }}>
+              <label htmlFor="files" className="Button">
+                Upload Image
+              </label>
+            </Button>
             <Input
+              id="files"
               type="file"
               value=""
               onChange={this.props.handleChange}
-              style={{ display: 'block', marginTop: '1%', marginBottom: '1%' }}
+              style={{ visibility: 'hidden' }}
             />
           </div>
         );
