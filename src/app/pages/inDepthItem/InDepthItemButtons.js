@@ -1,11 +1,12 @@
 import React from 'react';
+import { Button } from 'semantic-ui-react';
 import '@common/styles/global.css';
 import './styles/InDepthItem.scss';
 
 export function InDepthItemButtons(props) {
   const requestButton = (
     <div className="RequestButton" style={{ textAlign: 'right' }}>
-      <button
+      <Button
         onClick={props.handleRequest}
         style={{
           backgroundColor: '#89DF89',
@@ -15,13 +16,13 @@ export function InDepthItemButtons(props) {
         }}
       >
         Request
-      </button>
+      </Button>
     </div>
   );
 
   let editButton = (
     <div className="EditButton" style={{ textAlign: 'left' }}>
-      <button
+      <Button
         onClick={props.handleEdit}
         style={{
           backgroundColor: '#7bbfe8',
@@ -31,13 +32,13 @@ export function InDepthItemButtons(props) {
         }}
       >
         Edit
-      </button>
+      </Button>
     </div>
   );
 
   let cancelButton = (
     <div className="CancelButton" style={{ textAlign: 'left' }}>
-      <button
+      <Button
         onClick={props.handleCancel}
         style={{
           backgroundColor: '#D2E0E8',
@@ -47,13 +48,13 @@ export function InDepthItemButtons(props) {
         }}
       >
         Cancel
-      </button>
+      </Button>
     </div>
   );
 
   let acceptButton = (
     <div className="AcceptButton" style={{ textAlign: 'left' }}>
-      <button
+      <Button
         onClick={props.handleAccept}
         style={{
           backgroundColor: '#52e852',
@@ -63,7 +64,7 @@ export function InDepthItemButtons(props) {
         }}
       >
         Accept
-      </button>
+      </Button>
     </div>
   );
 
