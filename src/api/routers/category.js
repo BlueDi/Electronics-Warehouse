@@ -40,4 +40,15 @@ categoryRouter.post('/item_category_properties', async (req, res) => {
   console.log(promise);
 });
 
+categoryRouter.get('/category_tree/:id', async (req, res) => {
+  try {
+    const data = await db.func('get_category_tree', req.params.id);
+    console.log('category family', data);
+    res.send(data);
+  } catch (e) {
+    console.log('Error retrieving category tree!', e);
+    res.send('Failed to retrieve category tree!');
+  }
+});
+
 export default categoryRouter;

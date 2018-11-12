@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ReadjustableImage } from '@common/components';
-import { Dropdown, Input, Button } from 'semantic-ui-react';
+import { Dropdown, Breadcrumb, Input, Button } from 'semantic-ui-react';
 
 const IMAGE_WIDTH = 400;
 const IMAGE_HEIGHT = 300;
@@ -52,11 +52,29 @@ export class InDepthItemField extends Component {
         );
       }
 
-      case 'name': {
+      case 'description': {
         return (
           <h1 className="Title" style={{ textAlign: 'left', marginLeft: '5%' }}>
             {this.props.fieldContent}
           </h1>
+        );
+      }
+
+      case 'category': {
+        let category_tree = this.props.fieldContent.map((category, index) => {
+          let active = index === this.props.fieldContent.length - 1;
+          return {
+            key: category.id,
+            content: category.name,
+            link: false,
+            active: active
+          };
+        });
+        return (
+          <div>
+            {this.props.fieldName}:{' '}
+            <Breadcrumb icon="right angle" sections={category_tree} />
+          </div>
         );
       }
 
@@ -92,7 +110,7 @@ export class InDepthItemField extends Component {
   // A general editable field is any field that is NOT a property
   editableGeneralField() {
     switch (this.props.fieldName) {
-      case 'name': {
+      case 'description': {
         return (
           <h1 className="Title" style={{ textAlign: 'left', marginLeft: '5%' }}>
             {this.props.fieldName}:{' '}
@@ -131,9 +149,30 @@ export class InDepthItemField extends Component {
         );
       }
 
+      case 'breadcrumb': {
+        let breadcrumb_tree = this.props.fieldContent.map((category, index) => {
+          let link = index !== this.props.fieldContent.length - 1;
+          let active = index === this.props.fieldContent.length - 1;
+          let onClick =
+            index === this.props.fieldContent.length - 1
+              ? null
+              : this.props.handleChange;
+          return {
+            key: category.id,
+            content: category.name,
+            link: link,
+            active: active,
+            onClick: onClick
+          };
+        });
+
+        return <Breadcrumb icon="right angle" sections={breadcrumb_tree} />;
+      }
+
       case 'category': {
         let availableCategories = this.props.fieldContent.categoryList;
         let itemCategory = this.props.fieldContent.itemCategory.name;
+
         return (
           <span>
             {this.props.fieldName}:{' '}
@@ -142,7 +181,7 @@ export class InDepthItemField extends Component {
               fluid
               search
               selection
-              defaultValue={itemCategory}
+              value={itemCategory}
               options={availableCategories}
               onChange={this.props.handleChange}
             />

@@ -16,8 +16,8 @@ itemRouter.post('/add_new_item', async (req, res) => {
   }
 });
 
-itemRouter.get('/item_description/:id', async (req, res) => {
-  const item_description_query = `SELECT item.name, convert_from(item.image, 'UTF-8') as image, item.count, item.location, item.condition, item.details, item.manufacturer, item.reference
+itemRouter.get('/item_characteristics/:id', async (req, res) => {
+  const item_description_query = `SELECT item.description, convert_from(item.image, 'UTF-8') as image, item.total_stock, item.free_stock, item.last_price, item.location, item.user_comments, item.details, item.manufacturer, item.reference, item.packaging
     FROM item
     WHERE item.id = ${req.params.id}`;
 
@@ -64,14 +64,17 @@ itemRouter.post('/item_edit', async (req, res) => {
   let newItem = req.body;
   console.log('itemedit', newItem);
   let item_update_query = `UPDATE item
-    SET name = '${newItem.name}',
+    SET description = '${newItem.description}',
         image = '${newItem.image}',
-        count = ${newItem.count},
+        total_stock = ${newItem.total_stock},
+        free_stock = ${newItem.free_stock},
+        last_price = ${newItem.last_price},
         location = '${newItem.location}',
-        condition = '${newItem.condition}',
+        user_comments = '${newItem.user_comments}',
         details = '${newItem.details}',
         manufacturer = '${newItem.manufacturer}',
         reference = '${newItem.reference}',
+        packaging = '${newItem.packaging}',
         category_id = ${newItem.category.itemCategory.id}
     WHERE id = ${newItem.id}; \n`;
 
