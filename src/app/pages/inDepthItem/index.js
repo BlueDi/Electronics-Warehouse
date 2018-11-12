@@ -12,16 +12,20 @@ class InDepthItem extends Component {
 
     this.state = {
       id: this.props.match.params.id,
-      name: 'NAME',
+      description: 'DESCRIPTION',
       image: '',
-      count: 'STOCK',
+      total_stock: 'TOTAL STOCK',
+      free_stock: 'FREE STOCK',
+      last_price: 'LAST PRICE',
       location: 'Block B',
-      condition: 'COND',
+      user_comments: 'USER COMMENTS',
       details: 'DET',
-      manufacturer: 'SUPP',
+      manufacturer: 'MUFACTURER',
       reference: 'REF',
+      packaging: 'PACKAGING',
       category: {
         itemCategory: { id: 'ITEM_ID', name: 'ITEM_CAT' },
+        breadcrumb: [],
         categoryList: ['CAT1', 'CAT2', 'CAT3']
       },
       properties: [],
@@ -33,6 +37,7 @@ class InDepthItem extends Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.handleAcceptEdition = this.handleAcceptEdition.bind(this);
     this.handleCancelEdition = this.handleCancelEdition.bind(this);
+    this.handleBreadcrumbClick = this.handleBreadcrumbClick.bind(this);
 
     //form field handlers
     this.handleItemFieldChange = this.handleItemFieldChange.bind(this);
@@ -42,15 +47,15 @@ class InDepthItem extends Component {
   }
 
   componentDidMount() {
-    this.getItemDescription();
+    this.getItemCharacteristics();
     this.getItemProperties();
     this.getItemCategory();
     this.getAllCategories();
   }
 
-  getItemDescription() {
+  getItemCharacteristics() {
     //get item info present in database's item table
-    const apiUrl = `/item_description/${this.state.id}`;
+    const apiUrl = `/item_characteristics/${this.state.id}`;
 
     service
       .get(apiUrl)
@@ -93,6 +98,7 @@ class InDepthItem extends Component {
     service
       .get(apiUrl)
       .then(response => {
+        //set item category
         let result = response.data[0];
         let itemCategory = { id: result.id, name: result.name };
 
@@ -102,6 +108,9 @@ class InDepthItem extends Component {
         this.setState({
           category: newCategory
         });
+
+        //get item category tree
+        this.getItemCategoryBreadcrumb();
       })
       .catch(e => {
         throw e;
@@ -133,6 +142,76 @@ class InDepthItem extends Component {
       });
   }
 
+  getItemCategoryBreadcrumb() {
+    const apiUrl = `/category_tree/${this.state.category.itemCategory.id}`;
+
+    service
+      .get(apiUrl)
+      .then(response => {
+        //set item category
+        let categoryTree = response.data;
+
+        let breadcrumb = [];
+        for (let i = categoryTree.length - 1; i >= 0; i--) {
+          breadcrumb[categoryTree.length - 1 - i] = categoryTree[i];
+        }
+
+        let newCategory = this.state.category;
+        newCategory.breadcrumb = breadcrumb;
+
+        this.setState({
+          category: newCategory
+        });
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
+  setNewCategory(newCategoryId, newCategoryName) {
+    let apiUrl = `/item_category_properties`;
+    let parameters = { itemId: this.state.id, newCategoryId: newCategoryId };
+    service
+      .post(apiUrl, parameters)
+      .then(response => {
+        let newProperties = response.data;
+
+        //set properties according to new category
+        let property_list = newProperties.map(property => {
+          let value = '';
+          let edited = false;
+          for (let j = 0; j < this.state.properties.length; j++) {
+            if (property.id === this.state.properties[j].property_id) {
+              value = this.state.properties[j].value;
+              edited = this.state.properties[j].edited;
+              break;
+            }
+          }
+
+          return {
+            property_id: property.id,
+            value: value,
+            unit: property.unit,
+            name: property.name,
+            edited: edited
+          };
+        });
+
+        let newCategory = this.state.category;
+        newCategory.itemCategory = { id: newCategoryId, name: newCategoryName };
+        this.setState({
+          category: newCategory,
+          properties: property_list
+        });
+
+        this.getItemCategoryBreadcrumb();
+        console.log('category change', this.state);
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
   editItem() {
     const apiUrl = `/item_edit`;
     service
@@ -158,7 +237,6 @@ class InDepthItem extends Component {
   }
 
   handleItemFieldChange(event) {
-    console.log('itemFieldChange', event.target.name);
     this.setState({ [event.target.name]: event.target.value });
   }
 
@@ -186,7 +264,24 @@ class InDepthItem extends Component {
     }
   }
 
+  handleBreadcrumbClick(event, data) {
+    let categoryId;
+    let categoryName = data.content;
+    let breadcrumb = this.state.category.breadcrumb;
+    //get selected category id
+    for (let i = 0; i < breadcrumb.length - 1; i++) {
+      if (breadcrumb[i].name === categoryName) {
+        categoryId = breadcrumb[i].id;
+        break;
+      }
+    }
+
+    this.setNewCategory(categoryId, categoryName);
+  }
+
   handleCategoryChange(event) {
+    if (event.target.textContent === '') return;
+
     let categoryId;
     let categoryName = event.target.textContent;
     let categoryList = this.state.category.categoryList;
@@ -199,65 +294,7 @@ class InDepthItem extends Component {
       }
     }
 
-    let apiUrl = `/item_category_properties`;
-    let categories = { itemId: this.state.id, newCategoryId: categoryId };
-    service
-      .post(apiUrl, categories)
-      .then(response => {
-        let newProperties = response.data;
-        console.log('newProperties', this.state);
-
-        let property_list = newProperties.map(property => {
-          let value = '';
-          let edited = false;
-          for (let j = 0; j < this.state.properties.length; j++) {
-            if (property.id === this.state.properties[j].property_id) {
-              value = this.state.properties[j].value;
-              edited = this.state.properties[j].edited;
-              break;
-            }
-          }
-
-          return {
-            property_id: property.id,
-            value: value,
-            unit: property.unit,
-            name: property.name,
-            edited: edited
-          };
-        });
-
-        /*for(let i = 0; i < newProperties.length; i++)
-        {
-          let flag = false;
-          for(let j = 0; j < this.state.properties.length; j++)
-          {
-            if(newProperties[i].property_id === this.state.properties[j].property_id)
-            {
-              newProperties[i].value = this.state.properties[j].value;
-              newProperties[i].edited = this.state.properties[j].edited;
-              flag = true;
-              break;
-            }
-          }
-          if(!flag) {
-            newProperties[i].value = '';
-            newProperties[i].edited = false;
-          }
-        }*/
-
-        let newCategory = this.state.category;
-        newCategory.itemCategory = { id: categoryId, name: categoryName };
-        this.setState({
-          category: newCategory,
-          properties: property_list
-        });
-
-        //console.log('category change new properties response', this.state);
-      })
-      .catch(e => {
-        throw e;
-      });
+    this.setNewCategory(categoryId, categoryName);
   }
 
   handleNewImageFile(event) {
@@ -280,10 +317,10 @@ class InDepthItem extends Component {
 
   renderItemFields() {
     let stateContents = Object.values(this.state);
-    stateContents = stateContents.slice(3, stateContents.length - 1); // id, name, image, edit and category_list are NOT to be accessed
+    stateContents = stateContents.slice(3, stateContents.length - 1); // id, description, image, edit and category_list are NOT to be accessed
 
     let stateFields = Object.keys(this.state);
-    stateFields = stateFields.slice(3, stateFields.length - 1); // id, name, image, edit and category_list are NOT to be accessed
+    stateFields = stateFields.slice(3, stateFields.length - 1); // id, description, image, edit and category_list are NOT to be accessed
 
     let itemCharacteristics = [];
 
@@ -295,11 +332,26 @@ class InDepthItem extends Component {
       if (fieldName === 'properties') {
         changeHandler = this.handlePropertyChange;
       }
-      if (fieldName === 'category' && this.state.edit) {
-        fieldContent = this.state.category;
-        changeHandler = this.handleCategoryChange;
-      } else if (fieldName === 'category' && !this.state.edit) {
-        fieldContent = this.state.category.itemCategory.name;
+      if (fieldName === 'category') {
+        if (this.state.edit) {
+          //category breadcrumb
+          itemCharacteristics.push(
+            <div>
+              <InDepthItemField
+                key="breadcrumb"
+                fieldName="breadcrumb"
+                fieldContent={this.state.category.breadcrumb}
+                editable={this.state.edit}
+                handleChange={this.handleBreadcrumbClick}
+              />
+            </div>
+          );
+          fieldContent = this.state.category;
+          changeHandler = this.handleCategoryChange;
+        } else {
+          //fieldContent = this.state.category.itemCategory.name;
+          fieldContent = this.state.category.breadcrumb;
+        }
       }
 
       itemCharacteristics.push(
@@ -319,8 +371,8 @@ class InDepthItem extends Component {
       <div>
         <InDepthItemField
           style={{ textAlign: 'left', float: 'left' }}
-          fieldName="name"
-          fieldContent={this.state.name}
+          fieldName="description"
+          fieldContent={this.state.description}
           editable={this.state.edit}
           handleChange={this.handleItemFieldChange}
         />
