@@ -3,6 +3,30 @@ const db = require('@api/db.js');
 
 const itemRouter = express.Router();
 
+const all_items_query = `
+  SELECT *, convert_from(item.image, 'UTF-8') as image
+  FROM item
+`;
+
+itemRouter.get('/all_items', async (req, res) => {
+  try {
+    const data = await db.any(all_items_query);
+    for (var i = 0; i < data.length; i++) {
+      data[i]['details'] = {
+        details: data[i]['details'],
+        manufacturer: data[i]['manufacturer'],
+        condition: data[i]['condition']
+      };
+      delete data[i]['manufacturer'];
+      delete data[i]['category_id'];
+      delete data[i]['condition'];
+    }
+    res.send(data);
+  } catch (e) {
+    res.send('Failed to retrieve items!');
+  }
+});
+
 itemRouter.post('/add_new_item', async (req, res) => {
   var body = req.body;
   var query =
@@ -31,7 +55,8 @@ itemRouter.get('/item_characteristics/:id', async (req, res) => {
 });
 
 itemRouter.get('/item_properties/:id', async (req, res) => {
-  const in_depth_item_ppt_list_query = `SELECT item_property.property_id, item_property.value, property.unit, property.name
+  const in_depth_item_ppt_list_query = `
+    SELECT item_property.property_id, item_property.value, property.unit, property.name
     FROM item_property, property
     WHERE property.id = item_property.property_id and item_property.item_id = ${
       req.params.id
@@ -47,9 +72,11 @@ itemRouter.get('/item_properties/:id', async (req, res) => {
 });
 
 itemRouter.get('/item_category/:id', async (req, res) => {
-  const in_depth_item_catg_query = `SELECT category.id, category.name
+  const in_depth_item_catg_query = `
+    SELECT category.id, category.name, item.id AS item_id
     FROM category, item
-    WHERE category.id = item.category_id and item.id = ${req.params.id}`;
+    WHERE category.id = item.category_id
+      AND item.id = ${req.params.id}`;
 
   try {
     const data = await db.any(in_depth_item_catg_query);

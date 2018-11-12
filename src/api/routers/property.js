@@ -3,6 +3,23 @@ const db = require('@api/db.js');
 
 const propertyRouter = express.Router();
 
+const queryItemProperties = `
+  SELECT *
+  FROM property
+  JOIN item_property
+    ON item_property.property_id = property.id
+  		AND item_property.item_id = $1
+`;
+
+propertyRouter.get('/item_properties2/:id', async (req, res) => {
+  try {
+    const data = await db.any(queryItemProperties, req.params.id);
+    res.send(data);
+  } catch (e) {
+    res.send('Failed to retrieve selected properties info!');
+  }
+});
+
 propertyRouter.post('/properties_info', async (req, res) => {
   try {
     let propertyIds = req.body;
@@ -11,7 +28,7 @@ propertyRouter.post('/properties_info', async (req, res) => {
       return property.property_id;
     });
 
-    let get_properties_info_query = `SELECT * 
+    let get_properties_info_query = `SELECT *
     FROM property
     WHERE id IN(${property_list});`;
 

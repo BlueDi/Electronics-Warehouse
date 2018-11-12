@@ -9,9 +9,8 @@ import './styles/InDepthItem.scss';
 class InDepthItem extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      id: this.props.match.params.id,
+      id: this.props.id || this.props.match.params.id,
       description: 'DESCRIPTION',
       image: '',
       total_stock: 'TOTAL STOCK',
@@ -416,11 +415,11 @@ class InDepthItem extends Component {
   }
 
   render() {
-    return [
+    return (
       <PageTitle key={'InDepthItem'} title="InDepthItem">
         {this.renderItemFields()}
       </PageTitle>
-    ];
+    );
   }
 }
 

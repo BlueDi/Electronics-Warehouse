@@ -7,7 +7,9 @@ import {
   IntegratedFiltering,
   SortingState,
   IntegratedSorting,
-  DataTypeProvider
+  RowDetailState,
+  DataTypeProvider,
+  SelectionState
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -18,17 +20,22 @@ import {
   PagingPanel,
   ColumnChooser,
   TableColumnVisibility,
+  TableRowDetail,
   SearchPanel,
-  Toolbar
+  Toolbar,
+  TableSelection
 } from '@devexpress/dx-react-grid-material-ui';
 import { Button, Icon, Image } from 'semantic-ui-react';
+import CompareItems from './Compare';
+import InDepthItem from '@pages/inDepthItem';
 
 const SortingIcon = ({ direction }) =>
   direction === 'asc' ? <Icon name="arrow up" /> : <Icon name="arrow down" />;
 
 const SortLabel = ({ onSort, children, direction }) => {
   return children.props.children !== 'image' &&
-    children.props.children !== 'details' ? (
+    children.props.children !== 'details' &&
+    children.props.children !== 'properties' ? (
     <Button fluid icon labelPosition="right" onClick={onSort}>
       {children}
       {direction && <SortingIcon direction={direction} />}
@@ -60,6 +67,8 @@ const ImageTypeProvider = props => (
   <DataTypeProvider formatterComponent={ImageFormatter} {...props} />
 );
 
+const RowDetail = ({ row }) => <InDepthItem id={row.id} />;
+
 class TableRow extends Component {
   render() {
     return (
@@ -85,14 +94,24 @@ class ComponentsTable extends Component {
         { name: 'reference', title: 'Reference' }
       ],
       tableColumnExtensions: [{ columnName: 'name', wordWrapEnabled: true }],
-      detailsColumns: ['details'],
+      detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
-      rows: this.props.components
+      rows: this.props.components,
+      selection: []
     };
   }
 
   componentDidMount() {
     this.mount_header();
+  }
+
+  changeSelection = selection => this.setState({ selection });
+
+  getItemsFromSelection() {
+    const { rows, selection } = this.state;
+    var selected = [];
+    for (var i in selection) selected.push(rows[i]);
+    return selected;
   }
 
   mount_header() {
@@ -112,11 +131,18 @@ class ComponentsTable extends Component {
       columns,
       tableColumnExtensions,
       detailsColumns,
-      imageColumns
+      imageColumns,
+      selection
     } = this.state;
+
+    let compare_items;
+    if (selection.length > 0) {
+      compare_items = <CompareItems items={this.getItemsFromSelection()} />;
+    }
+
     return (
       <Grid rows={rows} columns={columns}>
-        <PagingState defaultCurrentPage={0} pageSize={2} />
+        <PagingState defaultCurrentPage={0} pageSize={7} />
         <IntegratedPaging />
         <DragDropProvider />
         <SearchState />
@@ -127,26 +153,25 @@ class ComponentsTable extends Component {
         <IntegratedSorting />
         <DetailsTypeProvider for={detailsColumns} />
         <ImageTypeProvider for={imageColumns} />
+        <RowDetailState />
+        <SelectionState
+          selection={selection}
+          onSelectionChange={this.changeSelection}
+        />
         <Table
           rowComponent={TableRow}
           columnExtensions={tableColumnExtensions}
         />
-        <TableColumnReordering
-          defaultOrder={[
-            'name',
-            'image',
-            'location',
-            'reference',
-            'count',
-            'details'
-          ]}
-        />
+        <TableColumnReordering />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
+        <TableRowDetail contentComponent={RowDetail} />
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
         <Toolbar />
         <SearchPanel />
         <ColumnChooser />
         <PagingPanel />
+        <TableSelection />
+        {compare_items}
       </Grid>
     );
   }
