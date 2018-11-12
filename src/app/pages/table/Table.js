@@ -88,12 +88,8 @@ class ComponentsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: 'name', title: 'Name' },
-        { name: 'location', title: 'Location' },
-        { name: 'reference', title: 'Reference' }
-      ],
-      tableColumnExtensions: [{ columnName: 'name', wordWrapEnabled: true }],
+      columns: [],
+      tableColumnExtensions: [],
       detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
       rows: this.props.components,
@@ -119,10 +115,7 @@ class ComponentsTable extends Component {
     for (var param in this.state.rows[0]) {
       if (param !== 'id') header_params.push({ name: param, title: param });
     }
-
-    this.setState({
-      columns: header_params
-    });
+    this.setState({ columns: header_params });
   }
 
   render() {
@@ -148,7 +141,7 @@ class ComponentsTable extends Component {
         <SearchState />
         <IntegratedFiltering />
         <SortingState
-          defaultSorting={[{ columnName: 'name', direction: 'asc' }]}
+          defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
         />
         <IntegratedSorting />
         <DetailsTypeProvider for={detailsColumns} />
@@ -162,7 +155,7 @@ class ComponentsTable extends Component {
           rowComponent={TableRow}
           columnExtensions={tableColumnExtensions}
         />
-        <TableColumnReordering />
+        <TableColumnReordering defaultOrder={this.props.columnsOrder} />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
         <TableRowDetail contentComponent={RowDetail} />
         <TableColumnVisibility defaultHiddenColumnNames={[]} />

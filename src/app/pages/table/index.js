@@ -124,6 +124,16 @@ class WHTable extends Component {
       this.setState({ isFetching: false });
   }
 
+  default_column_order() {
+    var columnOrder = [];
+    for (var i in this.state.components) {
+      for (var param in this.state.components[i]) {
+        if (columnOrder.indexOf(param) === -1) columnOrder.push(param);
+      }
+    }
+    return columnOrder;
+  }
+
   renderUserFunctions() {
     return (
       <Grid>
@@ -142,7 +152,10 @@ class WHTable extends Component {
     ) : (
       <PageTitle title="Table">
         {this.renderUserFunctions()}
-        <ComponentsTable components={this.state.components} />
+        <ComponentsTable
+          components={this.state.components}
+          columnsOrder={this.default_column_order()}
+        />
       </PageTitle>
     );
   }
