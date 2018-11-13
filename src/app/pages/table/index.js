@@ -126,11 +126,10 @@ class WHTable extends Component {
 
   default_column_order() {
     var columnOrder = [];
-    for (var i in this.state.components) {
-      for (var param in this.state.components[i]) {
-        if (columnOrder.indexOf(param) === -1) columnOrder.push(param);
-      }
-    }
+    this.state.components.forEach(component => {
+      columnOrder = columnOrder.concat(Object.keys(component));
+    });
+    columnOrder = [...new Set(columnOrder)];
     return columnOrder;
   }
 
