@@ -5,10 +5,10 @@ import '@common/styles/global.css';
 import './styles/InDepthItem.scss';
 
 /**
- * Creates buttons to interact with an Item.
+ * Creates buttons to edit an Item.
  * The interactions available depend on the user permissions.
  */
-class InDepthItemButtons extends Component {
+class EditButton extends Component {
   renderButton(cookie_name, button_text, onClick) {
     var canDo = this.props.cookies.get(cookie_name) === 'true';
     var positive = button_text === 'Accept' ? true : false;
@@ -33,11 +33,8 @@ class InDepthItemButtons extends Component {
           this.renderButton('can_edit', 'Accept', this.props.handleAccept),
           this.renderButton('can_edit', 'Cancel', this.props.handleCancel)
         ]
-      : [
-          this.renderButton('can_request', 'Request', this.props.handleRequest),
-          this.renderButton('can_edit', 'Edit', this.props.handleEdit)
-        ];
+      : [this.renderButton('can_edit', 'Edit', this.props.handleEdit)];
   }
 }
 
-export default withCookies(InDepthItemButtons);
+export default withCookies(EditButton);

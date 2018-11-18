@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { PageTitle } from '@common/components';
+import { AddToCart, PageTitle } from '@common/components';
 import { service } from '@utils';
 import { InDepthItemField } from './InDepthItemField';
-import InDepthItemButtons from './InDepthItemButtons';
+import EditButton from './EditButton';
 import '@common/styles/global.css';
 import './styles/InDepthItem.scss';
 
@@ -395,7 +395,8 @@ class InDepthItem extends Component {
               style={{ float: 'left', textAlign: 'left', marginLeft: '5%' }}
             >
               {itemCharacteristics}
-              <InDepthItemButtons
+              <AddToCart items={this.state} />
+              <EditButton
                 editing={this.state.edit}
                 handleRequest={this.handleRequest}
                 handleEdit={this.handleEdit}
