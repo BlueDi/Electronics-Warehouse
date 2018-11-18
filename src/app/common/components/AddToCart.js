@@ -5,7 +5,6 @@ import { withCookies } from 'react-cookie';
 class AddToCart extends Component {
   handleClick = () => {
     var newItems = this.props.items;
-    delete newItems[0]['image'];
     var oldCart = this.props.cookies.get('cart') || [];
     var newUniqueItems = [];
     for (let item of newItems)
