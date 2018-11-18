@@ -4,15 +4,15 @@ import { withCookies } from 'react-cookie';
 
 class AddToCart extends Component {
   handleClick = () => {
-    var newItems = this.props.items;
-    var oldCart = this.props.cookies.get('cart') || [];
-    var newUniqueItems = [];
-    for (let item of newItems)
-      if (!oldCart.some(i => i.id == item.id))
-        newUniqueItems.push({ item, ammount: 1 });
-
-    var newCart = [...oldCart, ...newUniqueItems];
-    this.props.cookies.set('cart', newCart);
+    const { cookies, items } = this.props;
+    var cart = cookies.get('cart');
+    for (var item of items) {
+      if (!cart.some(i => i.item.id == item.id)) {
+        delete item.image;
+        cart.push({ item, ammount: 1 });
+      }
+    }
+    cookies.set('cart', cart, { path: '/' });
   };
 
   render() {
