@@ -27,6 +27,7 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import { Button, Icon, Image } from 'semantic-ui-react';
 import CompareItems from './Compare';
+import { AddToCart } from '@common/components';
 import InDepthItem from '@pages/inDepthItem';
 
 const SortingIcon = ({ direction }) =>
@@ -110,7 +111,7 @@ class ComponentsTable extends Component {
   getItemsFromSelection() {
     const { rows, selection } = this.state;
     var selected = [];
-    for (var i in selection) selected.push(rows[i]);
+    for (var i of selection) selected.push(rows[i]);
     return selected;
   }
 
@@ -133,8 +134,11 @@ class ComponentsTable extends Component {
     } = this.state;
 
     let compare_items;
+    let addToCart;
     if (selection.length > 0) {
-      compare_items = <CompareItems items={this.getItemsFromSelection()} />;
+      var selected_items = this.getItemsFromSelection();
+      compare_items = <CompareItems items={selected_items} />;
+      addToCart = <AddToCart items={selected_items} />;
     }
 
     return (
@@ -169,6 +173,7 @@ class ComponentsTable extends Component {
         <PagingPanel />
         <TableSelection />
         {compare_items}
+        {addToCart}
       </Grid>
     );
   }
