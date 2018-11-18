@@ -395,7 +395,7 @@ class InDepthItem extends Component {
               style={{ float: 'left', textAlign: 'left', marginLeft: '5%' }}
             >
               {itemCharacteristics}
-              <AddToCart items={this.state} />
+              <AddToCart items={[this.state]} />
               <EditButton
                 editing={this.state.edit}
                 handleRequest={this.handleRequest}
