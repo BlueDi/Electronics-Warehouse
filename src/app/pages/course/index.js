@@ -5,7 +5,7 @@ import { Authorization } from '@common/components';
 class Course extends Component {
   render() {
     return (
-      <Authorization>
+      <Authorization param="can_read">
         <Header>
           This is a page only accessible to Managers or Professors.
         </Header>

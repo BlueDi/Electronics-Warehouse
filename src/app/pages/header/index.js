@@ -6,17 +6,23 @@ import Login from './Login';
 import Logout from './Logout';
 
 class WHHeader extends Component {
-  render() {
+  checkSecurity() {
     const { cookies } = this.props;
-    const security = cookies.get('security');
+    const emptyCookie =
+      Object.keys(cookies.cookies).length === 0 &&
+      cookies.cookies.constructor === Object;
+    const validSecurity = cookies.get('security') !== '0';
+    return !emptyCookie && validSecurity;
+  }
 
+  render() {
     return (
       <Menu attached size="huge">
         <Menu.Item as={Link} to="/">
           <Header size="medium">Warehouse</Header>
         </Menu.Item>
 
-        {security !== '0' ? <Logout /> : <Login />}
+        {this.checkSecurity() ? <Logout /> : <Login />}
       </Menu>
     );
   }

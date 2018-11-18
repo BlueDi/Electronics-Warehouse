@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PageTitle } from '@common/components';
 import { service } from '@utils';
 import { InDepthItemField } from './InDepthItemField';
-import { InDepthItemButtons } from './InDepthItemButtons';
+import InDepthItemButtons from './InDepthItemButtons';
 import '@common/styles/global.css';
 import './styles/InDepthItem.scss';
 
@@ -335,9 +335,8 @@ class InDepthItem extends Component {
         if (this.state.edit) {
           //category breadcrumb
           itemCharacteristics.push(
-            <div>
+            <div key="breadcrumb">
               <InDepthItemField
-                key="breadcrumb"
                 fieldName="breadcrumb"
                 fieldContent={this.state.category.breadcrumb}
                 editable={this.state.edit}
@@ -354,9 +353,8 @@ class InDepthItem extends Component {
       }
 
       itemCharacteristics.push(
-        <div>
+        <div key={fieldName}>
           <InDepthItemField
-            key={fieldName}
             fieldName={fieldName}
             fieldContent={fieldContent}
             editable={this.state.edit}
@@ -397,16 +395,13 @@ class InDepthItem extends Component {
               style={{ float: 'left', textAlign: 'left', marginLeft: '5%' }}
             >
               {itemCharacteristics}
-
-              <div className="Buttons" style={{ columnCount: '2' }}>
-                <InDepthItemButtons
-                  editing={this.state.edit}
-                  handleRequest={this.handleRequest}
-                  handleEdit={this.handleEdit}
-                  handleAccept={this.handleAcceptEdition}
-                  handleCancel={this.handleCancelEdition}
-                />
-              </div>
+              <InDepthItemButtons
+                editing={this.state.edit}
+                handleRequest={this.handleRequest}
+                handleEdit={this.handleEdit}
+                handleAccept={this.handleAcceptEdition}
+                handleCancel={this.handleCancelEdition}
+              />
             </div>
           </column>
         </div>
