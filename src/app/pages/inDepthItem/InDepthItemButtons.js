@@ -1,79 +1,43 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { withCookies } from 'react-cookie';
 import { Button } from 'semantic-ui-react';
 import '@common/styles/global.css';
 import './styles/InDepthItem.scss';
 
-export function InDepthItemButtons(props) {
-  const requestButton = (
-    <div className="RequestButton" style={{ textAlign: 'right' }}>
-      <Button
-        onClick={props.handleRequest}
-        style={{
-          backgroundColor: '#89DF89',
-          padding: '10px 15px',
-          borderRadius: '10px',
-          border: '0px'
-        }}
-      >
-        Request
-      </Button>
-    </div>
-  );
+/**
+ * Creates buttons to interact with an Item.
+ * The interactions available depend on the user permissions.
+ */
+class InDepthItemButtons extends Component {
+  renderButton(cookie_name, button_text, onClick) {
+    var canDo = this.props.cookies.get(cookie_name) === 'true';
+    var positive = button_text === 'Accept' ? true : false;
+    var negative = button_text === 'Cancel' ? true : false;
+    return (
+      canDo && (
+        <Button
+          key={button_text}
+          onClick={onClick}
+          positive={positive}
+          negative={negative}
+        >
+          {button_text}
+        </Button>
+      )
+    );
+  }
 
-  let editButton = (
-    <div className="EditButton" style={{ textAlign: 'left' }}>
-      <Button
-        onClick={props.handleEdit}
-        style={{
-          backgroundColor: '#7bbfe8',
-          padding: '10px 15px',
-          borderRadius: '10px',
-          border: '0px'
-        }}
-      >
-        Edit
-      </Button>
-    </div>
-  );
-
-  let cancelButton = (
-    <div className="CancelButton" style={{ textAlign: 'left' }}>
-      <Button
-        onClick={props.handleCancel}
-        style={{
-          backgroundColor: '#D2E0E8',
-          padding: '10px 15px',
-          borderRadius: '10px',
-          border: '0px'
-        }}
-      >
-        Cancel
-      </Button>
-    </div>
-  );
-
-  let acceptButton = (
-    <div className="AcceptButton" style={{ textAlign: 'left' }}>
-      <Button
-        onClick={props.handleAccept}
-        style={{
-          backgroundColor: '#52e852',
-          padding: '10px 15px',
-          borderRadius: '10px',
-          border: '0px'
-        }}
-      >
-        Accept
-      </Button>
-    </div>
-  );
-
-  return (
-    <div>
-      {!props.editing && requestButton}
-      {!props.editing && editButton}
-      {props.editing && cancelButton}
-      {props.editing && acceptButton}
-    </div>
-  );
+  render() {
+    return this.props.editing
+      ? [
+          this.renderButton('can_edit', 'Accept', this.props.handleAccept),
+          this.renderButton('can_edit', 'Cancel', this.props.handleCancel)
+        ]
+      : [
+          this.renderButton('can_request', 'Request', this.props.handleRequest),
+          this.renderButton('can_edit', 'Edit', this.props.handleEdit)
+        ];
+  }
 }
+
+export default withCookies(InDepthItemButtons);

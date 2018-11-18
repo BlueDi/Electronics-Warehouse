@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { withCookies } from 'react-cookie';
 import { Menu } from 'semantic-ui-react';
+import { service } from '@utils';
 
 class Logout extends Component {
   handleLogout = () => {
-    const { cookies } = this.props;
-    cookies.set('id', null, { path: '/' });
-    cookies.set('name', null, { path: '/' });
-    cookies.set('security', 0, { path: '/' });
+    service
+      .post('/logout')
+      .then(response => {
+        response.data != 0
+          ? this.props.history.push('/')
+          : console.warn('Invalid logout');
+      })
+      .catch(error => {
+        throw error;
+      });
   };
 
   render() {
@@ -20,7 +27,7 @@ class Logout extends Component {
         <Menu.Item as={Link} to={'/user/' + userID}>
           {userName}
         </Menu.Item>
-        <Menu.Item as={Link} to={'/'} onClick={this.handleLogout}>
+        <Menu.Item link onClick={this.handleLogout}>
           Logout
         </Menu.Item>
       </Menu.Menu>
@@ -28,4 +35,4 @@ class Logout extends Component {
   }
 }
 
-export default withCookies(Logout);
+export default withRouter(withCookies(Logout));

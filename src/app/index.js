@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import favicon from 'serve-favicon';
-import cookiesMiddleware from 'universal-cookie-express';
+import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { DEV, ENV, SYSPATH } from '@config';
 import { proxy, logger, errorHandler } from '@middlewares/express';
@@ -20,7 +20,7 @@ app
   .use(logger.http())
   .use(helmet())
   .use(cors())
-  .use(cookiesMiddleware())
+  .use(cookieParser())
   .use(compression())
   .use(express.static(SYSPATH['PUBLIC']))
   .use(`/api/${ENV['API_VERSION']}`, proxy.proxyWeb);
