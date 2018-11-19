@@ -143,8 +143,6 @@ class ComponentsTable extends Component {
 
     return (
       <Grid rows={rows} columns={columns}>
-        <PagingState defaultCurrentPage={0} pageSize={7} />
-        <IntegratedPaging />
         <DragDropProvider />
         <SearchState />
         <IntegratedFiltering />
@@ -159,6 +157,8 @@ class ComponentsTable extends Component {
           selection={selection}
           onSelectionChange={this.changeSelection}
         />
+        <PagingState defaultCurrentPage={0} pageSize={7} />
+        <IntegratedPaging />
         <Table
           rowComponent={TableRow}
           columnExtensions={tableColumnExtensions}
