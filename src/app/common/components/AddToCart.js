@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'semantic-ui-react';
+import { Button, Input } from 'semantic-ui-react';
 import { withCookies } from 'react-cookie';
 
 class AddToCart extends Component {
@@ -15,11 +15,23 @@ class AddToCart extends Component {
     cookies.set('cart', cart, { path: '/' });
   };
 
+  renderButton() {
+    return this.props.simple ? (
+      <Input
+        action={<Button color="teal" icon="cart" onClick={this.handleClick} />}
+        actionPosition="left"
+        fluid
+        placeholder="Buy"
+        defaultValue="1"
+      />
+    ) : (
+      <Button onClick={this.handleClick}>Add to Cart</Button>
+    );
+  }
+
   render() {
     var canRequest = this.props.cookies.get('can_request') === 'true';
-    return (
-      canRequest && <Button onClick={this.handleClick}>Add to Cart</Button>
-    );
+    return canRequest && this.renderButton();
   }
 }
 

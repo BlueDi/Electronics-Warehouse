@@ -25,7 +25,7 @@ import {
   Toolbar,
   TableSelection
 } from '@devexpress/dx-react-grid-material-ui';
-import { Button, Icon, Image, Input } from 'semantic-ui-react';
+import { Button, Icon, Image } from 'semantic-ui-react';
 import CompareItems from './Compare';
 import { AddToCart } from '@common/components';
 import InDepthItem from '@pages/inDepthItem';
@@ -73,15 +73,15 @@ const ImageTypeProvider = props => (
 );
 
 const RowDetail = ({ row }) => <InDepthItem id={row.id} />;
-const SelectComponent = () => (
-  <Input
-    action={{ color: 'teal', icon: 'cart' }}
-    actionPosition="left"
-    fluid
-    placeholder="Buy"
-    defaultValue="1"
-  />
-);
+const SelectComponent = ({ row }) => {
+  var cleanRow = Object.create(row);
+  delete cleanRow.image;
+  return (
+    <td>
+      <AddToCart items={[cleanRow]} simple />
+    </td>
+  );
+};
 
 class TableRow extends Component {
   render() {
@@ -92,7 +92,9 @@ class TableRow extends Component {
             {...this.props}
             onClick={e => {
               if (
-                !['button', 'input'].includes(e.target.tagName.toLowerCase())
+                !['button', 'i', 'input'].includes(
+                  e.target.tagName.toLowerCase()
+                )
               ) {
                 return history.push('/item/' + this.props.tableRow.row.id);
               }
@@ -109,6 +111,7 @@ class ComponentsTable extends Component {
     super(props);
     this.state = {
       columns: [],
+      columnsOrder: this.props.columnsOrder,
       tableColumnExtensions: [],
       detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
@@ -142,6 +145,7 @@ class ComponentsTable extends Component {
     const {
       rows,
       columns,
+      columnsOrder,
       tableColumnExtensions,
       detailsColumns,
       imageColumns,
@@ -178,7 +182,7 @@ class ComponentsTable extends Component {
           rowComponent={TableRow}
           columnExtensions={tableColumnExtensions}
         />
-        <TableColumnReordering defaultOrder={this.props.columnsOrder} />
+        <TableColumnReordering defaultOrder={columnsOrder} />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
         <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
