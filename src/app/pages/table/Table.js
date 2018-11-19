@@ -25,7 +25,7 @@ import {
   Toolbar,
   TableSelection
 } from '@devexpress/dx-react-grid-material-ui';
-import { Button, Icon, Image } from 'semantic-ui-react';
+import { Button, Icon, Image, Input } from 'semantic-ui-react';
 import CompareItems from './Compare';
 import { AddToCart } from '@common/components';
 import InDepthItem from '@pages/inDepthItem';
@@ -73,6 +73,15 @@ const ImageTypeProvider = props => (
 );
 
 const RowDetail = ({ row }) => <InDepthItem id={row.id} />;
+const SelectComponent = () => (
+  <Input
+    action={{ color: 'teal', icon: 'cart' }}
+    actionPosition="left"
+    fluid
+    placeholder="Buy"
+    defaultValue="1"
+  />
+);
 
 class TableRow extends Component {
   render() {
@@ -81,7 +90,13 @@ class TableRow extends Component {
         render={({ history }) => (
           <Table.Row
             {...this.props}
-            onClick={() => history.push('/item/' + this.props.tableRow.row.id)}
+            onClick={e => {
+              if (
+                !['button', 'input'].includes(e.target.tagName.toLowerCase())
+              ) {
+                return history.push('/item/' + this.props.tableRow.row.id);
+              }
+            }}
           />
         )}
       />
@@ -165,13 +180,16 @@ class ComponentsTable extends Component {
         />
         <TableColumnReordering defaultOrder={this.props.columnsOrder} />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
-        <TableRowDetail contentComponent={RowDetail} />
+        <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
         <Toolbar />
         <SearchPanel />
         <ColumnChooser />
         <PagingPanel />
-        <TableSelection />
+        <TableSelection
+          cellComponent={SelectComponent}
+          selectionColumnWidth={85}
+        />
         {compare_items}
         {addToCart}
       </Grid>
