@@ -3,26 +3,46 @@ import { Button, Input } from 'semantic-ui-react';
 import { withCookies } from 'react-cookie';
 
 class AddToCart extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      amount: 1,
+      items: this.props.items,
+      simple: this.props.simple
+    };
+  }
+
+  handleChange = ({ target }) => {
+    this.setState({
+      [target.name]: target.value
+    });
+  };
+
   handleClick = () => {
-    const { cookies, items } = this.props;
+    const { cookies } = this.props;
+    const { amount, items } = this.state;
     var cart = cookies.get('cart');
     for (var item of items) {
       if (!cart.some(i => i.item.id == item.id)) {
         delete item.image;
-        cart.push({ item, ammount: 1 });
+        cart.push({ item, amount: amount });
       }
     }
     cookies.set('cart', cart, { path: '/' });
   };
 
   renderButton() {
-    return this.props.simple ? (
+    const { simple } = this.state;
+    return simple ? (
       <Input
         action={<Button color="teal" icon="cart" onClick={this.handleClick} />}
         actionPosition="left"
         fluid
         placeholder="Buy"
-        defaultValue="1"
+        name="amount"
+        value={this.state.amount}
+        onChange={this.handleChange}
       />
     ) : (
       <Button onClick={this.handleClick}>Add to Cart</Button>
@@ -30,7 +50,8 @@ class AddToCart extends Component {
   }
 
   render() {
-    var canRequest = this.props.cookies.get('can_request') === 'true';
+    const { cookies } = this.props;
+    var canRequest = cookies.get('can_request') === 'true';
     return canRequest && this.renderButton();
   }
 }
