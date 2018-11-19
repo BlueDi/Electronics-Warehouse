@@ -8,6 +8,7 @@ export const WHHeader = loadComponent('header');
 export const WHMenu = loadComponent('menu');
 export const AddItem = loadComponent('addItem');
 export const InDepthItem = loadComponent('inDepthItem');
+export const Requests = loadComponent('requests');
 
 // export Layout as default, and also NotFound as named
 export { default } from './layout';
