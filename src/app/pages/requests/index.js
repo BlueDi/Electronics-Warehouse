@@ -17,14 +17,17 @@ class Requests extends Component {
   }
 
   componentDidMount() {
+    console.log('test');
     this.getData();
+    console.log('test2');
   }
 
   getData() {
     service
       .get(urlAllRequests)
       .then(response => {
-        this.setState({ requests: response.data });
+        console.log(response.data);
+        this.setState({ requests: response.data, isFetching: false });
       })
       .catch(e => {
         this.setState({
@@ -49,7 +52,7 @@ class Requests extends Component {
     ) : (
       <PageTitle title="Table">
         <RequestsTable
-          components={this.state.requestss}
+          components={this.state.requests}
           columnsOrder={this.default_column_order()}
         />
       </PageTitle>

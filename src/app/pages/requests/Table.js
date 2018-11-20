@@ -7,7 +7,6 @@ import {
   IntegratedFiltering,
   SortingState,
   IntegratedSorting,
-  RowDetailState,
   DataTypeProvider,
   SelectionState
 } from '@devexpress/dx-react-grid';
@@ -20,7 +19,6 @@ import {
   PagingPanel,
   ColumnChooser,
   TableColumnVisibility,
-  TableRowDetail,
   SearchPanel,
   Toolbar,
   TableSelection
@@ -65,8 +63,6 @@ const ImageTypeProvider = props => (
   <DataTypeProvider formatterComponent={ImageFormatter} {...props} />
 );
 
-const RowDetail = 0; //{ row } => <InDepthItem id={row.id} />;
-
 class TableRow extends Component {
   render() {
     return (
@@ -74,7 +70,9 @@ class TableRow extends Component {
         render={({ history }) => (
           <Table.Row
             {...this.props}
-            onClick={() => history.push('/item/' + this.props.tableRow.row.id)}
+            onClick={() =>
+              history.push('/request/' + this.props.tableRow.row.id)
+            }
           />
         )}
       />
@@ -85,6 +83,7 @@ class TableRow extends Component {
 class RequestsTable extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
       columns: [],
       tableColumnExtensions: [],
@@ -144,7 +143,6 @@ class RequestsTable extends Component {
         <IntegratedSorting />
         <DetailsTypeProvider for={detailsColumns} />
         <ImageTypeProvider for={imageColumns} />
-        <RowDetailState />
         <SelectionState
           selection={selection}
           onSelectionChange={this.changeSelection}
@@ -155,7 +153,6 @@ class RequestsTable extends Component {
         />
         <TableColumnReordering defaultOrder={this.props.columnsOrder} />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
-        <TableRowDetail contentComponent={RowDetail} />
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
         <Toolbar />
         <SearchPanel />
