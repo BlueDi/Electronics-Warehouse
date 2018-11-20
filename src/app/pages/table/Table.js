@@ -27,6 +27,7 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import { Button, Icon, Image } from 'semantic-ui-react';
 import CompareItems from './Compare';
+import SelectComponent from './SelectComponent';
 import { AddToCart } from '@common/components';
 import InDepthItem from '@pages/inDepthItem';
 
@@ -73,15 +74,6 @@ const ImageTypeProvider = props => (
 );
 
 const RowDetail = ({ row }) => <InDepthItem id={row.id} />;
-const SelectComponent = ({ row }) => {
-  var cleanRow = Object.create(row);
-  delete cleanRow.image;
-  return (
-    <td>
-      <AddToCart items={[cleanRow]} simple />
-    </td>
-  );
-};
 
 class TableRow extends Component {
   render() {
@@ -92,7 +84,7 @@ class TableRow extends Component {
             {...this.props}
             onClick={e => {
               if (
-                !['button', 'i', 'input'].includes(
+                !['button', 'i', 'input', 'label'].includes(
                   e.target.tagName.toLowerCase()
                 )
               ) {
