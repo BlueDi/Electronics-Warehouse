@@ -36,7 +36,7 @@ CREATE TABLE item (
 	reference TEXT UNIQUE NOT NULL,
 	packaging_id INT,
 	category_id INT NOT NULL,
-	last_edit DATE NOT NULL,
+	last_edit TIMESTAMP WITH TIME ZONE NOT NULL,
 	FOREIGN KEY(packaging_id) REFERENCES packaging(id),
 	FOREIGN KEY(category_id) REFERENCES category(id));
 
@@ -102,5 +102,3 @@ CREATE TABLE request_items (
 	count REAL NOT NULL CHECK (count > 0),
 	FOREIGN KEY(request_id) REFERENCES request_workflow(id),
 	FOREIGN KEY(item_id) REFERENCES item(id));
-	
-	

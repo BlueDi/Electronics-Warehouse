@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS get_category_descendant_tree(INT);
 DROP FUNCTION IF EXISTS get_category_tree(INT);
 DROP FUNCTION IF EXISTS get_category_recursive_properties(INT);
 DROP FUNCTION IF EXISTS get_item_category_independent_properties(INT);
@@ -8,6 +9,23 @@ DROP FUNCTION IF EXISTS update_item_category_properties();
 DROP TRIGGER IF EXISTS trigger_update_item_category ON item;
 
 -- TRIGGER PROCEDURES AND FUNCTIONS
+CREATE OR REPLACE FUNCTION get_category_descendant_tree(_main_category_id INT)
+RETURNS TABLE(id INT, name TEXT) AS $$
+
+	WITH RECURSIVE recur_categories (id, name) AS (
+      SELECT category.id, category.name
+      FROM category
+      WHERE category.id_parent = _main_category_id
+      UNION ALL
+      SELECT category.id, category.name
+      FROM recur_categories, category
+      WHERE category.id_parent = recur_categories.id
+    )
+    
+    SELECT id, name FROM recur_categories;
+	
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION get_category_tree(_main_category_id INT)
 RETURNS TABLE(id INT, name TEXT) AS $$
 
