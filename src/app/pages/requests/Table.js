@@ -110,7 +110,7 @@ class RequestsTable extends Component {
   mount_header() {
     var header_params = [];
     for (var param in this.state.rows[0]) {
-      if (param !== 'id') header_params.push({ name: param, title: param });
+      header_params.push({ name: param, title: param });
     }
     this.setState({ columns: header_params });
   }

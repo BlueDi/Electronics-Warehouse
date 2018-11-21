@@ -50,7 +50,7 @@ class Requests extends Component {
     return this.state.isFetching ? (
       <Loader text="Preparing Table" />
     ) : (
-      <PageTitle title="Table">
+      <PageTitle title="Requests">
         <RequestsTable
           components={this.state.requests}
           columnsOrder={this.default_column_order()}

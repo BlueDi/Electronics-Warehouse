@@ -9,9 +9,25 @@ const queryRequest = `
   WHERE id = $1
 `;
 
+/*
 const queryRequestAll = `
-  SELECT *
-  FROM request_workflow
+  SELECT request_workflow.*, users.login AS requester, users2.login AS professor, users3.login AS manager
+  FROM request_workflow INNER JOIN users
+  ON request_workflow.requester_id = users.id
+  INNER JOIN users AS users2
+  ON request_workflow.professor_id = users2.id
+  INNER JOIN users AS users3
+  ON request_workflow.manager_id = users3.id
+`;
+*/
+
+const queryRequestAll = `
+  SELECT DISTINCT ON(request_workflow.id) request_workflow.*, users.login AS requester,
+    users2.login AS professor, users3.login AS manager
+  FROM request_workflow, users, users AS users2, users AS users3
+  WHERE (request_workflow.requester_id = users.id OR request_workflow.requester_id ISNULL)
+    AND (request_workflow.professor_id = users2.id OR request_workflow.professor_id ISNULL)
+    AND (request_workflow.manager_id = users3.id OR request_workflow.manager_id ISNULL)
 `;
 
 const queryRequestItems = `
