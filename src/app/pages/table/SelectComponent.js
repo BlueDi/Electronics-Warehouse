@@ -10,7 +10,7 @@ class SelectComponent extends Component {
     var cleanRow = Object.create(row);
     delete cleanRow.image;
     return (
-      <>
+      <React.Fragment>
         {canRequest ? (
           <td>
             <AddToCart items={[cleanRow]} simple />
@@ -21,7 +21,7 @@ class SelectComponent extends Component {
           selected={selected}
           onToggle={onToggle}
         />
-      </>
+      </React.Fragment>
     );
   }
 }
