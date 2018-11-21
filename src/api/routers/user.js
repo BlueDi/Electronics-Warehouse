@@ -16,11 +16,24 @@ const queryPermissions = `
   WHERE id = $1
 ;`;
 
+//var currentID = cookies.get('id');
+/*
+const queryHowManyRequests = `
+  SELECT count(*)
+  FROM request_workflow
+  WHERE professor_id = currentID
+    AND professor_accept = "false"
+;`;
+*/
+//console.log(currentID);4
+
 /**
  * Login the user.
  *
  * @return {object} User details
  */
+//  var currentID;
+
 userRouter.post('/login', async (req, res) => {
   try {
     const dataLogin = await db.one(queryLogin, [
@@ -34,10 +47,14 @@ userRouter.post('/login', async (req, res) => {
     delete dataPermissions['id'];
     let merged = { ...dataLogin, ...dataPermissions };
     res.status(200).send(merged);
+
+    //  currentID = req.cookies.get('id');
   } catch (e) {
     res.status(401).send('Invalid login!');
   }
 });
+
+//console.log('Aqqqqqqqqqqqqquiiiiiiiiiiiiiii  ', currentID);
 
 /**
  * Logout the user.
