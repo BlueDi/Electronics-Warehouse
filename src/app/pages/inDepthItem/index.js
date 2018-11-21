@@ -19,15 +19,20 @@ class InDepthItem extends Component {
       location: 'Block B',
       user_comments: 'USER COMMENTS',
       details: 'DET',
-      manufacturer: 'MUFACTURER',
+      manufacturer: 'MANUFACTURER',
       reference: 'REF',
-      packaging: 'PACKAGING',
+      packaging: {
+        itemPackaging: { id: 'PACKAGING_ID', name: 'ITEM_PACK' },
+        packagingList: ['PACK1', 'PACK2', 'PACK3']
+      },
       category: {
         itemCategory: { id: 'ITEM_ID', name: 'ITEM_CAT' },
         breadcrumb: [],
+        dropdown: [],
         categoryList: ['CAT1', 'CAT2', 'CAT3']
       },
       properties: [],
+      last_edit: 'EDIT_DATE',
       edit: false
     };
 
@@ -37,18 +42,22 @@ class InDepthItem extends Component {
     this.handleAcceptEdition = this.handleAcceptEdition.bind(this);
     this.handleCancelEdition = this.handleCancelEdition.bind(this);
     this.handleBreadcrumbClick = this.handleBreadcrumbClick.bind(this);
+    this.handleBreadcrumbDelete = this.handleBreadcrumbDelete.bind(this);
 
     //form field handlers
     this.handleItemFieldChange = this.handleItemFieldChange.bind(this);
     this.handlePropertyChange = this.handlePropertyChange.bind(this);
     this.handleNewImageFile = this.handleNewImageFile.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
+    this.handlePackagingChange = this.handlePackagingChange.bind(this);
   }
 
   componentDidMount() {
     this.getItemCharacteristics();
+    this.getItemPackaging();
     this.getItemProperties();
     this.getItemCategory();
+    this.getAllPackages();
     this.getAllCategories();
   }
 
@@ -60,6 +69,28 @@ class InDepthItem extends Component {
       .get(apiUrl)
       .then(response => {
         this.setState(response.data);
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
+  getItemPackaging() {
+    const apiUrl = `/item_packaging/${this.state.id}`;
+
+    service
+      .get(apiUrl)
+      .then(response => {
+        let result = response.data;
+
+        let itemPackaging = { id: result.id, name: result.name };
+
+        let newPackaging = this.state.packaging;
+        newPackaging.itemPackaging = itemPackaging;
+
+        this.setState({
+          packaging: newPackaging
+        });
       })
       .catch(e => {
         throw e;
@@ -78,6 +109,7 @@ class InDepthItem extends Component {
             value: property.value,
             unit: property.unit,
             name: property.name,
+            isNumber: property.number,
             edited: false
           };
         });
@@ -110,6 +142,34 @@ class InDepthItem extends Component {
 
         //get item category tree
         this.getItemCategoryBreadcrumb();
+
+        //get category dropdown for item editing
+        this.getDropdownCategories();
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
+  getAllPackages() {
+    const apiUrl = `/all_packages`;
+    service
+      .get(apiUrl)
+      .then(response => {
+        let packaging_list = response.data.map(packaging => {
+          return {
+            key: packaging.id,
+            value: packaging.name,
+            text: packaging.name
+          };
+        });
+
+        let newPackaging = this.state.packaging;
+        newPackaging.packagingList = packaging_list;
+
+        this.setState({
+          packaging: newPackaging
+        });
       })
       .catch(e => {
         throw e;
@@ -167,6 +227,47 @@ class InDepthItem extends Component {
       });
   }
 
+  getDropdownCategories() {
+    if (!this.state.category.itemCategory.name) {
+      // category breadcrumb was erased
+      let newCategory = this.state.category;
+      newCategory.dropdown = newCategory.categoryList;
+
+      this.setState({
+        category: newCategory
+      });
+      return;
+    }
+
+    const apiUrl = `/category_descendant_tree/${
+      this.state.category.itemCategory.id
+    }`;
+
+    service
+      .get(apiUrl)
+      .then(response => {
+        let descendantTree = response.data;
+
+        let dropdown_list = descendantTree.map(descendant => {
+          return {
+            key: descendant.id,
+            value: descendant.name,
+            text: descendant.name
+          };
+        });
+
+        let newCategory = this.state.category;
+        newCategory.dropdown = dropdown_list;
+
+        this.setState({
+          category: newCategory
+        });
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
   setNewCategory(newCategoryId, newCategoryName) {
     let apiUrl = `/item_category_properties`;
     let parameters = { itemId: this.state.id, newCategoryId: newCategoryId };
@@ -204,7 +305,7 @@ class InDepthItem extends Component {
         });
 
         this.getItemCategoryBreadcrumb();
-        console.log('category change', this.state);
+        this.getDropdownCategories();
       })
       .catch(e => {
         throw e;
@@ -215,9 +316,6 @@ class InDepthItem extends Component {
     const apiUrl = `/item_edit`;
     service
       .post(apiUrl, this.state)
-      .then(response => {
-        console.log('edit item response', response.data);
-      })
       .then(response => {
         this.componentDidMount();
         return response;
@@ -240,8 +338,10 @@ class InDepthItem extends Component {
   }
 
   handleAcceptEdition() {
-    this.editItem();
-    this.setState({ edit: false });
+    if (this.state.category.itemCategory.name) {
+      this.editItem();
+      this.setState({ edit: false });
+    }
   }
 
   handleCancelEdition() {
@@ -278,11 +378,20 @@ class InDepthItem extends Component {
     this.setNewCategory(categoryId, categoryName);
   }
 
-  handleCategoryChange(event) {
-    if (event.target.textContent === '') return;
+  handleBreadcrumbDelete() {
+    let emptyCategory = this.state.category;
+    emptyCategory.itemCategory.name = null;
+    emptyCategory.breadcrumb = [];
+    this.setState({
+      category: emptyCategory
+    });
 
+    this.getDropdownCategories();
+  }
+
+  handleCategoryChange(event, data) {
     let categoryId;
-    let categoryName = event.target.textContent;
+    let categoryName = data.value;
     let categoryList = this.state.category.categoryList;
 
     for (let i = 0; i < categoryList.length; i++) {
@@ -294,6 +403,27 @@ class InDepthItem extends Component {
     }
 
     this.setNewCategory(categoryId, categoryName);
+  }
+
+  handlePackagingChange(event, data) {
+    let packagingId;
+    let packagingName = data.value;
+    let packagingList = this.state.packaging.packagingList;
+
+    for (let i = 0; i < packagingList.length; i++) {
+      let currPackaging = packagingList[i];
+      if (currPackaging.value == packagingName) {
+        packagingId = currPackaging.key;
+        break;
+      }
+    }
+
+    let newPackaging = this.state.packaging;
+    newPackaging.itemPackaging = { id: packagingId, name: packagingName };
+
+    this.setState({
+      packaging: newPackaging
+    });
   }
 
   handleNewImageFile(event) {
@@ -316,10 +446,10 @@ class InDepthItem extends Component {
 
   renderItemFields() {
     let stateContents = Object.values(this.state);
-    stateContents = stateContents.slice(3, stateContents.length - 1); // id, description, image, edit and category_list are NOT to be accessed
+    stateContents = stateContents.slice(3, stateContents.length - 1); // id, description, image and edit are NOT to be accessed
 
     let stateFields = Object.keys(this.state);
-    stateFields = stateFields.slice(3, stateFields.length - 1); // id, description, image, edit and category_list are NOT to be accessed
+    stateFields = stateFields.slice(3, stateFields.length - 1); // id, description, image and edit are NOT to be accessed
 
     let itemCharacteristics = [];
 
@@ -330,32 +460,45 @@ class InDepthItem extends Component {
 
       if (fieldName === 'properties') {
         changeHandler = this.handlePropertyChange;
-      }
-      if (fieldName === 'category') {
+      } else if (fieldName === 'category') {
         if (this.state.edit) {
           //category breadcrumb
+          let breadcrumbHandlers = [
+            this.handleBreadcrumbClick,
+            this.handleBreadcrumbDelete
+          ];
           itemCharacteristics.push(
             <div key="breadcrumb">
               <InDepthItemField
                 fieldName="breadcrumb"
                 fieldContent={this.state.category.breadcrumb}
                 editable={this.state.edit}
-                handleChange={this.handleBreadcrumbClick}
+                handleChange={breadcrumbHandlers}
               />
             </div>
           );
           fieldContent = this.state.category;
           changeHandler = this.handleCategoryChange;
         } else {
-          //fieldContent = this.state.category.itemCategory.name;
           fieldContent = this.state.category.breadcrumb;
         }
+      } else if (fieldName === 'packaging') {
+        if (!this.state.edit) {
+          fieldContent = this.state.packaging.itemPackaging.name;
+        } else {
+          fieldContent = this.state.packaging;
+          changeHandler = this.handlePackagingChange;
+        }
+      } else if (fieldName === 'last_edit' && this.state.edit) {
+        //last edit date is not editable
+        continue;
       }
 
       itemCharacteristics.push(
         <div key={fieldName}>
           <InDepthItemField
-            fieldName={fieldName}
+            key={fieldName}
+            fieldName={fieldName.replace(/_/g, ' ')}
             fieldContent={fieldContent}
             editable={this.state.edit}
             handleChange={changeHandler}
