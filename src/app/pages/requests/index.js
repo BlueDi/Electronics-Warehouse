@@ -4,7 +4,9 @@ import { service } from '@utils';
 import { Loader, PageTitle } from '@common/components';
 import RequestsTable from './Table';
 
-const urlAllRequests = `/request_all`;
+const urlAllRequestsManager = `/request_manager_all`;
+//const urlAllRequestsProfessor = `/request_professor_all/3`;
+//const urlAllRequestsStudent = `/request_student_all/1`;
 
 class Requests extends Component {
   constructor(props) {
@@ -24,7 +26,7 @@ class Requests extends Component {
 
   getData() {
     service
-      .get(urlAllRequests)
+      .get(urlAllRequestsManager)
       .then(response => {
         console.log(response.data);
         this.setState({ requests: response.data, isFetching: false });
