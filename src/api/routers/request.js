@@ -85,7 +85,7 @@ requestRouter.get('/request_student_all/:id', async (req, res) => {
 
 requestRouter.get('/request/:id', async (req, res) => {
   try {
-    const data = await db.any(queryRequest, req.params.id);
+    const data = await db.one(queryRequest, req.params.id);
     res.send(data);
   } catch (e) {
     res.send('Failed to retrieve selected request info!');

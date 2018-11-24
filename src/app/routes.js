@@ -5,7 +5,8 @@ import Layout, {
   Course,
   InDepthItem,
   WHTable,
-  Requests
+  Requests,
+  Request
 } from '@pages';
 
 export const routes = [
@@ -37,6 +38,10 @@ export const routes = [
   {
     path: '/requests',
     component: Requests
+  },
+  {
+    path: '/request/:id',
+    component: Request
   },
   {
     path: '/*',
