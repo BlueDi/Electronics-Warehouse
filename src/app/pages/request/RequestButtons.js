@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
 import '@common/styles/global.css';
-import './styles/InDepthItem.scss';
 
 export function RequestButtons(props) {
   let editButton = (
@@ -39,7 +38,7 @@ export function RequestButtons(props) {
   let saveButton = (
     <div className="SaveButton" style={{ textAlign: 'left' }}>
       <Button
-        onClick={props.handleCancel}
+        onClick={props.handleSave}
         style={{
           backgroundColor: '#D2E0E8',
           padding: '10px 15px',
@@ -71,7 +70,7 @@ export function RequestButtons(props) {
   let rejectButton = (
     <div className="RejectButton" style={{ textAlign: 'left' }}>
       <Button
-        onClick={props.handleAccept}
+        onClick={props.handleReject}
         style={{
           backgroundColor: '#e85252',
           padding: '10px 15px',

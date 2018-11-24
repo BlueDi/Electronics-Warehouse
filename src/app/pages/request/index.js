@@ -4,7 +4,6 @@ import { service } from '@utils';
 import { RequestField } from './RequestField';
 import { RequestButtons } from './RequestButtons';
 import '@common/styles/global.css';
-import './styles/InDepthItem.scss';
 
 class Request extends Component {
   constructor(props) {
@@ -27,35 +26,28 @@ class Request extends Component {
       professor: 'UNKNOWN',
       manager: 'UNKNOWN',
       items: [],
-      category: {
-        itemCategory: { id: 'ITEM_ID', name: 'ITEM_CAT' },
-        breadcrumb: [],
-        categoryList: ['CAT1', 'CAT2', 'CAT3']
-      },
-      properties: [],
       edit: false
     };
 
     //button handlers
-    this.handleRequest = this.handleRequest.bind(this);
+    this.handleAccept = this.handleReject.bind(this);
+    this.handleReject = this.handleReject.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
-    this.handleAcceptEdition = this.handleAcceptEdition.bind(this);
+    this.handleSaveEdition = this.handleSaveEdition.bind(this);
     this.handleCancelEdition = this.handleCancelEdition.bind(this);
   }
 
   componentDidMount() {
-    this.getItemCharacteristics();
+    this.getRequestInfo();
     //this.getAllCategories();
   }
 
-  getItemCharacteristics() {
-    //get item info present in database's item table
+  getRequestInfo() {
     const apiUrl = `/request/${this.state.id}`;
 
     service
       .get(apiUrl)
       .then(response => {
-        console.log(response.data);
         this.setState(response.data);
       })
       .catch(e => {
@@ -63,24 +55,15 @@ class Request extends Component {
       });
   }
 
-  getAllCategories() {
+  getRequestItems() {
     const apiUrl = `/all_categories`;
     service
       .get(apiUrl)
       .then(response => {
-        let category_list = response.data.map(category => {
-          return {
-            key: category.id,
-            value: category.name,
-            text: category.name
-          };
-        });
-
-        let newCategory = this.state.category;
-        newCategory.categoryList = category_list;
+        console.log(response.data);
 
         this.setState({
-          category: newCategory
+          items: response.data
         });
       })
       .catch(e => {
@@ -88,7 +71,7 @@ class Request extends Component {
       });
   }
 
-  editItem() {
+  editRequestWorkflow() {
     const apiUrl = `/item_edit`;
     service
       .post(apiUrl, this.state)
@@ -104,7 +87,11 @@ class Request extends Component {
       });
   }
 
-  handleRequest() {
+  handleAccept() {
+    //TODO: call API to create item request in database
+  }
+
+  handleReject() {
     //TODO: call API to create item request in database
   }
 
@@ -112,11 +99,7 @@ class Request extends Component {
     this.setState({ edit: true });
   }
 
-  handleItemFieldChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  handleAcceptEdition() {
+  handleSaveEdition() {
     this.editItem();
     this.setState({ edit: false });
   }
@@ -140,31 +123,6 @@ class Request extends Component {
       let fieldContent = stateContents[i];
       let changeHandler = this.handleItemFieldChange;
 
-      if (fieldName === 'properties') {
-        changeHandler = this.handlePropertyChange;
-      }
-      if (fieldName === 'category') {
-        if (this.state.edit) {
-          //category breadcrumb
-          itemCharacteristics.push(
-            <div>
-              <RequestField
-                key="breadcrumb"
-                fieldName="breadcrumb"
-                fieldContent={this.state.category.breadcrumb}
-                editable={this.state.edit}
-                handleChange={this.handleBreadcrumbClick}
-              />
-            </div>
-          );
-          fieldContent = this.state.category;
-          changeHandler = this.handleCategoryChange;
-        } else {
-          //fieldContent = this.state.category.itemCategory.name;
-          fieldContent = this.state.category.breadcrumb;
-        }
-      }
-
       itemCharacteristics.push(
         <div>
           <RequestField
@@ -180,29 +138,7 @@ class Request extends Component {
 
     return (
       <div>
-        <RequestField
-          style={{ textAlign: 'left', float: 'left' }}
-          fieldName="description"
-          fieldContent={this.state.description}
-          editable={this.state.edit}
-          handleChange={this.handleItemFieldChange}
-        />
-
-        <div className="Item" style={{ textAlign: 'left' }}>
-          <column style={{ columnWidth: '50%' }}>
-            <div
-              className="ComponentImage"
-              style={{ float: 'left', marginLeft: '5%' }}
-            >
-              <RequestField
-                fieldName="image"
-                fieldContent={this.state.image}
-                editable={this.state.edit}
-                handleChange={this.handleNewImageFile}
-              />
-            </div>
-          </column>
-
+        <div className="Request" style={{ textAlign: 'left' }}>
           <column style={{ columnWidth: '50%' }}>
             <div
               className="Information"
@@ -210,7 +146,7 @@ class Request extends Component {
             >
               {itemCharacteristics}
 
-              <div className="Buttons" style={{ columnCount: '2' }}>
+              <div className="Buttons" style={{ columnCount: '3' }}>
                 <RequestButtons
                   editing={this.state.edit}
                   handleRequest={this.handleRequest}
@@ -228,7 +164,7 @@ class Request extends Component {
 
   render() {
     return (
-      <PageTitle key={'InDepthItem'} title="InDepthItem">
+      <PageTitle key={'Request'} title="Request">
         {this.renderItemFields()}
       </PageTitle>
     );
