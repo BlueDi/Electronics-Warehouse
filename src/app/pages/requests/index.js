@@ -22,13 +22,10 @@ class RequestList extends Component {
   constructor(props) {
     super(props);
     const { cookies } = this.props;
-    const cart = cookies.get('cart');
+    this.state.data = cookies.get('cart');
 
-    for (let i = 0; i < cart.length; i++) {
-      let cart_item = cart[i].item;
-      cart_item['amount']= cart[i].amount;
-      this.state.data.push(cart_item);
-    }
+    console.log(this.state.data);
+
     for (let i = 0; i < this.columns_name.length; i++) {
       const name = this.columns_name[i];
       this.state.columns.push({title: name, name: name});
@@ -108,7 +105,6 @@ class RequestList extends Component {
               selection
               placeholder='Professor Name'
               label='Professor'
-              validate={this.state.professor_id != undefined}
               options={this.state.professors}
               onChange={this.handleProfessorChange}
             />
@@ -117,7 +113,6 @@ class RequestList extends Component {
               required
               label='Request Details'
               placeholder='Details'
-              validate={this.state.details != undefined && this.state.details.length > 0}
               onChange={this.handleDetailsChange}
             />
 

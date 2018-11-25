@@ -27,22 +27,22 @@ class AddToCart extends Component {
     for (var item of items) {
       var i;
       for (i = 0; i < cart.length; i++) {
-        if (cart[i].item.id == item.id) {
+        if (cart[i].id == item.id) {
           cart[i]['amount'] = +cart[i].amount + +amount;
           break;
         }
       }
       if (i === cart.length) {
-        cart.push({'item': this.makeItemCopy(item), amount});
+        cart.push(this.makeItemCopy(item, amount));
       }
     }
     cookies.set('cart', cart, { path: '/' });
     console.log(cookies.get('cart'));
   };
 
-  makeItemCopy = (item) => {
+  makeItemCopy = (item, amount) => {
     const ignore = ['image'];
-    let item_copy = {};
+    let item_copy = {amount};
 
     for (let property in item) {
       if (ignore.indexOf(property) === -1) {

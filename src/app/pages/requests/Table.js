@@ -1,29 +1,24 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import { withCookies } from 'react-cookie';
 import {
   PagingState,
   IntegratedPaging,
-  SearchState,
   IntegratedFiltering,
   SortingState,
+  EditingState,
   IntegratedSorting,
   RowDetailState,
-  DataTypeProvider,
-  SelectionState
+  DataTypeProvider
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
-  DragDropProvider,
   Table,
   TableHeaderRow,
-  TableColumnReordering,
   PagingPanel,
-  ColumnChooser,
-  TableColumnVisibility,
   TableRowDetail,
-  SearchPanel,
-  Toolbar,
-  TableSelection
+  TableEditColumn,
+  TableEditRow
 } from '@devexpress/dx-react-grid-material-ui';
 import { Button, Icon } from 'semantic-ui-react';
 import InDepthItem from '@pages/inDepthItem';
@@ -92,9 +87,24 @@ class RequestsTable extends Component {
       tableColumnExtensions: [],
       detailsColumns: ['details', 'properties'],
     };
+    this.commitChanges = this.commitChanges.bind(this);
+  }
+
+  commitChanges(status) {
+    const { deleted } = status;
+    console.log(deleted);
+    let { cart } = this.state;
+    if (deleted) {
+      const deletedSet = new Set(deleted);
+      cart = cart.filter(item => !deletedSet.has(item.id));
+      let { cookies } = this.props;
+      cookies.set('cart', cart);
+    }
+    this.setState({ cart });
   }
 
   render() {
+    const getRowId = (row) => row.id;
     const {
       cart,
       columns,
@@ -103,9 +113,13 @@ class RequestsTable extends Component {
     } = this.state;
 
     return (
-      <Grid rows={cart} columns={columns}>
-      <DragDropProvider />
-      <SearchState />
+      <Grid rows={cart} columns={columns} getRowId={getRowId}>
+      <EditingState onCommitChanges={this.commitChanges}/>
+      <Table
+      rowComponent={TableRow}
+      columnExtensions={tableColumnExtensions}
+      />
+      <TableEditColumn showDeleteCommand />
       <IntegratedFiltering />
       <SortingState
         defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
@@ -115,20 +129,11 @@ class RequestsTable extends Component {
       <RowDetailState />
       <PagingState defaultCurrentPage={0} pageSize={5} />
       <IntegratedPaging />
-      <Table
-        rowComponent={TableRow}
-        columnExtensions={tableColumnExtensions}
-      />
       <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
       <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
-      <TableColumnVisibility defaultHiddenColumnNames={[]} />
-      <Toolbar />
-      <SearchPanel />
-      <ColumnChooser />
-      <PagingPanel />
       </Grid>
     );
   }
 }
 
-export default RequestsTable;
+export default withCookies(RequestsTable);
