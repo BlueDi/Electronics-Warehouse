@@ -23,14 +23,35 @@ class AddToCart extends Component {
     const { cookies } = this.props;
     const { amount, items } = this.state;
     var cart = cookies.get('cart');
+
     for (var item of items) {
-      if (!cart.some(i => i.item.id == item.id)) {
-        delete item.image;
-        cart.push({ item, amount: amount });
+      var i;
+      for (i = 0; i < cart.length; i++) {
+        if (cart[i].item.id == item.id) {
+          cart[i]['amount'] = +cart[i].amount + +amount;
+          break;
+        }
+      }
+      if (i === cart.length) {
+        cart.push({'item': this.makeItemCopy(item), amount});
       }
     }
     cookies.set('cart', cart, { path: '/' });
+    console.log(cookies.get('cart'));
   };
+
+  makeItemCopy = (item) => {
+    const ignore = ['image'];
+    let item_copy = {};
+
+    for (let property in item) {
+      if (ignore.indexOf(property) === -1) {
+        item_copy[property] = item[property];
+      }
+    }
+
+    return item_copy;
+  }
 
   renderButton() {
     const { simple } = this.state;

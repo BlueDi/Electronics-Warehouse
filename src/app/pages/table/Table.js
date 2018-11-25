@@ -152,6 +152,8 @@ class ComponentsTable extends Component {
       addToCart = <AddToCart items={selected_items} />;
     }
 
+    console.log(this.state);
+
     return (
       <Grid rows={rows} columns={columns}>
         <DragDropProvider />

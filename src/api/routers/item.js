@@ -3,10 +3,9 @@ const db = require('@api/db.js');
 
 const itemRouter = express.Router();
 
-const all_items_query = `
-  SELECT *, convert_from(item.image, 'UTF-8') as image
-  FROM item
-`;
+const all_items_query = `SELECT *, convert_from(item.image, 'UTF-8') as image FROM item`;
+const insert_request_query = 'INSERT INTO request_workflow (id, cancelled, purpose, requester_id, professor_id) VALUES (DEFAULT, FALSE, $1, $2, $3) RETURNING id';
+const insert_request_item = 'INSERT INTO request_items (request_id, item_id, count) VALUES ($1, $2, $3)';
 
 itemRouter.get('/all_items', async (req, res) => {
   try {
@@ -122,6 +121,35 @@ itemRouter.post('/item_edit', async (req, res) => {
     console.log('Error editing item!', e);
     res.send('Failed to edit item!');
   }
+});
+
+itemRouter.post('/request_items', async (req, res) => {
+  let {cart, info} = req.body;
+
+  if (cart != undefined && cart.length > 0) {
+    let query_data = ['super interessante', info.requester_id, 3];
+
+    try {
+      const data = await db.one(insert_request_query, query_data);
+      const request_id = data.id;
+
+      for (let i = 0; i < cart.length; i++) {
+        const item_info = cart[i];
+        query_data = [request_id, item_info.item.id, item_info.amount];
+        db.none(insert_request_item, query_data);
+      }
+
+      res.send('OK');
+    }
+    catch (e) {
+      throw new Error('Failed to insert the request\n - ' + e);
+    }
+
+  }
+  else {
+    res.status(404).send('No items found in cart!');
+  }
+
 });
 
 export default itemRouter;

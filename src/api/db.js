@@ -1,11 +1,11 @@
 var pgp = require('pg-promise')();
 
 const cn = {
-  host: 'database',
+  host: 'localhost',
   port: 5432,
-  database: 'ldso',
+  database: 'database',
   user: 'postgres',
-  password: 'postgres'
+  password: 'password'
 };
 
 const db = pgp(cn);
