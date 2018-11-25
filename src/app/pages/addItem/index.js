@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Grid, Button, Image, Form } from 'semantic-ui-react';
 import NumericInput from 'react-numeric-input';
 import { Authorization, PageTitle } from '@common/components';
@@ -104,7 +105,7 @@ class AddItem extends Component {
                 Save
               </Button>
               <Button.Or />
-              <Button>Cancel</Button>
+              <Button as={Link} to={'/'}>Cancel</Button>
             </Button.Group>
           </div>
         </div>

@@ -124,10 +124,10 @@ itemRouter.post('/item_edit', async (req, res) => {
 });
 
 itemRouter.post('/request_items', async (req, res) => {
-  let {cart, info} = req.body;
+  let {cart, details, professor_id, user_id} = req.body;
 
   if (cart != undefined && cart.length > 0) {
-    let query_data = ['super interessante', info.requester_id, 3];
+    let query_data = [details, user_id, professor_id];
 
     try {
       const data = await db.one(insert_request_query, query_data);
@@ -135,7 +135,7 @@ itemRouter.post('/request_items', async (req, res) => {
 
       for (let i = 0; i < cart.length; i++) {
         const item_info = cart[i];
-        query_data = [request_id, item_info.item.id, item_info.amount];
+        query_data = [request_id, item_info.id, item_info.amount];
         db.none(insert_request_item, query_data);
       }
 
