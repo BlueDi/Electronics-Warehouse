@@ -4,9 +4,15 @@ const db = require('@api/db.js');
 const requestRouter = express.Router();
 
 const queryRequest = `
-  SELECT *
+  SELECT request_workflow.*, users.login AS requester, users2.login AS professor, users3.login AS manager
   FROM request_workflow
-  WHERE id = $1
+  INNER JOIN users
+  ON (request_workflow.requester_id = users.id)
+  INNER JOIN users AS users2
+  ON (request_workflow.professor_id = users2.id)
+  LEFT JOIN users AS users3
+  ON (request_workflow.manager_id = users3.id)
+  WHERE request_workflow.id = $1
 `;
 
 /*
@@ -22,32 +28,41 @@ const queryRequestAll = `
 */
 
 const queryManagerRequestAll = `
-  SELECT DISTINCT ON(request_workflow.id) request_workflow.*, users.login AS requester,
-    users2.login AS professor, users3.login AS manager
-  FROM request_workflow, users, users AS users2, users AS users3
-  WHERE request_workflow.requester_id = users.id
-    AND request_workflow.professor_id = users2.id
-    AND (request_workflow.manager_id = users3.id OR request_workflow.manager_id ISNULL)
+  SELECT DISTINCT ON(request_workflow.id) request_workflow.*,
+    users.login AS requester, users2.login AS professor, users3.login AS manager
+  FROM request_workflow
+  INNER JOIN users
+  ON (request_workflow.requester_id = users.id)
+  INNER JOIN users AS users2
+  ON (request_workflow.professor_id = users2.id)
+  LEFT JOIN users AS users3
+  ON (request_workflow.manager_id = users3.id)
 `;
 
 const queryProfessorRequestAll = `
-  SELECT DISTINCT ON(request_workflow.id) request_workflow.*, users.login AS requester,
-    users2.login AS professor, users3.login AS manager
-  FROM request_workflow, users, users AS users2, users AS users3
-  WHERE request_workflow.requester_id = users.id
-    AND request_workflow.professor_id = users2.id
-    AND (request_workflow.manager_id = users3.id OR request_workflow.manager_id ISNULL)
-    AND request_workflow.professor_id = $1
+  SELECT DISTINCT ON(request_workflow.id) request_workflow.*,
+    users.login AS requester, users2.login AS professor, users3.login AS manager
+  FROM request_workflow
+  INNER JOIN users
+  ON (request_workflow.requester_id = users.id)
+  INNER JOIN users AS users2
+  ON (request_workflow.professor_id = users2.id)
+  LEFT JOIN users AS users3
+  ON (request_workflow.manager_id = users3.id)
+  WHERE request_workflow.professor_id = $1
 `;
 
 const queryStudentRequestAll = `
-  SELECT DISTINCT ON(request_workflow.id) request_workflow.*, users.login AS requester,
-    users2.login AS professor, users3.login AS manager
-  FROM request_workflow, users, users AS users2, users AS users3
-  WHERE request_workflow.requester_id = users.id
-    AND request_workflow.professor_id = users2.id
-    AND (request_workflow.manager_id = users3.id OR request_workflow.manager_id ISNULL)
-    AND request_workflow.requester_id = $1
+  SELECT DISTINCT ON(request_workflow.id) request_workflow.*,
+    users.login AS requester, users2.login AS professor, users3.login AS manager
+  FROM request_workflow
+  INNER JOIN users
+  ON (request_workflow.requester_id = users.id)
+  INNER JOIN users AS users2
+  ON (request_workflow.professor_id = users2.id)
+  LEFT JOIN users AS users3
+  ON (request_workflow.manager_id = users3.id)
+  WHERE equest_workflow.requester_id = $1
 `;
 
 const queryRequestItems = `
