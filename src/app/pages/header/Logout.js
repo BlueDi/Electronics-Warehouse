@@ -20,7 +20,6 @@ class Logout extends Component {
 
   render() {
     var userCart = this.props.cookies.get('cart') || [];
-    var userID = this.props.cookies.get('id') || undefined;
     var userName = this.props.cookies.get('name') || undefined;
     var cartLength = userCart.length;
     var emptyCart = cartLength <= 0;

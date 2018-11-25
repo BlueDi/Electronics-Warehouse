@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Divider, Image } from 'semantic-ui-react';
+import { Card, Divider } from 'semantic-ui-react';
 
 class CardItem extends Component {
   constructor(props) {

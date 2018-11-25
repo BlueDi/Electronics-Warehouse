@@ -126,6 +126,10 @@ itemRouter.post('/item_edit', async (req, res) => {
 itemRouter.post('/request_items', async (req, res) => {
   let {cart, details, professor_id, user_id} = req.body;
 
+  console.log(details);
+  console.log(professor_id);
+  console.log(user_id);
+
   if (cart != undefined && cart.length > 0) {
     let query_data = [details, user_id, professor_id];
 

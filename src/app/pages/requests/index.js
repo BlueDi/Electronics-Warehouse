@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom'
 import { Button, Form } from 'semantic-ui-react';
 import RequestsTable from './Table';
 import { withCookies } from 'react-cookie';
@@ -24,7 +23,6 @@ class RequestList extends Component {
     const { cookies } = this.props;
     this.state.data = cookies.get('cart');
 
-    console.log(this.state.data);
 
     for (let i = 0; i < this.columns_name.length; i++) {
       const name = this.columns_name[i];
@@ -50,18 +48,10 @@ class RequestList extends Component {
       });
   }
 
-  handleProfessorChange = (e, {value}) => {
-    this.state.professor_id = value;
-  };
-
-  handleDetailsChange = (e, {value}) => {
-    this.state.details = value;
-  }
-
   clearRequests = () => {
     let { cookies } = this.props;
     cookies.set('cart', []);
-    this.state.data = [];
+    this.setState({data: []});
   }
 
   sendRequest = () => {
@@ -106,14 +96,14 @@ class RequestList extends Component {
               placeholder='Professor Name'
               label='Professor'
               options={this.state.professors}
-              onChange={this.handleProfessorChange}
+              onChange={(e, { value }) => this.setState({professor_id: value})}
             />
 
             <Form.TextArea
               required
               label='Request Details'
               placeholder='Details'
-              onChange={this.handleDetailsChange}
+              onChange={(e, { value }) => this.setState({details: value})}
             />
 
             <Button.Group>
