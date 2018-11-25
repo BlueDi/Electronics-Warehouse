@@ -105,7 +105,9 @@ class AddItem extends Component {
                 Save
               </Button>
               <Button.Or />
-              <Button as={Link} to={'/'}>Cancel</Button>
+              <Button as={Link} to={'/'}>
+                Cancel
+              </Button>
             </Button.Group>
           </div>
         </div>

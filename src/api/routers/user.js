@@ -57,8 +57,7 @@ userRouter.get('/professors', async function(req, res) {
   try {
     const data = await db.any(professors_query);
     res.send(data);
-  }
-  catch (e) {
+  } catch (e) {
     console.error('Error retrieving professors!');
     res.status(500).send('Failed to retrieve professors');
   }

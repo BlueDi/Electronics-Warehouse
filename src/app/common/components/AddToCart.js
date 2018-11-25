@@ -42,7 +42,7 @@ class AddToCart extends Component {
 
   makeItemCopy = (item, amount) => {
     const ignore = ['image'];
-    let item_copy = {amount};
+    let item_copy = { amount };
 
     for (let property in item) {
       if (ignore.indexOf(property) === -1) {
@@ -51,7 +51,7 @@ class AddToCart extends Component {
     }
 
     return item_copy;
-  }
+  };
 
   renderButton() {
     const { simple } = this.state;

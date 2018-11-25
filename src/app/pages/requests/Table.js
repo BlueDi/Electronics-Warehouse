@@ -15,10 +15,8 @@ import {
   Grid,
   Table,
   TableHeaderRow,
-  PagingPanel,
   TableRowDetail,
-  TableEditColumn,
-  TableEditRow
+  TableEditColumn
 } from '@devexpress/dx-react-grid-material-ui';
 import { Button, Icon } from 'semantic-ui-react';
 import InDepthItem from '@pages/inDepthItem';
@@ -85,7 +83,7 @@ class RequestsTable extends Component {
       columns: this.props.columns,
       cart: this.props.cart,
       tableColumnExtensions: [],
-      detailsColumns: ['details', 'properties'],
+      detailsColumns: ['details', 'properties']
     };
     this.commitChanges = this.commitChanges.bind(this);
   }
@@ -104,33 +102,28 @@ class RequestsTable extends Component {
   }
 
   render() {
-    const getRowId = (row) => row.id;
-    const {
-      cart,
-      columns,
-      tableColumnExtensions,
-      detailsColumns,
-    } = this.state;
+    const getRowId = row => row.id;
+    const { cart, columns, tableColumnExtensions, detailsColumns } = this.state;
 
     return (
       <Grid rows={cart} columns={columns} getRowId={getRowId}>
-      <EditingState onCommitChanges={this.commitChanges}/>
-      <Table
-      rowComponent={TableRow}
-      columnExtensions={tableColumnExtensions}
-      />
-      <TableEditColumn showDeleteCommand />
-      <IntegratedFiltering />
-      <SortingState
-        defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
-      />
-      <IntegratedSorting />
-      <DetailsTypeProvider for={detailsColumns} />
-      <RowDetailState />
-      <PagingState defaultCurrentPage={0} pageSize={5} />
-      <IntegratedPaging />
-      <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
-      <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
+        <EditingState onCommitChanges={this.commitChanges} />
+        <Table
+          rowComponent={TableRow}
+          columnExtensions={tableColumnExtensions}
+        />
+        <TableEditColumn showDeleteCommand />
+        <IntegratedFiltering />
+        <SortingState
+          defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
+        />
+        <IntegratedSorting />
+        <DetailsTypeProvider for={detailsColumns} />
+        <RowDetailState />
+        <PagingState defaultCurrentPage={0} pageSize={5} />
+        <IntegratedPaging />
+        <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
+        <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
       </Grid>
     );
   }
