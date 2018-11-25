@@ -16,9 +16,17 @@ import {
   Table,
   TableHeaderRow,
   TableRowDetail,
+  TableEditRow,
   TableEditColumn
 } from '@devexpress/dx-react-grid-material-ui';
 import { Button, Icon } from 'semantic-ui-react';
+import IconButton from '@material-ui/core/IconButton';
+
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from '@material-ui/icons/Cancel';
+
 import InDepthItem from '@pages/inDepthItem';
 
 const SortingIcon = ({ direction }) =>
@@ -76,43 +84,119 @@ class TableRow extends Component {
   }
 }
 
+const DeleteButton = ({ onExecute }) => (
+  <IconButton onClick={onExecute} title="Delete Request">
+    <DeleteIcon />
+  </IconButton>
+);
+
+const EditButton = ({ onExecute }) => (
+  <IconButton onClick={onExecute} title="Edit Request">
+    <EditIcon />
+  </IconButton>
+);
+
+const CommitButton = ({ onExecute }) => (
+  <IconButton onClick={onExecute} title="Save changes">
+    <SaveIcon />
+  </IconButton>
+);
+
+const CancelButton = ({ onExecute }) => (
+  <IconButton color="secondary" onClick={onExecute} title="Cancel changes">
+    <CancelIcon />
+  </IconButton>
+);
+
+const commandComponents = {
+  edit: EditButton,
+  delete: DeleteButton,
+  commit: CommitButton,
+  cancel: CancelButton
+};
+
+const Command = ({ id, onExecute }) => {
+  const CommandButton = commandComponents[id];
+  return <CommandButton onExecute={onExecute} />;
+};
+
+const Cell = props => {
+  return <Table.Cell {...props} />;
+};
+
+const EditCell = props => {
+  const { column, editingEnabled } = props;
+
+  console.log(column.name);
+  console.log(editingEnabled);
+
+  if (column.name == 'amount') {
+    return <TableEditRow.Cell {...props} />;
+  } else {
+    return <TableEditRow.Cell editingEnabled={false} {...props} />;
+  }
+};
+
 class RequestsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: this.props.columns,
+      columns: [
+        { name: 'description', title: 'Description' },
+        { name: 'amount', title: 'Amount' },
+        { name: 'details', title: 'Details' },
+        { name: 'location', title: 'Location' }
+      ],
+      tableColumnExtensions: [
+        { columnName: 'amount', width: 120, align: 'center' }
+      ],
       cart: this.props.cart,
-      tableColumnExtensions: [],
-      detailsColumns: ['details', 'properties']
+      detailsColumns: ['details', 'properties'],
+      rowChanges: {},
+      editingRowIds: []
     };
     this.commitChanges = this.commitChanges.bind(this);
+    this.changeEditingRowIds = editingRowIds =>
+      this.setState({ editingRowIds });
+    this.changeRowChanges = rowChanges => this.setState({ rowChanges });
   }
 
-  commitChanges(status) {
-    const { deleted } = status;
-    console.log(deleted);
+  commitChanges({ changed, deleted }) {
     let { cart } = this.state;
     if (deleted) {
       const deletedSet = new Set(deleted);
       cart = cart.filter(item => !deletedSet.has(item.id));
-      let { cookies } = this.props;
-      cookies.set('cart', cart);
     }
+    if (changed) {
+      cart = cart.map(item =>
+        changed[item.id] ? { ...item, ...changed[item.id] } : item
+      );
+    }
+    this.props.cookies.set('cart', cart);
     this.setState({ cart });
   }
 
   render() {
-    const getRowId = row => row.id;
-    const { cart, columns, tableColumnExtensions, detailsColumns } = this.state;
+    const {
+      cart,
+      columns,
+      editingRowIds,
+      rowChanges,
+      tableColumnExtensions,
+      detailsColumns
+    } = this.state;
 
     return (
-      <Grid rows={cart} columns={columns} getRowId={getRowId}>
-        <EditingState onCommitChanges={this.commitChanges} />
-        <Table
-          rowComponent={TableRow}
-          columnExtensions={tableColumnExtensions}
+      <Grid rows={cart} columns={columns} getRowId={row => row.id}>
+        <EditingState
+          columnExtensions={[{ columnName: 'amount', editingEnabled: true }]}
+          columnEditingEnabled={false}
+          editingRowIds={editingRowIds}
+          onEditingRowIdsChange={this.changeEditingRowIds}
+          rowChanges={rowChanges}
+          onRowChangesChange={this.changeRowChanges}
+          onCommitChanges={this.commitChanges}
         />
-        <TableEditColumn showDeleteCommand />
         <IntegratedFiltering />
         <SortingState
           defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
@@ -122,6 +206,17 @@ class RequestsTable extends Component {
         <RowDetailState />
         <PagingState defaultCurrentPage={0} pageSize={5} />
         <IntegratedPaging />
+        <Table
+          columnExtensions={tableColumnExtensions}
+          rowComponent={TableRow}
+          cellComponent={Cell}
+        />
+        <TableEditRow cellComponent={EditCell} />
+        <TableEditColumn
+          showDeleteCommand
+          showEditCommand
+          commandComponent={Command}
+        />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
         <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
       </Grid>

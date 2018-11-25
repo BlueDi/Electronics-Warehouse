@@ -12,7 +12,6 @@ class RequestList extends Component {
   columns_name = ['description', 'amount', 'details', 'location'];
   state = {
     data: [],
-    columns: [],
     professors: [],
     professor_id: undefined,
     details: undefined
@@ -22,11 +21,6 @@ class RequestList extends Component {
     super(props);
     const { cookies } = this.props;
     this.state.data = cookies.get('cart');
-
-    for (let i = 0; i < this.columns_name.length; i++) {
-      const name = this.columns_name[i];
-      this.state.columns.push({ title: name, name: name });
-    }
   }
 
   componentDidMount() {
