@@ -39,7 +39,9 @@ class RequestList extends Component {
             const { login, id } = response.data[i];
             professors.push({ key: id, value: id, flag: id, text: login });
           }
-          this.setState({ professors });
+          if (professors.length > 0) {
+            this.setState({ professor_id: professors[0].value, professors });
+          }
         }
       })
       .catch(e => {
@@ -89,13 +91,11 @@ class RequestList extends Component {
         <div style={{ paddingTop: '2em', float: 'left' }}>
           <Form>
             <Form.Dropdown
-              required
-              fluid
-              search
               selection
-              placeholder="Professor Name"
+              search
               label="Professor"
               options={this.state.professors}
+              value={this.state.professor_id}
               onChange={(e, { value }) =>
                 this.setState({ professor_id: value })
               }
