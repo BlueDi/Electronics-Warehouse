@@ -53,7 +53,7 @@ class Requests extends Component {
     ) : (
       <PageTitle title="Requests">
         <RequestsTable
-          components={this.state.requests}
+          requests={this.state.requests}
           columnsOrder={this.default_column_order()}
         />
       </PageTitle>

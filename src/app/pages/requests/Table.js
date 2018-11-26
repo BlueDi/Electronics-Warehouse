@@ -6,8 +6,7 @@ import {
   SearchState,
   IntegratedFiltering,
   SortingState,
-  IntegratedSorting,
-  DataTypeProvider
+  IntegratedSorting
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -21,45 +20,19 @@ import {
   SearchPanel,
   Toolbar
 } from '@devexpress/dx-react-grid-material-ui';
-import { Button, Icon, Image } from 'semantic-ui-react';
+import { Button, Icon } from 'semantic-ui-react';
 
 const SortingIcon = ({ direction }) =>
   direction === 'asc' ? <Icon name="arrow up" /> : <Icon name="arrow down" />;
 
 const SortLabel = ({ onSort, children, direction }) => {
-  return children.props.children !== 'image' &&
-    children.props.children !== 'details' &&
-    children.props.children !== 'properties' ? (
+  return (
     <Button fluid icon labelPosition="right" onClick={onSort}>
       {children}
       {direction && <SortingIcon direction={direction} />}
     </Button>
-  ) : (
-    <Button fluid>{children}</Button>
   );
 };
-
-const DetailsFormatter = ({ value }) => {
-  var details_list = [];
-  for (const param in value) {
-    if (value.hasOwnProperty(param)) {
-      details_list.push(<p>{param + ': ' + value[param]}</p>);
-    }
-  }
-  return details_list;
-};
-
-const DetailsTypeProvider = props => (
-  <DataTypeProvider formatterComponent={DetailsFormatter} {...props} />
-);
-
-const ImageFormatter = ({ value }) => (
-  <Image src={`data:image/png;base64,${value}`} size="small" />
-);
-
-const ImageTypeProvider = props => (
-  <DataTypeProvider formatterComponent={ImageFormatter} {...props} />
-);
 
 class TableRow extends Component {
   render() {
@@ -85,9 +58,7 @@ class RequestsTable extends Component {
     this.state = {
       columns: [],
       tableColumnExtensions: [],
-      detailsColumns: ['details', 'properties'],
-      imageColumns: ['image'],
-      rows: this.props.components
+      rows: this.props.requests
     };
   }
 
@@ -104,13 +75,7 @@ class RequestsTable extends Component {
   }
 
   render() {
-    const {
-      rows,
-      columns,
-      tableColumnExtensions,
-      detailsColumns,
-      imageColumns
-    } = this.state;
+    const { rows, columns, tableColumnExtensions } = this.state;
 
     return (
       <Grid rows={rows} columns={columns}>
@@ -123,8 +88,6 @@ class RequestsTable extends Component {
           defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
         />
         <IntegratedSorting />
-        <DetailsTypeProvider for={detailsColumns} />
-        <ImageTypeProvider for={imageColumns} />
         <Table
           rowComponent={TableRow}
           columnExtensions={tableColumnExtensions}
