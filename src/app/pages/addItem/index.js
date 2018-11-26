@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Button, Image, Form } from 'semantic-ui-react';
 import NumericInput from 'react-numeric-input';
-import { PageTitle } from '@common/components';
+import { Authorization, PageTitle } from '@common/components';
 import { service } from '@utils';
 
 const ImageExampleLink = () => (
@@ -92,25 +92,31 @@ class AddItem extends Component {
       });
   }
 
+  renderContent() {
+    return (
+      <Grid style={{ paddingTop: '2em' }}>
+        <div style={{ paddingLeft: '2em' }}>{ImageExampleLink()}</div>
+        <div style={{ width: '50%' }}>
+          {FormExampleForm()}
+          <div style={{ paddingTop: '2em', float: 'right' }}>
+            <Button.Group>
+              <Button positive onClick={this.editItem}>
+                Save
+              </Button>
+              <Button.Or />
+              <Button>Cancel</Button>
+            </Button.Group>
+          </div>
+        </div>
+      </Grid>
+    );
+  }
+
   render() {
     return (
-      <PageTitle title="Add an Item">
-        <Grid style={{ paddingTop: '2em' }}>
-          <div style={{ paddingLeft: '2em' }}>{ImageExampleLink()}</div>
-          <div style={{ width: '50%' }}>
-            {FormExampleForm()}
-            <div style={{ paddingTop: '2em', float: 'right' }}>
-              <Button.Group>
-                <Button positive onClick={this.editItem}>
-                  Save
-                </Button>
-                <Button.Or />
-                <Button>Cancel</Button>
-              </Button.Group>
-            </div>
-          </div>
-        </Grid>
-      </PageTitle>
+      <Authorization param="can_edit">
+        <PageTitle title="Add an Item">{this.renderContent()}</PageTitle>
+      </Authorization>
     );
   }
 }

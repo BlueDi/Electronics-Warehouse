@@ -1,6 +1,5 @@
 import Layout, {
   NotFound,
-  Home,
   AddItem,
   Course,
   InDepthItem,
@@ -14,7 +13,7 @@ export const routes = [
     path: '/',
     exact: true,
     menu: 'Home',
-    component: Home
+    component: WHTable
   },
   {
     path: '/course',

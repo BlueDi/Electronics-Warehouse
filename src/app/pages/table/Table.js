@@ -49,7 +49,7 @@ const DetailsFormatter = ({ value }) => {
   var details_list = [];
   for (const param in value) {
     if (value.hasOwnProperty(param)) {
-      details_list.push(<p>{param + ': ' + value[param]}</p>);
+      details_list.push(<p key={param}>{param + ': ' + value[param]}</p>);
     }
   }
   return details_list;
@@ -59,8 +59,12 @@ const DetailsTypeProvider = props => (
   <DataTypeProvider formatterComponent={DetailsFormatter} {...props} />
 );
 
-const ImageFormatter = ({ value }) => (
-  <Image src={`data:image/png;base64,${value}`} size="small" />
+const ImageFormatter = ({ row }) => (
+  <Image
+    src={`data:image/png;base64,${row.image}`}
+    size="small"
+    alt={row.description}
+  />
 );
 
 const ImageTypeProvider = props => (
