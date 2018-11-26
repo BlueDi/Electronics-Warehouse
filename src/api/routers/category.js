@@ -26,10 +26,10 @@ categoryRouter.post('/item_category_properties', async (req, res) => {
     resolve(data);
   }).then(propertyIds => {
     let apiUrl = '/properties_info';
+
     service
       .post(apiUrl, propertyIds)
       .then(response => {
-        console.log('PROP INFO', response.data);
         res.send(response.data);
       })
       .catch(e => {
@@ -43,11 +43,20 @@ categoryRouter.post('/item_category_properties', async (req, res) => {
 categoryRouter.get('/category_tree/:id', async (req, res) => {
   try {
     const data = await db.func('get_category_tree', req.params.id);
-    console.log('category family', data);
     res.send(data);
   } catch (e) {
     console.log('Error retrieving category tree!', e);
     res.send('Failed to retrieve category tree!');
+  }
+});
+
+categoryRouter.get('/category_descendant_tree/:id', async (req, res) => {
+  try {
+    const data = await db.func('get_category_descendant_tree', req.params.id);
+    res.send(data);
+  } catch (e) {
+    console.log('Error retrieving category descendant tree!', e);
+    res.send('Failed to retrieve category descendant tree!');
   }
 });
 
