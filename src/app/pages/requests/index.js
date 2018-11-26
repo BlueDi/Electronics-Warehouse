@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import { Grid } from 'semantic-ui-react';
+import { withCookies } from 'react-cookie';
 import { service } from '@utils';
 import { Loader, PageTitle } from '@common/components';
 import RequestsTable from './Table';
@@ -19,12 +19,11 @@ class Requests extends Component {
   }
 
   componentDidMount() {
-    console.log('test');
     this.getData();
-    console.log('test2');
   }
 
   getData() {
+    console.log(this.props.cookies.get('id'));
     service
       .get(urlAllRequestsManager)
       .then(response => {
@@ -62,4 +61,4 @@ class Requests extends Component {
   }
 }
 
-export default Requests;
+export default withCookies(Requests);
