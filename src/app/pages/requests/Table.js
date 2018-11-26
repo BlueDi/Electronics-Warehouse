@@ -7,8 +7,7 @@ import {
   IntegratedFiltering,
   SortingState,
   IntegratedSorting,
-  DataTypeProvider,
-  SelectionState
+  DataTypeProvider
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -20,8 +19,7 @@ import {
   ColumnChooser,
   TableColumnVisibility,
   SearchPanel,
-  Toolbar,
-  TableSelection
+  Toolbar
 } from '@devexpress/dx-react-grid-material-ui';
 import { Button, Icon, Image } from 'semantic-ui-react';
 
@@ -89,22 +87,12 @@ class RequestsTable extends Component {
       tableColumnExtensions: [],
       detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
-      rows: this.props.components,
-      selection: []
+      rows: this.props.components
     };
   }
 
   componentDidMount() {
     this.mount_header();
-  }
-
-  changeSelection = selection => this.setState({ selection });
-
-  getItemsFromSelection() {
-    const { rows, selection } = this.state;
-    var selected = [];
-    for (var i in selection) selected.push(rows[i]);
-    return selected;
   }
 
   mount_header() {
@@ -121,14 +109,8 @@ class RequestsTable extends Component {
       columns,
       tableColumnExtensions,
       detailsColumns,
-      imageColumns,
-      selection
+      imageColumns
     } = this.state;
-
-    let compare_items;
-    if (selection.length > 0) {
-      //compare_items = <CompareItems items={this.getItemsFromSelection()} />;
-    }
 
     return (
       <Grid rows={rows} columns={columns}>
@@ -143,10 +125,6 @@ class RequestsTable extends Component {
         <IntegratedSorting />
         <DetailsTypeProvider for={detailsColumns} />
         <ImageTypeProvider for={imageColumns} />
-        <SelectionState
-          selection={selection}
-          onSelectionChange={this.changeSelection}
-        />
         <Table
           rowComponent={TableRow}
           columnExtensions={tableColumnExtensions}
@@ -158,8 +136,6 @@ class RequestsTable extends Component {
         <SearchPanel />
         <ColumnChooser />
         <PagingPanel />
-        <TableSelection />
-        {compare_items}
       </Grid>
     );
   }
