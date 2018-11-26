@@ -50,10 +50,11 @@ class RequestList extends Component {
   };
 
   sendRequest = () => {
+    const items = this.props.cookies.get('cart');
     if (this.state.professor_id != undefined) {
       const cart = [];
-      for (let i = 0; i < this.state.data.length; i++) {
-        const item = this.state.data[i];
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
         cart.push({ id: item.id, amount: item.amount });
       }
       const body = {
