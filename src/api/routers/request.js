@@ -105,7 +105,7 @@ requestRouter.post('/request_workflow_update/', async (req, res) => {
 
 requestRouter.post('/request_evaluate_professor/', async (req, res) => {
   const queryProfessorEvaluateRequest = `UPDATE request_workflow
-    SET date_professor_evaluated = NOW()::timestamp,
+    SET date_professor_evaluated = NOW(),
         professor_accept = ${req.body.accept}
     WHERE id = '${req.body.id}';
   `;
@@ -120,7 +120,7 @@ requestRouter.post('/request_evaluate_professor/', async (req, res) => {
 
 requestRouter.post('/request_evaluate_manager/', async (req, res) => {
   const queryManagerEvaluateRequest = `UPDATE request_workflow
-    SET date_manager_evaluated = NOW()::timestamp,
+    SET date_manager_evaluated = NOW(),
         manager_accept = ${req.body.accept}
     WHERE id = '${req.body.id}';
   `;
