@@ -35,11 +35,12 @@ class Request extends Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.handleSaveEdition = this.handleSaveEdition.bind(this);
     this.handleCancelEdition = this.handleCancelEdition.bind(this);
+    this.handleRequestFieldChange = this.handleRequestFieldChange.bind(this);
   }
 
   componentDidMount() {
     this.getRequestInfo();
-    //this.getAllCategories();
+    this.getRequestItems();
   }
 
   getRequestInfo() {
@@ -56,11 +57,11 @@ class Request extends Component {
   }
 
   getRequestItems() {
-    const apiUrl = `/all_categories`;
+    const apiUrl = `/request_items/${this.state.id}`;
     service
       .get(apiUrl)
       .then(response => {
-        console.log(response.data);
+        console.log('items', response.data);
 
         this.setState({
           items: response.data
@@ -72,9 +73,26 @@ class Request extends Component {
   }
 
   editRequestWorkflow() {
-    const apiUrl = `/item_edit`;
+    const apiUrl = `/request_workflow_update`;
     service
       .post(apiUrl, this.state)
+      .then(response => {
+        console.log('edit workflow response', response.data);
+      })
+      .then(response => {
+        this.componentDidMount();
+        return response;
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
+  handleAccept() {
+    const apiUrl = `/request_evaluate_manager`;
+    const reqBody = { id: this.state.id, accept: true };
+    service
+      .post(apiUrl, reqBody)
       .then(response => {
         console.log('edit item response', response.data);
       })
@@ -87,12 +105,21 @@ class Request extends Component {
       });
   }
 
-  handleAccept() {
-    //TODO: call API to create item request in database
-  }
-
   handleReject() {
-    //TODO: call API to create item request in database
+    const apiUrl = `/request_evaluate_manager`;
+    const reqBody = { id: this.state.id, accept: false };
+    service
+      .post(apiUrl, reqBody)
+      .then(response => {
+        console.log('edit item response', response.data);
+      })
+      .then(response => {
+        this.componentDidMount();
+        return response;
+      })
+      .catch(e => {
+        throw e;
+      });
   }
 
   handleEdit() {
@@ -100,13 +127,17 @@ class Request extends Component {
   }
 
   handleSaveEdition() {
-    this.editItem();
+    this.editRequestWorkflow();
     this.setState({ edit: false });
   }
 
   handleCancelEdition() {
     this.setState({ edit: false });
     this.componentDidMount();
+  }
+
+  handleRequestFieldChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
   }
 
   renderItemFields() {
@@ -121,7 +152,7 @@ class Request extends Component {
     for (let i = 0; i < stateContents.length; i++) {
       let fieldName = stateFields[i];
       let fieldContent = stateContents[i];
-      let changeHandler = this.handleItemFieldChange;
+      let changeHandler = this.handleRequestFieldChange;
 
       itemCharacteristics.push(
         <div>
@@ -148,11 +179,13 @@ class Request extends Component {
 
               <div className="Buttons" style={{ columnCount: '3' }}>
                 <RequestButtons
+                  acceptState={this.state.manager_accept}
                   editing={this.state.edit}
-                  handleRequest={this.handleRequest}
                   handleEdit={this.handleEdit}
-                  handleAccept={this.handleAcceptEdition}
-                  handleCancel={this.handleCancelEdition}
+                  handleAccept={this.handleAccept}
+                  handleReject={this.handleReject}
+                  handleSaveEdition={this.handleSaveEdition}
+                  handleCancelEdition={this.handleCancelEdition}
                 />
               </div>
             </div>

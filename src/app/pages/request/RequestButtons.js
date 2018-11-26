@@ -22,7 +22,7 @@ export function RequestButtons(props) {
   let cancelButton = (
     <div className="CancelButton" style={{ textAlign: 'left' }}>
       <Button
-        onClick={props.handleCancel}
+        onClick={props.handleCancelEdition}
         style={{
           backgroundColor: '#D2E0E8',
           padding: '10px 15px',
@@ -38,15 +38,15 @@ export function RequestButtons(props) {
   let saveButton = (
     <div className="SaveButton" style={{ textAlign: 'left' }}>
       <Button
-        onClick={props.handleSave}
+        onClick={props.handleSaveEdition}
         style={{
-          backgroundColor: '#D2E0E8',
+          backgroundColor: '#52e852',
           padding: '10px 15px',
           borderRadius: '10px',
           border: '0px'
         }}
       >
-        Cancel
+        Save
       </Button>
     </div>
   );
@@ -85,8 +85,8 @@ export function RequestButtons(props) {
 
   return (
     <div>
-      {!props.editing && acceptButton}
-      {!props.editing && rejectButton}
+      {!props.editing && props.acceptState === null && acceptButton}
+      {!props.editing && props.acceptState === null && rejectButton}
       {!props.editing && editButton}
       {props.editing && cancelButton}
       {props.editing && saveButton}
