@@ -28,6 +28,12 @@ propertyRouter.post('/properties_info', async (req, res) => {
       return property.property_id;
     });
 
+    if (property_list.length == 0) {
+      let data = [];
+      res.send(data);
+      return;
+    }
+
     let get_properties_info_query = `SELECT *
     FROM property
     WHERE id IN(${property_list});`;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ReadjustableImage } from '@common/components';
+import { ReadjustableImage, HTMLEditor } from '@common/components';
 import {
   Dropdown,
   Breadcrumb,
@@ -30,7 +30,7 @@ export class InDepthItemField extends Component {
 
   nonEditablePropertiesField() {
     let property_list = this.props.fieldContent.map(property => {
-      let invalidProperty = !property.value || property.value === '';
+      let invalidProperty = !property.value.trim();
 
       return (
         <li key={property.property_id}>
@@ -41,10 +41,17 @@ export class InDepthItemField extends Component {
       );
     });
 
-    return (
-      <div>
+    let existentSpecifications = (
+      <>
         <span>Specifications</span>
         <ul>{property_list}</ul>
+      </>
+    );
+    let noSpecifications = <span>There are no specifications</span>;
+    return (
+      <div>
+        {property_list.length > 0 && existentSpecifications}
+        {property_list.length === 0 && noSpecifications}
       </div>
     );
   }
@@ -68,6 +75,43 @@ export class InDepthItemField extends Component {
           <h1 className="Title" style={{ textAlign: 'left', marginLeft: '5%' }}>
             {this.props.fieldContent}
           </h1>
+        );
+      }
+
+      case 'user comments': {
+        return (
+          <>
+            {this.props.fieldName}: <br />
+            <HTMLEditor displayOnly={true} value={this.props.fieldContent} />
+          </>
+        );
+      }
+
+      case 'add user comment': {
+        if (!this.props.isUserLogged) {
+          //only allow comment addition if user is logged in
+          return null;
+        }
+
+        return (
+          <div style={{ marginTop: 20 }}>
+            <HTMLEditor
+              className={this.props.fieldName.replace(/ /g, '_')}
+              canvasType="code"
+              height="200"
+              onChange={this.props.handleChange[0]}
+              value={this.props.fieldContent}
+            />
+            <div style={{ marginBottom: 10, position: 'relative' }}>
+              <Button
+                primary
+                key={this.props.fieldName}
+                onClick={this.props.handleChange[1]}
+              >
+                Add comment
+              </Button>
+            </div>
+          </div>
         );
       }
 
@@ -111,10 +155,17 @@ export class InDepthItemField extends Component {
       );
     });
 
-    return (
-      <div>
+    let existentSpecifications = (
+      <>
         <span>Specifications</span>
         <ul>{property_list}</ul>
+      </>
+    );
+    let noSpecifications = <span>There are no specifications</span>;
+    return (
+      <div>
+        {property_list.length > 0 && existentSpecifications}
+        {property_list.length === 0 && noSpecifications}
       </div>
     );
   }
@@ -156,6 +207,20 @@ export class InDepthItemField extends Component {
               value=""
               onChange={this.props.handleChange}
               style={{ visibility: 'hidden' }}
+            />
+          </div>
+        );
+      }
+
+      case 'user comments': {
+        return (
+          <div style={{ marginTop: 3 }}>
+            {this.props.fieldName}: <br />
+            <HTMLEditor
+              className={this.props.fieldName.replace(/ /g, '_')}
+              canvasType="code"
+              onChange={this.props.handleChange}
+              value={this.props.fieldContent}
             />
           </div>
         );

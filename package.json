@@ -92,6 +92,7 @@
     "react-cookie": "^3.0.4",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.6.3",
+    "react-html-parser": "^2.0.2",
     "react-numeric-input": "^2.2.3",
     "react-router-config": "^4.4.0-beta.6",
     "react-router-dom": "^4.4.0-beta.6",
