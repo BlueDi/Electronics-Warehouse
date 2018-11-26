@@ -17,7 +17,7 @@ CREATE TABLE category (
 	name TEXT UNIQUE NOT NULL,
 	id_parent INT,
 	FOREIGN KEY(id_parent) REFERENCES category(id));
-	
+
 CREATE TABLE packaging (
 	id SERIAL PRIMARY KEY,
 	name TEXT UNIQUE NOT NULL);
@@ -60,7 +60,7 @@ CREATE TABLE item_property (
 	property_id INT NOT NULL,
 	FOREIGN KEY(item_id) REFERENCES item(id),
 	FOREIGN KEY(property_id) REFERENCES property(id));
-	
+
 CREATE TABLE permissions (
 	id SERIAL PRIMARY KEY,
 	name TEXT UNIQUE NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE permissions (
 	can_read BOOLEAN NOT NULL,
 	can_request BOOLEAN NOT NULL,
 	can_edit BOOLEAN NOT NULL);
-	
+
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
 	login TEXT UNIQUE,
@@ -76,13 +76,13 @@ CREATE TABLE users (
 	user_permissions INT NOT NULL,
 	FOREIGN KEY(user_permissions) REFERENCES permissions(id));
 
-	
+
 CREATE TABLE request_workflow (
 	id SERIAL PRIMARY KEY,
-	date_sent DATE NOT NULL,
-	date_cancelled DATE,
-	date_professor_evaluated DATE,
-	date_manager_evaluated DATE,
+	date_sent TIMESTAMP WITH TIME ZONE NOT NULL,
+	date_cancelled TIMESTAMP WITH TIME ZONE,
+	date_professor_evaluated TIMESTAMP WITH TIME ZONE,
+	date_manager_evaluated TIMESTAMP WITH TIME ZONE,
 	cancelled BOOLEAN NOT NULL,
 	professor_accept BOOLEAN,
 	manager_accept BOOLEAN,
@@ -94,7 +94,7 @@ CREATE TABLE request_workflow (
 	FOREIGN KEY(requester_id) REFERENCES users(id),
 	FOREIGN KEY(professor_id) REFERENCES users(id),
 	FOREIGN KEY(manager_id) REFERENCES users(id));
-	
+
 CREATE TABLE request_items (
 	id SERIAL PRIMARY KEY,
 	request_id INT NOT NULL,

@@ -11,11 +11,11 @@ INSERT INTO category (name, id_parent) VALUES
  ('Audio, Office and Electrical', 1),
  ('Power, Test and Measurement', 1),
  ('Tools and Maintenance', 1);
- 
+
  INSERT INTO category (name, id_parent) VALUES
  ('Transistors', 2),
  ('Wire-To-Board Connectors', 6);
- 
+
  INSERT INTO packaging (name) VALUES
  ('Packaging A'),
  ('Packaging B'),
@@ -1546,12 +1546,12 @@ INSERT INTO item_property (value, item_id, property_id) VALUES
  ('24', 6, 1), ('20', 6, 3), ('Black', 6, 4), ('300', 6, 11),
  ('24', 7, 1), ('200', 7, 3), ('Yes', 7, 6), ('12', 7, 9),
  ('1.5', 8, 1), ('50', 8, 3), ('12', 8, 10), ('80', 8, 10);
- 
+
 INSERT INTO permissions (name, user_path, can_read, can_request, can_edit) VALUES
  ('student', '/table/1', TRUE, TRUE, FALSE),
  ('professor', '/table/1', TRUE, FALSE, FALSE),
  ('manager', '/table/1', TRUE, FALSE, TRUE);
- 
+
 INSERT INTO users (login, password, user_permissions) VALUES
  ('student1', '1234', 1),
  ('student2', 'qwer', 1),
@@ -1559,14 +1559,14 @@ INSERT INTO users (login, password, user_permissions) VALUES
  ('professor2', 'qwer', 2),
  ('manager1', '1234', 3),
  ('manager2', 'qwer', 3);
-  
+
 INSERT INTO request_workflow (date_sent, date_cancelled, date_professor_evaluated, date_manager_evaluated, cancelled, professor_accept, manager_accept, purpose, workflow, requester_id, professor_id, manager_id) VALUES
-  (NOW()::timestamp, NULL, NULL, NULL, FALSE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
-  (NOW()::timestamp - interval '1 hour', NOW()::timestamp, NULL, NULL, TRUE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
-  (NOW()::timestamp - interval '6 hours', NULL, NOW()::timestamp - interval '3 hours', NOW()::timestamp, FALSE, TRUE, TRUE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 5),
-  (NOW()::timestamp - interval '7 hours', NULL, NOW()::timestamp - interval '2 hours', NULL, FALSE, TRUE, FALSE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 6),
-  (NOW()::timestamp - interval '9 hours', NULL, NOW()::timestamp - interval '5 hours', NULL, FALSE, TRUE, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 4, NULL);
-  
+  (NOW(), NULL, NULL, NULL, FALSE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
+  (NOW() - interval '1 hour', NOW()::timestamp, NULL, NULL, TRUE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
+  (NOW()- interval '6 hours', NULL, NOW() - interval '3 hours', NOW(), FALSE, TRUE, TRUE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 5),
+  (NOW() - interval '7 hours', NULL, NOW() - interval '2 hours', NULL, FALSE, TRUE, FALSE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 6),
+  (NOW() - interval '9 hours', NULL, NOW() - interval '5 hours', NULL, FALSE, TRUE, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 4, NULL);
+
 INSERT INTO request_items (request_id, item_id, count) VALUES
  (1, 1, 2),
  (1, 2, 4),
