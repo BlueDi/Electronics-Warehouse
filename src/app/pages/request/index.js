@@ -30,7 +30,7 @@ class Request extends Component {
     };
 
     //button handlers
-    this.handleAccept = this.handleReject.bind(this);
+    this.handleAccept = this.handleAccept.bind(this);
     this.handleReject = this.handleReject.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleSaveEdition = this.handleSaveEdition.bind(this);
