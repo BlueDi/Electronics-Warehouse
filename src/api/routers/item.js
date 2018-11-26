@@ -102,6 +102,21 @@ itemRouter.get('/item_packaging/:id', async (req, res) => {
   }
 });
 
+itemRouter.get('/item_comments/:id', async (req, res) => {
+  const in_depth_item_comments_query = `
+    SELECT item.user_comments
+    FROM item
+    WHERE item.id = ${req.params.id}`;
+
+  try {
+    const data = await db.one(in_depth_item_comments_query);
+    res.send(data);
+  } catch (e) {
+    console.log('Error retrieving item user comments! ', e);
+    res.send('Failed to retrieve item comments!');
+  }
+});
+
 itemRouter.post('/item_edit', async (req, res) => {
   let newItem = req.body;
 
@@ -136,6 +151,17 @@ itemRouter.post('/item_edit', async (req, res) => {
   } catch (e) {
     console.log('Error editing item!', e);
     res.send('Failed to edit item!');
+  }
+});
+
+itemRouter.post('/item_comments_increment', async (req, res) => {
+  try {
+    let parameters = [req.body.itemId, req.body.newComment.trimRight()];
+
+    const data = await db.func('increment_user_comments', parameters);
+    res.send(data);
+  } catch (e) {
+    res.send('Failed to increment item comments!');
   }
 });
 
