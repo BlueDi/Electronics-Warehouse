@@ -13,6 +13,12 @@ class AddToCart extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.state.items.length != nextProps.items) {
+      this.setState({items: nextProps.items});
+    }
+  }
+
   handleChange = ({ target }) => {
     this.setState({
       [target.name]: target.value
@@ -37,7 +43,6 @@ class AddToCart extends Component {
       }
     }
     cookies.set('cart', cart, { path: '/' });
-    console.log(cookies.get('cart'));
   };
 
   makeItemCopy = (item, amount) => {
