@@ -326,7 +326,16 @@ class InDepthItem extends Component {
   }
 
   handleRequest() {
-    //TODO: call API to create item request in database
+    const apiUrl = `/send_mail/veronica.fradique@gmail.com`;
+
+    service
+      .get(apiUrl)
+      .then(response => {
+        return response;
+      })
+      .catch(e => {
+        throw e;
+      });
   }
 
   handleEdit() {
