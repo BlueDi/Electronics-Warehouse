@@ -26,6 +26,7 @@ categoryRouter.post('/item_category_properties', async (req, res) => {
     resolve(data);
   }).then(propertyIds => {
     let apiUrl = '/properties_info';
+
     service
       .post(apiUrl, propertyIds)
       .then(response => {

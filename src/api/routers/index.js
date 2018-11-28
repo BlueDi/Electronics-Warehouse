@@ -1,15 +1,17 @@
-import itemRouter from './item';
 import categoryRouter from './category';
+import itemRouter from './item';
+import mailRouter from './mail';
+import packagingRouter from './packaging';
 import propertyRouter from './property';
 import requestRouter from './request';
-import packagingRouter from './packaging';
 import userRouter from './user';
 
 export default [
-  itemRouter,
   categoryRouter,
+  itemRouter,
+  mailRouter,
+  packagingRouter,
   propertyRouter,
   requestRouter,
-  packagingRouter,
   userRouter
 ];
