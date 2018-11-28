@@ -3,7 +3,7 @@ import { PageTitle } from '@common/components';
 import { service } from '@utils';
 import { withCookies } from 'react-cookie';
 import { Redirect } from 'react-router-dom';
-import { RequestField } from './RequestField';
+import { InDepthItemField } from '@pages/inDepthItem/InDepthItemField';
 import { RequestButtons } from './RequestButtons';
 import '@common/styles/global.css';
 
@@ -50,7 +50,7 @@ class Request extends Component {
   }
 
   getRole() {
-    if (this.state.user_id == -1) return;
+    if (this.state.user_id === -1) return;
 
     const urlGetRole = `/user_permissions/${this.state.user_id}`;
     service
@@ -114,9 +114,9 @@ class Request extends Component {
 
   handleAccept() {
     let apiUrl = `/none`;
-    if (this.state.user_permissions == 2)
+    if (this.state.user_permissions === 2)
       apiUrl = `/request_evaluate_professor`;
-    else if (this.state.user_permissions == 3)
+    else if (this.state.user_permissions === 3)
       apiUrl = `/request_evaluate_manager`;
 
     const reqBody = { id: this.state.id, accept: true };
@@ -136,9 +136,9 @@ class Request extends Component {
 
   handleReject() {
     let apiUrl = `/none`;
-    if (this.state.user_permissions == 2)
+    if (this.state.user_permissions === 2)
       apiUrl = `/request_evaluate_professor`;
-    else if (this.state.user_permissions == 3)
+    else if (this.state.user_permissions === 3)
       apiUrl = `/request_evaluate_manager`;
 
     const reqBody = { id: this.state.id, accept: false };
@@ -190,11 +190,11 @@ class Request extends Component {
 
       itemCharacteristics.push(
         <div>
-          <RequestField
+          <InDepthItemField
             key={fieldName}
             fieldName={fieldName}
             fieldContent={fieldContent}
-            editable={this.state.edit}
+            editable={fieldName === 'workflow' && this.state.edit}
             handleChange={changeHandler}
           />
         </div>
@@ -202,43 +202,41 @@ class Request extends Component {
     }
 
     return (
-      <div>
-        <div className="Request" style={{ textAlign: 'left' }}>
-          <column style={{ columnWidth: '50%' }}>
-            <div
-              className="Information"
-              style={{ float: 'left', textAlign: 'left', marginLeft: '5%' }}
-            >
-              {itemCharacteristics}
+      <div className="Request" style={{ textAlign: 'left' }}>
+        <column style={{ columnWidth: '50%' }}>
+          <div
+            className="Information"
+            style={{ float: 'left', textAlign: 'left', marginLeft: '5%' }}
+          >
+            {itemCharacteristics}
 
-              <div className="Buttons" style={{ columnCount: '3' }}>
-                <RequestButtons
-                  acceptState={this.state.manager_accept}
-                  editing={this.state.edit}
-                  handleEdit={this.handleEdit}
-                  handleAccept={this.handleAccept}
-                  handleReject={this.handleReject}
-                  handleSaveEdition={this.handleSaveEdition}
-                  handleCancelEdition={this.handleCancelEdition}
-                  user_permissions={this.state.user_permissions}
-                  professor_accept={this.state.professor_accept}
-                />
-              </div>
+            <div className="Buttons" style={{ columnCount: '3' }}>
+              <RequestButtons
+                acceptState={this.state.manager_accept}
+                editing={this.state.edit}
+                handleEdit={this.handleEdit}
+                handleAccept={this.handleAccept}
+                handleReject={this.handleReject}
+                handleSaveEdition={this.handleSaveEdition}
+                handleCancelEdition={this.handleCancelEdition}
+                user_permissions={this.state.user_permissions}
+                professor_accept={this.state.professor_accept}
+              />
             </div>
-          </column>
-        </div>
+          </div>
+        </column>
       </div>
     );
   }
 
   render() {
-    return this.state.user_id == -1 ||
-      (this.state.user_permissions == 1 &&
-        this.state.user_id != this.state.requester_id &&
-        this.state.fetching == false) ||
-      (this.state.user_permissions == 2 &&
-        this.state.user_id != this.state.professor_id &&
-        this.state.fetching == false) ? (
+    return this.state.user_id === -1 ||
+      (this.state.user_permissions === 1 &&
+        this.state.user_id !== this.state.requester_id &&
+        this.state.fetching === false) ||
+      (this.state.user_permissions === 2 &&
+        this.state.user_id !== this.state.professor_id &&
+        this.state.fetching === false) ? (
       <Redirect to="/" />
     ) : (
       <PageTitle key={'Request'} title="Request">

@@ -21,7 +21,7 @@ class Requests extends Component {
   }
 
   getRole() {
-    if (this.state.user_id == -1) return;
+    if (this.state.user_id === -1) return;
 
     const urlGetRole = `/user_permissions/${this.state.user_id}`;
     service
@@ -43,11 +43,12 @@ class Requests extends Component {
 
   getData() {
     let DataUrl = `none`;
-    if (this.state.user_permissions == 1)
+    if (this.state.user_permissions === 1)
       DataUrl = `/request_student_all/${this.state.user_id}`;
-    else if (this.state.user_permissions == 2)
+    else if (this.state.user_permissions === 2)
       DataUrl = `/request_professor_all/${this.state.user_id}`;
-    else if (this.state.user_permissions == 3) DataUrl = `/request_manager_all`;
+    else if (this.state.user_permissions === 3)
+      DataUrl = `/request_manager_all`;
 
     service
       .get(DataUrl)
@@ -72,7 +73,7 @@ class Requests extends Component {
   }
 
   render() {
-    return this.state.user_id == -1 ? (
+    return this.state.user_id === -1 ? (
       <Redirect to="/" />
     ) : this.state.isFetching ? (
       <Loader text="Preparing Table" />

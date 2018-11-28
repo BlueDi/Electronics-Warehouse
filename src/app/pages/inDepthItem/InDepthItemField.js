@@ -251,6 +251,21 @@ export class InDepthItemField extends Component {
         );
       }
 
+      case 'workflow': {
+        return (
+          <span>
+            {this.props.fieldName}:{' '}
+            <Input
+              type="text"
+              name={this.props.fieldName}
+              value={this.props.fieldContent}
+              onChange={this.props.handleChange}
+              style={{ width: '800px' }}
+            />
+          </span>
+        );
+      }
+
       default: {
         return (
           <span>
