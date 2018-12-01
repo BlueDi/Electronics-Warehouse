@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { ReadjustableImage } from '@common/components';
-import { Dropdown, Breadcrumb, Input, Button } from 'semantic-ui-react';
+import {
+  Dropdown,
+  Breadcrumb,
+  Input,
+  Button,
+  Message
+} from 'semantic-ui-react';
 
 const IMAGE_WIDTH = 400;
 const IMAGE_HEIGHT = 300;
@@ -24,12 +30,17 @@ export class InDepthItemField extends Component {
 
   nonEditablePropertiesField() {
     let property_list = this.props.fieldContent.map(property => {
+      let invalidProperty = !property.value || property.value === '';
+
       return (
         <li key={property.property_id}>
-          {property.name} : {property.value} {property.unit}
+          {property.name} : {invalidProperty && 'N/D'}{' '}
+          {!invalidProperty && `${property.value}`}{' '}
+          {property.unit && !invalidProperty && `${property.unit}`}
         </li>
       );
     });
+
     return (
       <div>
         <span>Specifications</span>
@@ -85,15 +96,16 @@ export class InDepthItemField extends Component {
 
   editablePropertiesField() {
     let property_list = this.props.fieldContent.map(property => {
+      var type = property.isNumber ? 'number' : 'text';
       return (
         <li key={property.property_id}>
-          {property.name} :{' '}
+          {property.name} :
           <Input
-            type="text"
+            type={type}
             name={property.name}
             value={property.value}
             onChange={this.props.handleChange}
-          />{' '}
+          />
           {property.unit}
         </li>
       );
@@ -149,14 +161,37 @@ export class InDepthItemField extends Component {
         );
       }
 
+      case 'packaging': {
+        let availablePackages = this.props.fieldContent.packagingList;
+        let itemPackaging = this.props.fieldContent.itemPackaging.name;
+
+        return (
+          <span>
+            {this.props.fieldName}:{' '}
+            <Dropdown
+              fluid
+              search
+              selection
+              selectOnNavigation={false}
+              value={itemPackaging}
+              options={availablePackages}
+              onChange={this.props.handleChange}
+            />
+          </span>
+        );
+      }
+
       case 'breadcrumb': {
+        if (this.props.fieldContent.length === 0) {
+          return <Message negative header="WARNING: No category selected!" />;
+        }
         let breadcrumb_tree = this.props.fieldContent.map((category, index) => {
           let link = index !== this.props.fieldContent.length - 1;
           let active = index === this.props.fieldContent.length - 1;
           let onClick =
             index === this.props.fieldContent.length - 1
               ? null
-              : this.props.handleChange;
+              : this.props.handleChange[0];
           return {
             key: category.id,
             content: category.name,
@@ -166,22 +201,49 @@ export class InDepthItemField extends Component {
           };
         });
 
-        return <Breadcrumb icon="right angle" sections={breadcrumb_tree} />;
+        return (
+          <div
+            style={{
+              padding: '3px 3px',
+              backgroundSize: 'auto'
+            }}
+          >
+            category: <br />
+            <Breadcrumb icon="right angle" sections={breadcrumb_tree} />
+            <Button
+              circular
+              negative
+              icon="delete"
+              size="mini"
+              onClick={this.props.handleChange[1]}
+              style={{
+                backgroundColor: '#e82b34',
+                marginLeft: '5px',
+                padding: '5px 5px'
+              }}
+            />
+          </div>
+        );
       }
 
       case 'category': {
-        let availableCategories = this.props.fieldContent.categoryList;
+        let availableCategories = this.props.fieldContent.dropdown;
         let itemCategory = this.props.fieldContent.itemCategory.name;
+
+        let noCategoryAvailable = `${itemCategory} has no children`;
+        let placeholder = itemCategory
+          ? `${itemCategory}'s children`
+          : 'Select a category';
 
         return (
           <span>
-            {this.props.fieldName}:{' '}
             <Dropdown
-              placeholder="Select category"
               fluid
               search
               selection
-              value={itemCategory}
+              selectOnNavigation={false}
+              noResultsMessage={noCategoryAvailable}
+              text={placeholder}
               options={availableCategories}
               onChange={this.props.handleChange}
             />

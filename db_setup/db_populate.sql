@@ -1548,9 +1548,9 @@ INSERT INTO item_property (value, item_id, property_id) VALUES
  ('1.5', 8, 1), ('50', 8, 3), ('12', 8, 10), ('80', 8, 10);
 
 INSERT INTO permissions (name, user_path, can_read, can_request, can_edit) VALUES
- ('student', '/request_cart', TRUE, TRUE, FALSE),
- ('professor', '/request_list', TRUE, FALSE, FALSE),
- ('manager', '/request_list', TRUE, FALSE, TRUE);
+ ('student', '/requests_cart', TRUE, TRUE, FALSE),
+ ('professor', '/requests_list', TRUE, FALSE, FALSE),
+ ('manager', '/requests_list', TRUE, FALSE, TRUE);
 
 INSERT INTO users (login, password, user_permissions) VALUES
  ('student1', '1234', 1),
