@@ -179,6 +179,9 @@ itemRouter.post('/request_items', async (req, res) => {
     }
   } else {
     res.status(404).send('No items found in cart!');
+  }
+});
+
 
 itemRouter.post('/item_comments_increment', async (req, res) => {
   try {
