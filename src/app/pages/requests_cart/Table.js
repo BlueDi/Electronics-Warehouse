@@ -164,9 +164,8 @@ class RequestsTable extends Component {
       cart = cart.map(item => {
         if (changed[item.id]) {
           if (changed[item.id].amount > 0) {
-            return {...item, ...changed[item.id]};
-          }
-          else if (changed[item.id].amount == 0) {
+            return { ...item, ...changed[item.id] };
+          } else if (changed[item.id].amount == 0) {
             delete_rows.push(item.id);
           }
         }

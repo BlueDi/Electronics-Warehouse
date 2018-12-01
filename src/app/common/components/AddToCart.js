@@ -13,9 +13,9 @@ class AddToCart extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.state.items.length != nextProps.items) {
-      this.setState({items: nextProps.items});
+  componentDidUpdate(prevProps) {
+    if (prevProps.items.length != this.props.items.length) {
+      this.setState({ items: this.props.items });
     }
   }
 
