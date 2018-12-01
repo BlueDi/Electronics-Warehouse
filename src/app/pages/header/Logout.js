@@ -19,6 +19,7 @@ class Logout extends Component {
   };
 
   render() {
+    var userPath = this.props.cookies.get('user_path');
     var userCart = this.props.cookies.get('cart') || [];
     var userName = this.props.cookies.get('name') || undefined;
     var cartLength = userCart.length;
@@ -26,7 +27,7 @@ class Logout extends Component {
 
     return (
       <Menu.Menu position="right">
-        <Menu.Item as={Link} to={'/requests'}>
+        <Menu.Item as={Link} to={userPath}>
           {userName}
           {!emptyCart && <Label circular>{userCart.length}</Label>}
         </Menu.Item>

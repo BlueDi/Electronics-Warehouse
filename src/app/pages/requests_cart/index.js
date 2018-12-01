@@ -8,7 +8,7 @@ import { PageTitle } from '@common/components';
 const professors_path = '/professors';
 const request_path = '/request_items';
 
-class RequestList extends Component {
+class RequestCartList extends Component {
   columns_name = ['description', 'amount', 'details', 'location'];
   state = {
     data: [],
@@ -119,4 +119,4 @@ class RequestList extends Component {
   }
 }
 
-export default withCookies(RequestList);
+export default withCookies(RequestCartList);

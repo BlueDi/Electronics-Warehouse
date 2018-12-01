@@ -125,16 +125,7 @@ const Cell = props => {
 };
 
 const EditCell = props => {
-  const { column, editingEnabled } = props;
-
-  console.log(column.name);
-  console.log(editingEnabled);
-
-  if (column.name == 'amount') {
-    return <TableEditRow.Cell {...props} />;
-  } else {
-    return <TableEditRow.Cell editingEnabled={false} {...props} />;
-  }
+  return <TableEditRow.Cell {...props} />;
 };
 
 class RequestsTable extends Component {
@@ -168,9 +159,22 @@ class RequestsTable extends Component {
       cart = cart.filter(item => !deletedSet.has(item.id));
     }
     if (changed) {
-      cart = cart.map(item =>
-        changed[item.id] ? { ...item, ...changed[item.id] } : item
-      );
+      var delete_rows = [];
+
+      cart = cart.map(item => {
+        if (changed[item.id]) {
+          if (changed[item.id].amount > 0) {
+            return {...item, ...changed[item.id]};
+          }
+          else if (changed[item.id].amount == 0) {
+            delete_rows.push(item.id);
+          }
+        }
+        return item;
+      });
+      if (delete_rows.length > 0) {
+        cart = cart.filter(item => !delete_rows.includes(item.id));
+      }
     }
     this.props.cookies.set('cart', cart);
     this.setState({ cart });

@@ -4,7 +4,7 @@ import Layout, {
   Course,
   InDepthItem,
   WHTable,
-  RequestList
+  RequestCartList
 } from '@pages';
 
 export const routes = [
@@ -34,8 +34,8 @@ export const routes = [
     component: WHTable
   },
   {
-    path: '/requests',
-    component: RequestList
+    path: '/request_cart',
+    component: RequestCartList
   },
   {
     path: '/*',
