@@ -3,8 +3,13 @@ import { AddToCart, PageTitle } from '@common/components';
 import { service } from '@utils';
 import { InDepthItemField } from './InDepthItemField';
 import EditButton from './EditButton';
+import InDepthItemButtons from './InDepthItemButtons';
+import { withCookies } from 'react-cookie';
+import { Loader } from 'semantic-ui-react';
 import '@common/styles/global.css';
 import './styles/InDepthItem.scss';
+
+const loadingsForRender = 6;
 
 class InDepthItem extends Component {
   constructor(props) {
@@ -18,6 +23,7 @@ class InDepthItem extends Component {
       last_price: 'LAST PRICE',
       location: 'Block B',
       user_comments: 'USER COMMENTS',
+      add_user_comment: '',
       details: 'DET',
       manufacturer: 'MANUFACTURER',
       reference: 'REF',
@@ -33,7 +39,8 @@ class InDepthItem extends Component {
       },
       properties: [],
       last_edit: 'EDIT_DATE',
-      edit: false
+      edit: false,
+      loadedInfo: 0
     };
 
     //button handlers
@@ -43,9 +50,11 @@ class InDepthItem extends Component {
     this.handleCancelEdition = this.handleCancelEdition.bind(this);
     this.handleBreadcrumbClick = this.handleBreadcrumbClick.bind(this);
     this.handleBreadcrumbDelete = this.handleBreadcrumbDelete.bind(this);
+    this.handleUserCommentAddition = this.handleUserCommentAddition.bind(this);
 
     //form field handlers
     this.handleItemFieldChange = this.handleItemFieldChange.bind(this);
+    this.handleUserCommentsChange = this.handleUserCommentsChange.bind(this);
     this.handlePropertyChange = this.handlePropertyChange.bind(this);
     this.handleNewImageFile = this.handleNewImageFile.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
@@ -69,6 +78,7 @@ class InDepthItem extends Component {
       .get(apiUrl)
       .then(response => {
         this.setState(response.data);
+        this.loadedNewInfo();
       })
       .catch(e => {
         throw e;
@@ -91,6 +101,7 @@ class InDepthItem extends Component {
         this.setState({
           packaging: newPackaging
         });
+        this.loadedNewInfo();
       })
       .catch(e => {
         throw e;
@@ -117,6 +128,7 @@ class InDepthItem extends Component {
         this.setState({
           properties: property_list
         });
+        this.loadedNewInfo();
       })
       .catch(e => {
         throw e;
@@ -145,6 +157,8 @@ class InDepthItem extends Component {
 
         //get category dropdown for item editing
         this.getDropdownCategories();
+
+        this.loadedNewInfo();
       })
       .catch(e => {
         throw e;
@@ -170,6 +184,7 @@ class InDepthItem extends Component {
         this.setState({
           packaging: newPackaging
         });
+        this.loadedNewInfo();
       })
       .catch(e => {
         throw e;
@@ -195,6 +210,7 @@ class InDepthItem extends Component {
         this.setState({
           category: newCategory
         });
+        this.loadedNewInfo();
       })
       .catch(e => {
         throw e;
@@ -221,6 +237,19 @@ class InDepthItem extends Component {
         this.setState({
           category: newCategory
         });
+      })
+      .catch(e => {
+        throw e;
+      });
+  }
+
+  getUserComments() {
+    const apiUrl = `/item_characteristics/${this.state.id}`;
+
+    service
+      .get(apiUrl)
+      .then(response => {
+        this.setState(response.data);
       })
       .catch(e => {
         throw e;
@@ -266,6 +295,12 @@ class InDepthItem extends Component {
       .catch(e => {
         throw e;
       });
+  }
+
+  loadedNewInfo() {
+    this.setState(state => ({
+      loadedInfo: state.loadedInfo + 1
+    }));
   }
 
   setNewCategory(newCategoryId, newCategoryName) {
@@ -326,7 +361,16 @@ class InDepthItem extends Component {
   }
 
   handleRequest() {
-    //TODO: call API to create item request in database
+    const apiUrl = `/send_mail/veronica.fradique@gmail.com`;
+
+    service
+      .get(apiUrl)
+      .then(response => {
+        return response;
+      })
+      .catch(e => {
+        throw e;
+      });
   }
 
   handleEdit() {
@@ -347,6 +391,34 @@ class InDepthItem extends Component {
   handleCancelEdition() {
     this.setState({ edit: false });
     this.componentDidMount();
+  }
+
+  handleUserCommentAddition() {
+    //TODO: append current user comment to the aready existing user comments
+    //database and stuff related
+    if (!this.state.add_user_comment.trim()) {
+      //empty comment
+      return;
+    }
+
+    const apiUrl = `/item_comments_increment`;
+    let postBody = {
+      itemId: this.state.id,
+      newComment: this.state.add_user_comment
+    };
+
+    service
+      .post(apiUrl, postBody)
+      .then(response => {
+        this.setState({
+          add_user_comment: ''
+        });
+        this.getUserComments();
+        return response;
+      })
+      .catch(e => {
+        throw e;
+      });
   }
 
   handlePropertyChange(event) {
@@ -426,6 +498,12 @@ class InDepthItem extends Component {
     });
   }
 
+  handleUserCommentsChange(event, data) {
+    this.setState({
+      [event.target.className]: data.value
+    });
+  }
+
   handleNewImageFile(event) {
     let uploadedFile = event.target.files[0];
 
@@ -444,12 +522,21 @@ class InDepthItem extends Component {
     reader.readAsDataURL(uploadedFile);
   }
 
+  isUserLogged() {
+    const { cookies } = this.props;
+    const emptyCookie =
+      Object.keys(cookies.cookies).length === 0 &&
+      cookies.cookies.constructor === Object;
+    const validSecurity = cookies.get('security') !== '0';
+    return !emptyCookie && validSecurity;
+  }
+
   renderItemFields() {
     let stateContents = Object.values(this.state);
-    stateContents = stateContents.slice(3, stateContents.length - 1); // id, description, image and edit are NOT to be accessed
+    stateContents = stateContents.slice(3, stateContents.length - 2); // id, description, image and edit are NOT to be accessed
 
     let stateFields = Object.keys(this.state);
-    stateFields = stateFields.slice(3, stateFields.length - 1); // id, description, image and edit are NOT to be accessed
+    stateFields = stateFields.slice(3, stateFields.length - 2); // id, description, image and edit are NOT to be accessed
 
     let itemCharacteristics = [];
 
@@ -489,9 +576,20 @@ class InDepthItem extends Component {
           fieldContent = this.state.packaging;
           changeHandler = this.handlePackagingChange;
         }
-      } else if (fieldName === 'last_edit' && this.state.edit) {
+      } else if (
+        this.state.edit &&
+        (fieldName === 'last_edit' || fieldName === 'add_user_comment')
+      ) {
         //last edit date is not editable
+        //when edition is active, manager can edit directly on user_comments camp. There's no need for add comment form
         continue;
+      } else if (fieldName === 'add_user_comment') {
+        changeHandler = [
+          this.handleUserCommentsChange,
+          this.handleUserCommentAddition
+        ];
+      } else if (fieldName === 'user_comments') {
+        changeHandler = this.handleUserCommentsChange;
       }
 
       itemCharacteristics.push(
@@ -502,6 +600,7 @@ class InDepthItem extends Component {
             fieldContent={fieldContent}
             editable={this.state.edit}
             handleChange={changeHandler}
+            isUserLogged={this.isUserLogged()}
           />
         </div>
       );
@@ -554,7 +653,9 @@ class InDepthItem extends Component {
   }
 
   render() {
-    return (
+    return this.state.loadedInfo < loadingsForRender ? (
+      <Loader text="Preparing Item" />
+    ) : (
       <PageTitle key={'InDepthItem'} title="InDepthItem">
         {this.renderItemFields()}
       </PageTitle>
@@ -562,4 +663,4 @@ class InDepthItem extends Component {
   }
 }
 
-export default InDepthItem;
+export default withCookies(InDepthItem);

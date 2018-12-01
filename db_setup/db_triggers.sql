@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS increment_user_comments(INT, TEXT);
 DROP FUNCTION IF EXISTS get_category_descendant_tree(INT);
 DROP FUNCTION IF EXISTS get_category_tree(INT);
 DROP FUNCTION IF EXISTS get_category_recursive_properties(INT);
@@ -9,6 +10,19 @@ DROP FUNCTION IF EXISTS update_item_category_properties();
 DROP TRIGGER IF EXISTS trigger_update_item_category ON item;
 
 -- TRIGGER PROCEDURES AND FUNCTIONS
+CREATE OR REPLACE FUNCTION increment_user_comments(_item_id INT, _new_comment TEXT)
+RETURNS void AS $$
+
+	UPDATE item
+	  SET user_comments = user_comments ||
+                        CASE WHEN user_comments = '' THEN ''
+                        ELSE '<br>' || E'\n'
+                        END
+                        || _new_comment
+	  WHERE id = _item_id;
+
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION get_category_descendant_tree(_main_category_id INT)
 RETURNS TABLE(id INT, name TEXT) AS $$
 

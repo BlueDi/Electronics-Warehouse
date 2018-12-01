@@ -7,3 +7,4 @@ export { default as Loader } from './Loader';
 export { default as PageTitle } from './PageTitle';
 export { default as SearchBar } from './SearchBar';
 export { default as ReadjustableImage } from './ReadjustableImage';
+export { default as HTMLEditor } from './HTMLEditor';
