@@ -68,7 +68,7 @@ class HTMLEditor extends Component {
 
   getCanvasButtons() {
     return (
-      <>
+      <div>
         <Button.Group basic>
           <Button compact size="mini" onClick={this.setCodeCanvas}>
             Write
@@ -78,7 +78,7 @@ class HTMLEditor extends Component {
           </Button>
         </Button.Group>
         <Divider style={{ marginTop: 1, marginBottom: 1 }} />
-      </>
+      </div>
     );
   }
 

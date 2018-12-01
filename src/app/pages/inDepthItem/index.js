@@ -3,7 +3,6 @@ import { AddToCart, PageTitle } from '@common/components';
 import { service } from '@utils';
 import { InDepthItemField } from './InDepthItemField';
 import EditButton from './EditButton';
-import InDepthItemButtons from './InDepthItemButtons';
 import { withCookies } from 'react-cookie';
 import { Loader } from 'semantic-ui-react';
 import '@common/styles/global.css';
