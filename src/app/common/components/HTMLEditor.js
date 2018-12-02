@@ -117,12 +117,12 @@ class HTMLEditor extends Component {
 
   render() {
     return (
-      <>
+      <div>
         {!this.state.displayOnly && this.getCanvasButtons()}
 
         {this.state.canvasType === 'code' && this.getHTMLCodeEditor()}
         {this.state.canvasType === 'preview' && this.getHTMLPreview()}
-      </>
+      <div/>
     );
   }
 }
