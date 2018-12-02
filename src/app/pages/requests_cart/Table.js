@@ -180,23 +180,14 @@ class RequestsTable extends Component {
   }
 
   render() {
-    const {
-      cart,
-      columns,
-      editingRowIds,
-      rowChanges,
-      tableColumnExtensions,
-      detailsColumns
-    } = this.state;
-
     return (
-      <Grid rows={cart} columns={columns} getRowId={row => row.id}>
+      <Grid rows={this.state.cart} columns={this.state.columns} getRowId={row => row.id}>
         <EditingState
           columnExtensions={[{ columnName: 'amount', editingEnabled: true }]}
           columnEditingEnabled={false}
-          editingRowIds={editingRowIds}
+          editingRowIds={this.state.editingRowIds}
           onEditingRowIdsChange={this.changeEditingRowIds}
-          rowChanges={rowChanges}
+          rowChanges={this.state.rowChanges}
           onRowChangesChange={this.changeRowChanges}
           onCommitChanges={this.commitChanges}
         />
@@ -205,12 +196,12 @@ class RequestsTable extends Component {
           defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
         />
         <IntegratedSorting />
-        <DetailsTypeProvider for={detailsColumns} />
+        <DetailsTypeProvider for={this.state.detailsColumns} />
         <RowDetailState />
         <PagingState defaultCurrentPage={0} pageSize={5} />
         <IntegratedPaging />
         <Table
-          columnExtensions={tableColumnExtensions}
+          columnExtensions={this.state.tableColumnExtensions}
           rowComponent={TableRow}
           cellComponent={Cell}
         />

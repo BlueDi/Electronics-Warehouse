@@ -79,39 +79,49 @@ class RequestsCartList extends Component {
     }
   };
 
+  professorForm = () => {
+    return (<Form.Dropdown
+      selection
+      search
+      label="Professor"
+      options={this.state.professors}
+      value={this.state.professor_id}
+      onChange={(e, { value }) =>
+        this.setState({ professor_id: value })
+      }
+    />);
+  }
+
+  requestDetails = () => {
+    return (<Form.TextArea
+      required
+      label="Request Details"
+      placeholder="Details"
+      onChange={(e, { value }) => this.setState({ details: value })}
+    />);
+  }
+
+  buttons = () => {
+    return (<Button.Group>
+      <Button positive onClick={this.sendRequest}>
+        Send Request
+      </Button>
+      <Button.Or />
+      <Button negative onClick={this.clearRequests}>
+        Clear All
+      </Button>
+    </Button.Group>);
+  }
+
   render() {
     return (
       <PageTitle title="Requests Table">
         <RequestsTable cart={this.state.data} columns={this.state.columns} />
         <div style={{ paddingTop: '2em', float: 'left' }}>
           <Form>
-            <Form.Dropdown
-              selection
-              search
-              label="Professor"
-              options={this.state.professors}
-              value={this.state.professor_id}
-              onChange={(e, { value }) =>
-                this.setState({ professor_id: value })
-              }
-            />
-
-            <Form.TextArea
-              required
-              label="Request Details"
-              placeholder="Details"
-              onChange={(e, { value }) => this.setState({ details: value })}
-            />
-
-            <Button.Group>
-              <Button positive onClick={this.sendRequest}>
-                Send Request
-              </Button>
-              <Button.Or />
-              <Button negative onClick={this.clearRequests}>
-                Clear All
-              </Button>
-            </Button.Group>
+            {this.professorForm()}
+            {this.requestDetails()}
+            {this.buttons()}
           </Form>
         </div>
       </PageTitle>
