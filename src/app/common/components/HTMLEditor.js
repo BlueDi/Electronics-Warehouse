@@ -122,7 +122,7 @@ class HTMLEditor extends Component {
 
         {this.state.canvasType === 'code' && this.getHTMLCodeEditor()}
         {this.state.canvasType === 'preview' && this.getHTMLPreview()}
-      <div/>
+      </div>
     );
   }
 }
