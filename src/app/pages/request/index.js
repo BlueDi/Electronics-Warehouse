@@ -187,6 +187,17 @@ class Request extends Component {
       let fieldName = stateFields[i];
       let fieldContent = stateContents[i];
       let changeHandler = this.handleRequestFieldChange;
+      if (
+        fieldName == 'requester_id' ||
+        fieldName == 'professor_id' ||
+        fieldName == 'manager_id'
+      )
+        continue;
+
+      if (!fieldContent) fieldContent = 'No value assigned';
+
+      fieldName = fieldName.replace(/_/g, ' ');
+      fieldName = fieldName.charAt(0).toUpperCase() + fieldName.substr(1);
 
       itemCharacteristics.push(
         <div>
