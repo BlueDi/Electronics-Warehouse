@@ -1,6 +1,6 @@
 import universal from 'react-universal-component';
-import { Loader } from 'semantic-ui-react';
 import { ENV } from '@config';
+import { ErrorBoundary, Loader } from '@common/components';
 
 export default function loadComponent(page) {
   const toLoadPage = () =>
@@ -8,6 +8,7 @@ export default function loadComponent(page) {
 
   return universal(toLoadPage, {
     minDelay: ENV['MIN_DELAY'],
+    error: ErrorBoundary,
     loading: Loader
   });
 }

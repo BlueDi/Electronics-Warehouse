@@ -5,7 +5,6 @@ import { InDepthItemField } from './InDepthItemField';
 import InDepthItemButtons from './InDepthItemButtons';
 import { withCookies } from 'react-cookie';
 import { Loader } from 'semantic-ui-react';
-import '@common/styles/global.css';
 import './styles/InDepthItem.scss';
 
 const loadingsForRender = 6;
