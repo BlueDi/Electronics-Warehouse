@@ -63,4 +63,17 @@ userRouter.get('/professors', async function(req, res) {
   }
 });
 
+userRouter.get('/user_permissions/:id', async (req, res) => {
+  const user_role_query = `SELECT users.user_permissions
+    FROM users
+    WHERE users.id = ${req.params.id}`;
+  try {
+    const data = await db.one(user_role_query);
+    res.send(data);
+  } catch (e) {
+    console.log('Error retrieving user role!', e);
+    res.send('Failed to retrieve user role!');
+  }
+});
+
 export default userRouter;

@@ -1561,11 +1561,11 @@ INSERT INTO users (login, password, user_permissions) VALUES
  ('manager2', 'qwer', 3);
 
 INSERT INTO request_workflow (date_sent, date_cancelled, date_professor_evaluated, date_manager_evaluated, cancelled, professor_accept, manager_accept, purpose, workflow, requester_id, professor_id, manager_id) VALUES
-  (NOW()::timestamp, NULL, NULL, NULL, FALSE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
-  (NOW()::timestamp - interval '1 hour', NOW()::timestamp, NULL, NULL, TRUE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
-  (NOW()::timestamp - interval '6 hours', NULL, NOW()::timestamp - interval '3 hours', NOW()::timestamp, FALSE, TRUE, TRUE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 5),
-  (NOW()::timestamp - interval '7 hours', NULL, NOW()::timestamp - interval '2 hours', NULL, FALSE, TRUE, FALSE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 6),
-  (NOW()::timestamp - interval '9 hours', NULL, NOW()::timestamp - interval '5 hours', NULL, FALSE, TRUE, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 4, NULL);
+  (NOW(), NULL, NULL, NULL, FALSE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
+  (NOW() - interval '1 hour', NOW()::timestamp, NULL, NULL, TRUE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
+  (NOW()- interval '6 hours', NULL, NOW() - interval '3 hours', NOW(), FALSE, TRUE, TRUE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 5),
+  (NOW() - interval '7 hours', NULL, NOW() - interval '2 hours', NULL, FALSE, TRUE, FALSE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 6),
+  (NOW() - interval '9 hours', NULL, NOW() - interval '5 hours', NULL, FALSE, TRUE, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 4, NULL);
 
 INSERT INTO request_items (request_id, item_id, count) VALUES
  (1, 1, 2),

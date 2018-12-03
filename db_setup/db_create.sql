@@ -79,10 +79,10 @@ CREATE TABLE users (
 
 CREATE TABLE request_workflow (
 	id SERIAL PRIMARY KEY,
-	date_sent DATE NOT NULL DEFAULT CURRENT_DATE,
-	date_cancelled DATE,
-	date_professor_evaluated DATE,
-	date_manager_evaluated DATE,
+	date_sent TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+	date_cancelled TIMESTAMP WITH TIME ZONE,
+	date_professor_evaluated TIMESTAMP WITH TIME ZONE,
+	date_manager_evaluated TIMESTAMP WITH TIME ZONE,
 	cancelled BOOLEAN NOT NULL,
 	professor_accept BOOLEAN,
 	manager_accept BOOLEAN,

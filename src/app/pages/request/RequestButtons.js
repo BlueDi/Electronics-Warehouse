@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button } from 'semantic-ui-react';
-import '@common/styles/global.css';
 
 export function RequestButtons(props) {
   let editButton = (
@@ -84,12 +83,20 @@ export function RequestButtons(props) {
   );
 
   return (
-    <div>
-      {!props.editing && props.acceptState === null && acceptButton}
-      {!props.editing && props.acceptState === null && rejectButton}
-      {!props.editing && editButton}
+    <React.Fragment>
+      {!props.editing &&
+        props.acceptState === null &&
+        (props.user_permissions === 2 ||
+          (props.user_permissions === 3 && props.professor_accept === true)) &&
+        acceptButton}
+      {!props.editing &&
+        props.acceptState === null &&
+        (props.user_permissions === 2 ||
+          (props.user_permissions === 3 && props.professor_accept === true)) &&
+        rejectButton}
+      {!props.editing && props.user_permissions === 3 && editButton}
       {props.editing && cancelButton}
       {props.editing && saveButton}
-    </div>
+    </React.Fragment>
   );
 }

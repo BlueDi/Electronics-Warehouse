@@ -57,7 +57,7 @@ requestRouter.get('/request_student_all/:id', async (req, res) => {
     ON (request_workflow.professor_id = users2.id)
     LEFT JOIN users AS users3
     ON (request_workflow.manager_id = users3.id)
-    WHERE equest_workflow.requester_id = $1
+    WHERE request_workflow.requester_id = $1
   `;
 
   try {

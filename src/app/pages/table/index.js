@@ -155,6 +155,9 @@ class WHTable extends Component {
         <ComponentsTable
           components={this.state.components}
           columnsOrder={this.default_column_order()}
+          withDetails
+          withImages
+          withSelection
         />
       </PageTitle>
     );
