@@ -171,15 +171,15 @@ class Request extends Component {
   }
 
   handleRequestFieldChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({ workflow: event.target.value });
   }
 
   renderItemFields() {
     let stateContents = Object.values(this.state);
-    stateContents = stateContents.slice(0, stateContents.length - 4); // id, description, image, edit and category_list are NOT to be accessed
+    stateContents = stateContents.slice(0, stateContents.length - 4);
 
     let stateFields = Object.keys(this.state);
-    stateFields = stateFields.slice(0, stateFields.length - 4); // id, description, image, edit and category_list are NOT to be accessed
+    stateFields = stateFields.slice(0, stateFields.length - 4);
 
     let itemCharacteristics = [];
 
@@ -205,7 +205,7 @@ class Request extends Component {
             key={fieldName}
             fieldName={fieldName}
             fieldContent={fieldContent}
-            editable={fieldName === 'workflow' && this.state.edit}
+            editable={fieldName === 'Workflow' && this.state.edit}
             handleChange={changeHandler}
           />
         </div>
