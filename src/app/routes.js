@@ -1,11 +1,11 @@
-import Layout, {
-  NotFound,
-  AddItem,
-  Course,
-  InDepthItem,
-  WHTable,
-  Requests,
-  Request
+import Root, {
+    AddItem,
+    Course,
+    InDepthItem,
+    NotFound,
+    Request,
+    Requests,
+    WHTable
 } from '@pages';
 
 export const routes = [
@@ -14,11 +14,6 @@ export const routes = [
     exact: true,
     menu: 'Home',
     component: WHTable
-  },
-  {
-    path: '/course',
-    menu: 'Course',
-    component: Course
   },
   {
     path: '/addNewItem/',
@@ -30,17 +25,22 @@ export const routes = [
     component: InDepthItem
   },
   {
-    path: '/table/:id',
-    menu: 'Table',
-    component: WHTable
+    path: '/course',
+    menu: 'Course',
+    component: Course
+  },
+  {
+    path: '/request/:id',
+    component: Request
   },
   {
     path: '/requests',
     component: Requests
   },
   {
-    path: '/request/:id',
-    component: Request
+    path: '/table/:id',
+    menu: 'Table',
+    component: WHTable
   },
   {
     path: '/*',
@@ -50,7 +50,7 @@ export const routes = [
 
 export default [
   {
-    component: Layout,
+    component: Root,
     routes
   }
 ];

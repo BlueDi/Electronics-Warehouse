@@ -17,7 +17,6 @@ const defaultState = {
  * - value: Value being displayed on the editor
  * - onChange: Event announcing the HTML code has been changed
  */
-
 class HTMLEditor extends Component {
   constructor(props) {
     super(props);
@@ -68,7 +67,7 @@ class HTMLEditor extends Component {
 
   getCanvasButtons() {
     return (
-      <>
+      <React.Fragment>
         <Button.Group basic>
           <Button compact size="mini" onClick={this.setCodeCanvas}>
             Write
@@ -78,7 +77,7 @@ class HTMLEditor extends Component {
           </Button>
         </Button.Group>
         <Divider style={{ marginTop: 1, marginBottom: 1 }} />
-      </>
+      </React.Fragment>
     );
   }
 
@@ -117,12 +116,12 @@ class HTMLEditor extends Component {
 
   render() {
     return (
-      <>
+      <React.Fragment>
         {!this.state.displayOnly && this.getCanvasButtons()}
 
         {this.state.canvasType === 'code' && this.getHTMLCodeEditor()}
         {this.state.canvasType === 'preview' && this.getHTMLPreview()}
-      </>
+      </React.Fragment>
     );
   }
 }

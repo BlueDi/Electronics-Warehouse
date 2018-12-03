@@ -30,7 +30,7 @@ export class InDepthItemField extends Component {
 
   nonEditablePropertiesField() {
     let property_list = this.props.fieldContent.map(property => {
-      let invalidProperty = !property.value.trim();
+      let invalidProperty = property.value ? !property.value.trim() : true;
 
       return (
         <li key={property.property_id}>
@@ -42,10 +42,10 @@ export class InDepthItemField extends Component {
     });
 
     let existentSpecifications = (
-      <>
+      <React.Fragment>
         <span>Specifications</span>
         <ul>{property_list}</ul>
-      </>
+      </React.Fragment>
     );
     let noSpecifications = <span>There are no specifications</span>;
     return (
@@ -80,10 +80,10 @@ export class InDepthItemField extends Component {
 
       case 'user comments': {
         return (
-          <>
+          <React.Fragment>
             {this.props.fieldName}: <br />
             <HTMLEditor displayOnly={true} value={this.props.fieldContent} />
-          </>
+          </React.Fragment>
         );
       }
 
@@ -156,10 +156,10 @@ export class InDepthItemField extends Component {
     });
 
     let existentSpecifications = (
-      <>
+      <React.Fragment>
         <span>Specifications</span>
         <ul>{property_list}</ul>
-      </>
+      </React.Fragment>
     );
     let noSpecifications = <span>There are no specifications</span>;
     return (
