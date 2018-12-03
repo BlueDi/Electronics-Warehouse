@@ -20,7 +20,7 @@ VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
     <div
       className="meta"
     >
-      Location:
+      Location: 
       HHD12U
     </div>
     <div
@@ -28,27 +28,27 @@ VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
     >
       <p>
         description
-        :
+        : 
         BMW motor
       </p>
       <p>
         free_stock
-        :
+        : 
         1
       </p>
       <p>
         last_edit
-        :
+        : 
         2018-11-20T11:46:01.628Z
       </p>
       <p>
         last_price
-        :
+        : 
         89.12
       </p>
       <p>
         reference
-        :
+        : 
         213748227
       </p>
       <div
@@ -59,12 +59,12 @@ VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
       />
       <p>
         details
-        :
+        : 
         Super detailed description
       </p>
       <p>
         manufacturer
-        :
+        : 
         Multicomp
       </p>
     </div>
@@ -72,7 +72,7 @@ VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
   <div
     className="extra content"
   >
-    Available:
+    Available: 
     1
   </div>
 </div>

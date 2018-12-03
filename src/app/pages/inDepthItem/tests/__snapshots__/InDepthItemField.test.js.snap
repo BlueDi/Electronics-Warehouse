@@ -25,7 +25,7 @@ exports[`<InDepthItemField /> Breadcrumb Field 2`] = `
     }
   }
 >
-  category:
+  category: 
   <br />
   <div
     className="ui breadcrumb"
@@ -237,6 +237,7 @@ exports[`<InDepthItemField /> Category Field 3`] = `
 <div>
   category
   :
+   
   <div
     className="ui breadcrumb"
   >
@@ -262,6 +263,7 @@ exports[`<InDepthItemField /> Description Field 1`] = `
 >
   description
   :
+   
   <div
     className="ui input"
   >
@@ -350,6 +352,7 @@ exports[`<InDepthItemField /> Other Field 1`] = `
 <span>
   other
   :
+   
   <div
     className="ui input"
   >
@@ -367,6 +370,7 @@ exports[`<InDepthItemField /> Packaging Field 1`] = `
 <span>
   packaging
   :
+   
   <div
     aria-expanded={false}
     className="ui fluid search selection dropdown"
@@ -460,8 +464,10 @@ exports[`<InDepthItemField /> Properties Field 2`] = `
   <ul>
     <li>
       test
-       :
+       : 
+       
       1
+       
       w
     </li>
   </ul>
@@ -499,8 +505,10 @@ exports[`<InDepthItemField /> Properties Invalid Field 2`] = `
   <ul>
     <li>
       test
-       :
+       : 
       N/D
+       
+       
     </li>
   </ul>
 </div>
