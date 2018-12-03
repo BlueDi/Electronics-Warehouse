@@ -7,7 +7,7 @@ Array [
   >
     <img
       className="ui image"
-      src="/logo.png"
+      src="test-file-stub"
     />
      Login to your account
   </div>,
@@ -91,7 +91,7 @@ Array [
   >
     <img
       className="ui image"
-      src="/logo.png"
+      src="test-file-stub"
     />
      Login to your account
   </div>,

@@ -3,6 +3,7 @@ import { withCookies } from 'react-cookie';
 import { withRouter } from 'react-router-dom';
 import { Form, Header, Image, Message } from 'semantic-ui-react';
 import { service } from '@utils';
+import logo from '@assets/images/logo.png';
 
 class LoginForm extends Component {
   state = { error: false, name: '', password: '' };
@@ -38,7 +39,7 @@ class LoginForm extends Component {
     return (
       <React.Fragment>
         <Header size="large">
-          <Image src="/logo.png" /> Login to your account
+          <Image src={logo} /> Login to your account
         </Header>
         <Form
           size="large"
