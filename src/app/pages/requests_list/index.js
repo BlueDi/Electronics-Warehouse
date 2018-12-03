@@ -3,7 +3,7 @@ import { withCookies } from 'react-cookie';
 import { Redirect } from 'react-router-dom';
 import { service } from '@utils';
 import { Loader, PageTitle } from '@common/components';
-import ComponentsTable from '@pages/table/Table';
+import RequestsTable from './Table';
 
 class RequestsList extends Component {
   constructor(props) {
@@ -79,7 +79,7 @@ class RequestsList extends Component {
       <Loader text="Preparing Table" />
     ) : (
       <PageTitle title="Requests List">
-        <ComponentsTable
+        <RequestsTable
           components={this.state.requests}
           columnsOrder={this.default_column_order()}
         />

@@ -169,7 +169,7 @@ class ComponentsTable extends Component {
 
     let compare_items;
     let addToCart;
-    if (selection.length > 0) {
+    if (withSelection && selection.length > 0) {
       var selected_items = this.getItemsFromSelection();
       compare_items = <CompareItems items={selected_items} />;
       addToCart = <AddToCart items={selected_items} />;
@@ -195,29 +195,28 @@ class ComponentsTable extends Component {
         )}
         <PagingState defaultCurrentPage={0} pageSize={7} />
         <IntegratedPaging />
-
         <Table
           rowComponent={TableRow}
           columnExtensions={tableColumnExtensions}
         />
         <TableColumnReordering defaultOrder={columnsOrder} />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
-        {this.state.withDetails && (
-          <TableRowDetail contentComponent={RowDetail} />
+        {withDetails && (
+          <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
         )}
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
         <Toolbar />
         <SearchPanel />
         <ColumnChooser />
         <PagingPanel />
-        {addToCart}
         {withSelection && (
           <TableSelection
             cellComponent={SelectComponent}
-            selectionColumnWidth={80}
+            selectionColumnWidth={85}
           />
         )}
         {withSelection && compare_items}
+        {addToCart}
       </Grid>
     );
   }

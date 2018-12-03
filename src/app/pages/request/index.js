@@ -171,15 +171,15 @@ class Request extends Component {
   }
 
   handleRequestFieldChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({ workflow: event.target.value });
   }
 
   renderItemFields() {
     let stateContents = Object.values(this.state);
-    stateContents = stateContents.slice(0, stateContents.length - 4); // id, description, image, edit and category_list are NOT to be accessed
+    stateContents = stateContents.slice(0, stateContents.length - 4);
 
     let stateFields = Object.keys(this.state);
-    stateFields = stateFields.slice(0, stateFields.length - 4); // id, description, image, edit and category_list are NOT to be accessed
+    stateFields = stateFields.slice(0, stateFields.length - 4);
 
     let itemCharacteristics = [];
 
@@ -187,6 +187,17 @@ class Request extends Component {
       let fieldName = stateFields[i];
       let fieldContent = stateContents[i];
       let changeHandler = this.handleRequestFieldChange;
+      if (
+        fieldName == 'requester_id' ||
+        fieldName == 'professor_id' ||
+        fieldName == 'manager_id'
+      )
+        continue;
+
+      if (!fieldContent) fieldContent = 'N/D';
+
+      fieldName = fieldName.replace(/_/g, ' ');
+      fieldName = fieldName.charAt(0).toUpperCase() + fieldName.substr(1);
 
       itemCharacteristics.push(
         <div>
@@ -194,7 +205,7 @@ class Request extends Component {
             key={fieldName}
             fieldName={fieldName}
             fieldContent={fieldContent}
-            editable={fieldName === 'workflow' && this.state.edit}
+            editable={fieldName === 'Workflow' && this.state.edit}
             handleChange={changeHandler}
           />
         </div>
@@ -230,18 +241,24 @@ class Request extends Component {
   }
 
   render() {
-    return this.state.user_id === -1 ||
-      (this.state.user_permissions === 1 &&
-        this.state.user_id !== this.state.requester_id &&
-        this.state.fetching === false) ||
-      (this.state.user_permissions === 2 &&
-        this.state.user_id !== this.state.professor_id &&
-        this.state.fetching === false) ? (
-      <Redirect to="/" />
-    ) : (
+    const {
+      user_id,
+      requester_id,
+      professor_id,
+      fetching,
+      user_permissions
+    } = this.state;
+    const is_requester = user_id == requester_id && user_permissions == 0,
+      is_professor = user_id == professor_id && user_permissions == 1,
+      is_manager = user_permissions == 2;
+
+    return fetching ||
+      ((is_requester || is_professor || is_manager) && !fetching) ? (
       <PageTitle key={'Request'} title="Request">
         {this.renderItemFields()}
       </PageTitle>
+    ) : (
+      <Redirect to="/" />
     );
   }
 }

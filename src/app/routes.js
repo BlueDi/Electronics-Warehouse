@@ -31,9 +31,8 @@ export const routes = [
     component: Course
   },
   {
-    path: '/table/:id',
-    menu: 'Table',
-    component: WHTable
+    path: '/request/:id',
+    component: Request
   },
   {
     path: '/requests_cart',
@@ -44,8 +43,9 @@ export const routes = [
     component: RequestsList
   },
   {
-    path: '/request/:id',
-    component: Request
+    path: '/table/:id',
+    menu: 'Table',
+    component: WHTable
   },
   {
     path: '/*',
