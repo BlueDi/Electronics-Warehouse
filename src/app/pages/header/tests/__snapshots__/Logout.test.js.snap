@@ -8,9 +8,7 @@ exports[`<Logout /> Renders properly 1`] = `
     className="item"
     href="/user/undefined"
     onClick={[Function]}
-  >
-    
-  </a>
+  />
   <a
     className="link item"
     onClick={[Function]}

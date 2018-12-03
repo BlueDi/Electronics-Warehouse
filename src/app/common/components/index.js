@@ -1,4 +1,5 @@
 export { default as AddItemButton } from './AddItemButton';
+export { default as AddToCart } from './AddToCart';
 export { default as Authorization } from './Authorization';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as HttpStatus } from './HttpStatus';

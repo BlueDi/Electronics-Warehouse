@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`<InDepthItemButtons /> Renders properly 1`] = `null`;
-
-exports[`<InDepthItemButtons /> Renders with edit enabled 1`] = `null`;
