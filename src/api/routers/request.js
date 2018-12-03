@@ -5,7 +5,10 @@ const requestRouter = express.Router();
 
 requestRouter.get('/request_manager_all', async (req, res) => {
   const queryManagerRequestAll = `
-    SELECT DISTINCT ON(request_workflow.id) request_workflow.*,
+    SELECT DISTINCT ON(request_workflow.id) request_workflow.*, to_char(request_workflow.date_sent, 'DD Mon YYYY HH24hMIm') as date_sent,
+      to_char(request_workflow.date_cancelled, 'DD Mon YYYY HH24hMIm') as date_cancelled,
+      to_char(request_workflow.date_professor_evaluated, 'DD Mon YYYY HH24hMIm') as date_professor_evaluated,
+      to_char(request_workflow.date_manager_evaluated, 'DD Mon YYYY HH24hMIm') as date_manager_evaluated, 
       users.login AS requester, users2.login AS professor, users3.login AS manager
     FROM request_workflow
     INNER JOIN users
@@ -26,7 +29,10 @@ requestRouter.get('/request_manager_all', async (req, res) => {
 
 requestRouter.get('/request_professor_all/:id', async (req, res) => {
   const queryProfessorRequestAll = `
-    SELECT DISTINCT ON(request_workflow.id) request_workflow.*,
+    SELECT DISTINCT ON(request_workflow.id) request_workflow.*, to_char(request_workflow.date_sent, 'DD Mon YYYY HH24hMIm') as date_sent,
+      to_char(request_workflow.date_cancelled, 'DD Mon YYYY HH24hMIm') as date_cancelled,
+      to_char(request_workflow.date_professor_evaluated, 'DD Mon YYYY HH24hMIm') as date_professor_evaluated,
+      to_char(request_workflow.date_manager_evaluated, 'DD Mon YYYY HH24hMIm') as date_manager_evaluated,
       users.login AS requester, users2.login AS professor, users3.login AS manager
     FROM request_workflow
     INNER JOIN users
@@ -48,7 +54,10 @@ requestRouter.get('/request_professor_all/:id', async (req, res) => {
 
 requestRouter.get('/request_student_all/:id', async (req, res) => {
   const queryStudentRequestAll = `
-    SELECT DISTINCT ON(request_workflow.id) request_workflow.*,
+    SELECT DISTINCT ON(request_workflow.id) request_workflow.*, to_char(request_workflow.date_sent, 'DD Mon YYYY HH24hMIm') as date_sent,
+      to_char(request_workflow.date_cancelled, 'DD Mon YYYY HH24hMIm') as date_cancelled,
+      to_char(request_workflow.date_professor_evaluated, 'DD Mon YYYY HH24hMIm') as date_professor_evaluated,
+      to_char(request_workflow.date_manager_evaluated, 'DD Mon YYYY HH24hMIm') as date_manager_evaluated,
       users.login AS requester, users2.login AS professor, users3.login AS manager
     FROM request_workflow
     INNER JOIN users
@@ -70,7 +79,11 @@ requestRouter.get('/request_student_all/:id', async (req, res) => {
 
 requestRouter.get('/request/:id', async (req, res) => {
   const queryRequest = `
-    SELECT request_workflow.*, users.login AS requester, users2.login AS professor, users3.login AS manager
+    SELECT request_workflow.*, to_char(request_workflow.date_sent, 'DD Mon YYYY HH24hMIm') as date_sent,
+      to_char(request_workflow.date_cancelled, 'DD Mon YYYY HH24hMIm') as date_cancelled,
+      to_char(request_workflow.date_professor_evaluated, 'DD Mon YYYY HH24hMIm') as date_professor_evaluated,
+      to_char(request_workflow.date_manager_evaluated, 'DD Mon YYYY HH24hMIm') as date_manager_evaluated,
+      users.login AS requester, users2.login AS professor, users3.login AS manager
     FROM request_workflow
     INNER JOIN users
     ON (request_workflow.requester_id = users.id)
