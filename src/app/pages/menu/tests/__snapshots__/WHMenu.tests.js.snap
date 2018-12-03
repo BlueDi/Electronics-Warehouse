@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<InDepthItemButtons /> Renders properly 1`] = `
+<div
+  className="ui horizontally padded grid"
+>
+  <div
+    className="three wide column"
+    style={
+      Object {
+        "backgroundColor": "#D2E0E8",
+      }
+    }
+  >
+    <div
+      className="ui huge secondary vertical accordion ui menu"
+    >
+      <div
+        className="link item"
+        onClick={[Function]}
+      >
+        <div
+          className="title"
+          id="sidebarInventory"
+          onClick={[Function]}
+        >
+          <i
+            aria-hidden="true"
+            className="dropdown icon"
+          />
+          <a
+            href="/table/1"
+            onClick={[Function]}
+            style={
+              Object {
+                "color": "black",
+              }
+            }
+          >
+            Inventory
+          </a>
+        </div>
+        <div
+          className="content"
+        >
+          <div
+            className="ui fluid search"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+          >
+            <div
+              className="ui fluid icon input"
+            >
+              <input
+                autoComplete="off"
+                className="prompt"
+                onChange={[Function]}
+                onClick={[Function]}
+                placeholder="Search filters..."
+                tabIndex="0"
+                type="text"
+                value=""
+              />
+              <i
+                aria-hidden="true"
+                className="search icon"
+              />
+            </div>
+            <div
+              className="results transition"
+            >
+              <div
+                className="message empty"
+              >
+                <div
+                  className="header"
+                >
+                  No results found.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="link item"
+        onClick={[Function]}
+      >
+        <a
+          href="/supplies"
+          onClick={[Function]}
+          style={
+            Object {
+              "color": "black",
+            }
+          }
+        >
+          Buy Supplies
+        </a>
+      </div>
+      <div
+        className="link item"
+        onClick={[Function]}
+      >
+        <a
+          href="/users"
+          onClick={[Function]}
+          style={
+            Object {
+              "color": "black",
+            }
+          }
+        >
+          Manage Users
+        </a>
+      </div>
+    </div>
+  </div>
+  <div
+    className="thirteen wide column"
+  />
+</div>
+`;

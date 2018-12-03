@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Login /> Renders properly 1`] = `
+<div
+  className="right menu"
+>
+  <div
+    className="item"
+    onClick={[Function]}
+  >
+    Signup
+  </div>
+  <div
+    aria-expanded={false}
+    className="ui item simple dropdown"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onMouseDown={[Function]}
+    role="listbox"
+    tabIndex={0}
+  >
+    <div
+      aria-live="polite"
+      className="text"
+      role="alert"
+    >
+      Login
+    </div>
+    <i
+      aria-hidden="true"
+      className="dropdown icon"
+      onClick={[Function]}
+    />
+    <div
+      className="right menu transition"
+    />
+  </div>
+</div>
+`;

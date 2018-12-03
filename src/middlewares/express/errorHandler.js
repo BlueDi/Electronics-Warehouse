@@ -17,7 +17,7 @@ const errorHandler = ({ json = false } = {}) => (err, req, res, next) => {
   if (req.xhr || !!json) {
     res.json(errorData);
   } else {
-    res.render('500', errorData);
+    res.send('500 Internal Server Error.');
   }
 
   return logger.exception(err);
