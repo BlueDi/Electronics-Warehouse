@@ -1,5 +1,89 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<LoginForm /> Renders error message properly 1`] = `
+Array [
+  <div
+    className="ui large header"
+  >
+    <img
+      className="ui image"
+      src="/logo.png"
+    />
+     Login to your account
+  </div>,
+  <form
+    className="ui large form"
+    onSubmit={[Function]}
+  >
+    <div
+      className="required field"
+    >
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="name"
+          onChange={[Function]}
+          placeholder="E-mail address"
+          required={true}
+          type="text"
+        />
+        <i
+          aria-hidden="true"
+          className="user icon"
+        />
+      </div>
+    </div>
+    <div
+      className="required field"
+    >
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="password"
+          onChange={[Function]}
+          placeholder="Password"
+          required={true}
+          type="password"
+        />
+        <i
+          aria-hidden="true"
+          className="lock icon"
+        />
+      </div>
+    </div>
+    <div
+      className="ui error message"
+    >
+      <div
+        className="content"
+      >
+        <div
+          className="header"
+        >
+          Failed Login
+        </div>
+        <p>
+          Please check again your user's info.
+        </p>
+      </div>
+    </div>
+    <div
+      className="field"
+    >
+      <button
+        className="ui fluid button"
+        onClick={[Function]}
+        role="button"
+      >
+        Login
+      </button>
+    </div>
+  </form>,
+]
+`;
+
 exports[`<LoginForm /> Renders properly 1`] = `
 Array [
   <div
