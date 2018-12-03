@@ -230,13 +230,13 @@ class Request extends Component {
   }
 
   render() {
-    return this.state.user_id === -1 ||
-      (this.state.user_permissions === 1 &&
-        this.state.user_id !== this.state.requester_id &&
-        this.state.fetching === false) ||
-      (this.state.user_permissions === 2 &&
-        this.state.user_id !== this.state.professor_id &&
-        this.state.fetching === false) ? (
+    return this.state.user_id == -1 ||
+      (this.state.user_permissions == 1 &&
+        this.state.user_id != this.state.requester_id &&
+        this.state.fetching == false) ||
+      (this.state.user_permissions == 2 &&
+        this.state.user_id != this.state.professor_id &&
+        this.state.fetching == false) ? (
       <Redirect to="/" />
     ) : (
       <PageTitle key={'Request'} title="Request">
