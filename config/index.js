@@ -13,14 +13,10 @@ if (!envProperties.API_PORT) {
   envProperties.API_PORT = +process.env.API_PORT || 3030;
 }
 
-// export built environment properties for universal usage
-module.exports.ENV = envProperties;
-
-// export named `SYSPATH` as part of config
-module.exports.SYSPATH = require('./syspath');
-
-// export named `DEV` as part of config
-module.exports.DEV = require('isdev');
-
-// export named `NODE` as part of config
-module.exports.NODE = require('detect-node');
+module.exports = {
+  ENV: envProperties,
+  DEV: require('isdev'),
+  HELMET: require('./helmet'),
+  SYSPATH: require('./syspath'),
+  NODE: require('detect-node')
+};

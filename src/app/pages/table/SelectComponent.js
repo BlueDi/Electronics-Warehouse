@@ -4,24 +4,28 @@ import { TableSelection } from '@devexpress/dx-react-grid-material-ui';
 import { AddToCart } from '@common/components';
 
 class SelectComponent extends Component {
-  render() {
-    var { cookies, row, selected, onToggle } = this.props;
-    var canRequest = cookies.get('can_request') === 'true';
+  renderAddToCart() {
+    var { row } = this.props;
     var cleanRow = Object.create(row);
     delete cleanRow.image;
-    return (
-      <React.Fragment>
-        {canRequest ? (
-          <td>
-            <AddToCart items={[cleanRow]} simple />
-          </td>
-        ) : null}
+    return <AddToCart items={[cleanRow]} simple />;
+  }
+
+  render() {
+    var { cookies } = this.props;
+    var pseudoProps = { ...this.props };
+    delete pseudoProps['style'];
+    var canRequest = cookies.get('can_request') === 'true';
+    return canRequest ? (
+      <td>
         <TableSelection.Cell
-          row={row}
-          selected={selected}
-          onToggle={onToggle}
+          style={{ borderBottomWidth: '0px' }}
+          {...pseudoProps}
         />
-      </React.Fragment>
+        {this.renderAddToCart()}
+      </td>
+    ) : (
+      <TableSelection.Cell {...this.props} />
     );
   }
 }

@@ -19,9 +19,9 @@
     "lint": "npm-run-all lint:js lint:style",
     "lint:style": "stylelint *.scss --syntax=scss --fix",
     "lint:js": "eslint . --fix",
-    "test": "npm run lint:js && cross-env NODE_ENV=test jest --detectOpenHandles",
-    "test:watch": "npm test -- --watch",
-    "test:coverage": "rimraf coverage && npm test -- --coverage"
+    "test": "rimraf coverage && npm run lint:js && cross-env NODE_ENV=test jest --detectOpenHandles && codecov",
+    "test:update": "rimraf coverage && npm run lint:js && cross-env NODE_ENV=test jest -u --detectOpenHandles",
+    "test:watch": "npm test -- --watch"
   },
   "verbose": true,
   "engines": {
@@ -33,7 +33,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged && npm test"
     }
   },
   "lint-staged": {
@@ -84,6 +84,7 @@
     "express-session": "^1.15.6",
     "helmet": "^3.15.0",
     "hpp": "^0.2.2",
+    "html-minifier": "^3.5.21",
     "http-proxy": "^1.17.0",
     "is-plain-object": "^2.0.4",
     "isdev": "^1.0.1",
@@ -96,10 +97,10 @@
     "pg-promise": "^8.5.3",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
-    "react-bootstrap-table-next": "^1.4.1",
     "react-cookie": "^3.0.7",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.6.3",
+    "react-helmet": "^5.2.0",
     "react-html-parser": "^2.0.2",
     "react-numeric-input": "^2.2.3",
     "react-router-config": "^4.4.0-beta.6",
@@ -123,7 +124,7 @@
     "@babel/plugin-transform-strict-mode": "^7.0.0",
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
-    "autoprefixer": "^9.3.1",
+    "autoprefixer": "^9.4.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
@@ -131,6 +132,7 @@
     "babel-plugin-transform-react-remove-prop-types": "^0.4.20",
     "babel-plugin-universal-import": "^3.1.2",
     "babel-plugin-webpack-alias": "^2.1.2",
+    "codecov": "^3.1.0",
     "copy-webpack-plugin": "^4.6.0",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
@@ -270,6 +272,14 @@
     }
   },
   "jest": {
+    "coverageReporters": [
+      "json",
+      "json-summary",
+      "lcov",
+      "text",
+      "clover"
+    ],
+    "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],

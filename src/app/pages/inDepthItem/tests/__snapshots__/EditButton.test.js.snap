@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<EditButton /> Renders properly 1`] = `null`;
+
+exports[`<EditButton /> Renders with edit enabled 1`] = `null`;

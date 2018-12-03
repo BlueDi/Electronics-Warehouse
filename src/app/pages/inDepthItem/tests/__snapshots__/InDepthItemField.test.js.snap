@@ -1,0 +1,509 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<InDepthItemField /> Breadcrumb Field 1`] = `
+<div
+  className="ui negative message"
+>
+  <div
+    className="content"
+  >
+    <div
+      className="header"
+    >
+      WARNING: No category selected!
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<InDepthItemField /> Breadcrumb Field 2`] = `
+<div
+  style={
+    Object {
+      "backgroundSize": "auto",
+      "padding": "3px 3px",
+    }
+  }
+>
+  category:
+  <br />
+  <div
+    className="ui breadcrumb"
+  >
+    <a
+      className="section"
+      onClick={[Function]}
+    >
+      test
+    </a>
+    <i
+      aria-hidden="true"
+      className="right angle icon divider"
+    />
+    <div
+      className="active section"
+      onClick={[Function]}
+    >
+      test2
+    </div>
+  </div>
+  <button
+    className="ui mini circular icon negative button"
+    onClick={[Function]}
+    role="button"
+    style={
+      Object {
+        "backgroundColor": "#e82b34",
+        "marginLeft": "5px",
+        "padding": "5px 5px",
+      }
+    }
+  >
+    <i
+      aria-hidden="true"
+      className="delete icon"
+    />
+  </button>
+</div>
+`;
+
+exports[`<InDepthItemField /> Category Field 1`] = `
+<span>
+  <div
+    aria-expanded={false}
+    className="ui fluid search selection dropdown"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onMouseDown={[Function]}
+    role="combobox"
+  >
+    <input
+      aria-autocomplete="list"
+      autoComplete="off"
+      className="search"
+      onChange={[Function]}
+      style={
+        Object {
+          "width": undefined,
+        }
+      }
+      tabIndex={0}
+      type="text"
+      value=""
+    />
+    <div
+      aria-live="polite"
+      className="text"
+      role="alert"
+    >
+      2's children
+    </div>
+    <i
+      aria-hidden="true"
+      className="dropdown icon"
+      onClick={[Function]}
+    />
+    <div
+      className="menu transition"
+      role="listbox"
+    >
+      <div
+        aria-checked={false}
+        aria-selected={true}
+        className="selected item"
+        onClick={[Function]}
+        role="option"
+        style={
+          Object {
+            "pointerEvents": "all",
+          }
+        }
+      >
+        <span
+          className="text"
+        >
+          c1
+        </span>
+      </div>
+      <div
+        aria-checked={false}
+        aria-selected={false}
+        className="item"
+        onClick={[Function]}
+        role="option"
+        style={
+          Object {
+            "pointerEvents": "all",
+          }
+        }
+      >
+        <span
+          className="text"
+        >
+          c2
+        </span>
+      </div>
+    </div>
+  </div>
+</span>
+`;
+
+exports[`<InDepthItemField /> Category Field 2`] = `
+<span>
+  <div
+    aria-expanded={false}
+    className="ui fluid search selection dropdown"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onMouseDown={[Function]}
+    role="combobox"
+  >
+    <input
+      aria-autocomplete="list"
+      autoComplete="off"
+      className="search"
+      onChange={[Function]}
+      style={
+        Object {
+          "width": undefined,
+        }
+      }
+      tabIndex={0}
+      type="text"
+      value=""
+    />
+    <div
+      aria-live="polite"
+      className="text"
+      role="alert"
+    >
+      Select a category
+    </div>
+    <i
+      aria-hidden="true"
+      className="dropdown icon"
+      onClick={[Function]}
+    />
+    <div
+      className="menu transition"
+      role="listbox"
+    >
+      <div
+        aria-checked={false}
+        aria-selected={true}
+        className="selected item"
+        onClick={[Function]}
+        role="option"
+        style={
+          Object {
+            "pointerEvents": "all",
+          }
+        }
+      >
+        <span
+          className="text"
+        >
+          c1
+        </span>
+      </div>
+      <div
+        aria-checked={false}
+        aria-selected={false}
+        className="item"
+        onClick={[Function]}
+        role="option"
+        style={
+          Object {
+            "pointerEvents": "all",
+          }
+        }
+      >
+        <span
+          className="text"
+        >
+          c2
+        </span>
+      </div>
+    </div>
+  </div>
+</span>
+`;
+
+exports[`<InDepthItemField /> Category Field 3`] = `
+<div>
+  category
+  :
+  <div
+    className="ui breadcrumb"
+  >
+    <div
+      className="active section"
+      onClick={[Function]}
+    >
+      test
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<InDepthItemField /> Description Field 1`] = `
+<h1
+  className="Title"
+  style={
+    Object {
+      "marginLeft": "5%",
+      "textAlign": "left",
+    }
+  }
+>
+  description
+  :
+  <div
+    className="ui input"
+  >
+    <input
+      name="description"
+      onChange={[Function]}
+      type="text"
+      value={1}
+    />
+  </div>
+</h1>
+`;
+
+exports[`<InDepthItemField /> Description Field 2`] = `
+<h1
+  className="Title"
+  style={
+    Object {
+      "marginLeft": "5%",
+      "textAlign": "left",
+    }
+  }
+>
+  1
+</h1>
+`;
+
+exports[`<InDepthItemField /> Image Field 1`] = `
+<div>
+  <img
+    height=""
+    onLoad={[Function]}
+    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG8AAABYCAYAAAD7uql1AAAgAElEQVR4Xu29e5RV5Znu+5vfN6/r
+VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
+2umklcSEaFRuIiiIF0AUFQVFQSAlRRVVRdW6zut3/phrLs…"
+    width=""
+  />
+  <button
+    className="ui button"
+    onClick={[Function]}
+    role="button"
+    style={
+      Object {
+        "display": "block",
+        "margin": "0 auto",
+      }
+    }
+  >
+    <label
+      className="Button"
+      htmlFor="files"
+    >
+      Upload Image
+    </label>
+  </button>
+  <div
+    className="ui input"
+    style={
+      Object {
+        "visibility": "hidden",
+      }
+    }
+  >
+    <input
+      id="files"
+      onChange={[Function]}
+      type="file"
+      value=""
+    />
+  </div>
+</div>
+`;
+
+exports[`<InDepthItemField /> Image Field 2`] = `
+<img
+  height=""
+  onLoad={[Function]}
+  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG8AAABYCAYAAAD7uql1AAAgAElEQVR4Xu29e5RV5Znu+5vfN6/r
+VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
+2umklcSEaFRuIiiIF0AUFQVFQSAlRRVVRdW6zut3/phrLs…"
+  width=""
+/>
+`;
+
+exports[`<InDepthItemField /> Other Field 1`] = `
+<span>
+  other
+  :
+  <div
+    className="ui input"
+  >
+    <input
+      name="other"
+      onChange={[Function]}
+      type="text"
+      value="other"
+    />
+  </div>
+</span>
+`;
+
+exports[`<InDepthItemField /> Packaging Field 1`] = `
+<span>
+  packaging
+  :
+  <div
+    aria-expanded={false}
+    className="ui fluid search selection dropdown"
+    onBlur={[Function]}
+    onChange={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onMouseDown={[Function]}
+    role="combobox"
+  >
+    <input
+      aria-autocomplete="list"
+      autoComplete="off"
+      className="search"
+      onChange={[Function]}
+      style={
+        Object {
+          "width": undefined,
+        }
+      }
+      tabIndex={0}
+      type="text"
+      value=""
+    />
+    <div
+      aria-live="polite"
+      className="text"
+      role="alert"
+    />
+    <i
+      aria-hidden="true"
+      className="dropdown icon"
+      onClick={[Function]}
+    />
+    <div
+      className="menu transition"
+      role="listbox"
+    >
+      <div
+        aria-checked={false}
+        aria-selected={true}
+        className="selected item"
+        onClick={[Function]}
+        role="option"
+        style={
+          Object {
+            "pointerEvents": "all",
+          }
+        }
+      >
+        <span
+          className="text"
+        >
+          p1
+        </span>
+      </div>
+    </div>
+  </div>
+</span>
+`;
+
+exports[`<InDepthItemField /> Properties Field 1`] = `
+<div>
+  <span>
+    Specifications
+  </span>
+  <ul>
+    <li>
+      test
+       :
+      <div
+        className="ui input"
+      >
+        <input
+          name="test"
+          onChange={[Function]}
+          type="text"
+          value="1"
+        />
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`<InDepthItemField /> Properties Field 2`] = `
+<div>
+  <span>
+    Specifications
+  </span>
+  <ul>
+    <li>
+      test
+       :
+      1
+      w
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`<InDepthItemField /> Properties Invalid Field 1`] = `
+<div>
+  <span>
+    Specifications
+  </span>
+  <ul>
+    <li>
+      test
+       :
+      <div
+        className="ui input"
+      >
+        <input
+          name="test"
+          onChange={[Function]}
+          type="number"
+        />
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`<InDepthItemField /> Properties Invalid Field 2`] = `
+<div>
+  <span>
+    Specifications
+  </span>
+  <ul>
+    <li>
+      test
+       :
+      N/D
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`<InDepthItemField /> Renders properly 1`] = `"undefined: undefined"`;

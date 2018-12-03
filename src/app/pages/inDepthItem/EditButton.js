@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withCookies } from 'react-cookie';
 import { Button } from 'semantic-ui-react';
-import '@common/styles/global.css';
 import './styles/InDepthItem.scss';
 
 /**

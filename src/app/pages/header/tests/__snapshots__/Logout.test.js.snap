@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Logout /> Renders properly 1`] = `
+<div
+  className="right menu"
+>
+  <a
+    className="item"
+    href="/user/undefined"
+    onClick={[Function]}
+  />
+  <a
+    className="link item"
+    onClick={[Function]}
+  >
+    Logout
+  </a>
+</div>
+`;

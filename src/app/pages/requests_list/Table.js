@@ -125,11 +125,6 @@ class RequestsTable extends Component {
       selection
     } = this.state;
 
-    let compare_items;
-    if (selection.length > 0) {
-      //compare_items = <CompareItems items={this.getItemsFromSelection()} />;
-    }
-
     return (
       <Grid rows={rows} columns={columns}>
         <PagingState defaultCurrentPage={0} pageSize={7} />
@@ -159,7 +154,6 @@ class RequestsTable extends Component {
         <ColumnChooser />
         <PagingPanel />
         <TableSelection />
-        {compare_items}
       </Grid>
     );
   }

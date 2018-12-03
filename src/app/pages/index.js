@@ -12,6 +12,6 @@ export const InDepthItem = loadComponent('inDepthItem');
 export const RequestsList = loadComponent('requests_list');
 export const RequestsCartList = loadComponent('requests_cart');
 
-// export Layout as default, and also NotFound as named
-export { default } from './layout';
+// export Root as default, and also NotFound as named
+export { default } from './root';
 export { default as NotFound } from './notfound';

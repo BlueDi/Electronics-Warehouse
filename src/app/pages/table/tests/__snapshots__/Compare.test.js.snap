@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create a Compare for 2 items 1`] = `
+<button
+  className="ui button"
+  onClick={[Function]}
+  role="button"
+>
+  Compare Items
+</button>
+`;

@@ -1,18 +1,15 @@
 import React, { Fragment } from 'react';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
-import DocumentTitle from 'react-document-title';
 
-const appTitle = 'Warehouse';
-
-const PageTitle = ({ title = 'Main', children }) => (
-  <DocumentTitle title={title + ' | ' + appTitle}>
-    <Fragment>{children}</Fragment>
-  </DocumentTitle>
+const PageTitle = ({ title, children }) => (
+  <Fragment>
+    <Helmet title={title} />
+    {children}
+  </Fragment>
 );
-
 PageTitle.propTypes = {
   children: PropTypes.node.isRequired,
-  title: PropTypes.string
+  title: PropTypes.string.isRequired
 };
-
 export default PageTitle;

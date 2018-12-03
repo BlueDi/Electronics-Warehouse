@@ -68,7 +68,6 @@ class AddItem extends Component {
     super(props);
 
     this.state = {
-      id: this.props.match.params.id,
       name: 'NAME',
       imageurl: 'IMAGE',
       count: 50,
