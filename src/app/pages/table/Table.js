@@ -27,6 +27,8 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import { Button, Icon, Image } from 'semantic-ui-react';
 import CompareItems from './Compare';
+import SelectComponent from './SelectComponent';
+import { AddToCart } from '@common/components';
 import InDepthItem from '@pages/inDepthItem';
 
 const SortingIcon = ({ direction }) =>
@@ -89,9 +91,15 @@ class TableRow extends Component {
         render={({ history }) => (
           <Table.Row
             {...this.props}
-            onClick={() =>
-              this.handleClick(history, this.props.tableRow.row.id)
-            }
+            onClick={e => {
+              if (
+                !['button', 'i', 'input', 'label'].includes(
+                  e.target.tagName.toLowerCase()
+                )
+              ) {
+                return this.handleClick(history, this.props.tableRow.row.id);
+              }
+            }}
           />
         )}
       />
@@ -112,6 +120,7 @@ class ComponentsTable extends Component {
     super(props);
     this.state = {
       columns: [],
+      columnsOrder: this.props.columnsOrder,
       tableColumnExtensions: [],
       detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
@@ -132,7 +141,7 @@ class ComponentsTable extends Component {
   getItemsFromSelection() {
     const { rows, selection } = this.state;
     var selected = [];
-    for (var i in selection) selected.push(rows[i]);
+    for (var i of selection) selected.push(rows[i]);
     return selected;
   }
 
@@ -148,6 +157,7 @@ class ComponentsTable extends Component {
     const {
       rows,
       columns,
+      columnsOrder,
       tableColumnExtensions,
       detailsColumns,
       imageColumns,
@@ -158,14 +168,15 @@ class ComponentsTable extends Component {
     } = this.state;
 
     let compare_items;
+    let addToCart;
     if (withSelection && selection.length > 0) {
-      compare_items = <CompareItems items={this.getItemsFromSelection()} />;
+      var selected_items = this.getItemsFromSelection();
+      compare_items = <CompareItems items={selected_items} />;
+      addToCart = <AddToCart items={selected_items} />;
     }
 
     return (
       <Grid rows={rows} columns={columns}>
-        <PagingState defaultCurrentPage={0} pageSize={7} />
-        <IntegratedPaging />
         <DragDropProvider />
         <SearchState />
         <IntegratedFiltering />
@@ -182,22 +193,30 @@ class ComponentsTable extends Component {
             onSelectionChange={this.changeSelection}
           />
         )}
+        <PagingState defaultCurrentPage={0} pageSize={7} />
+        <IntegratedPaging />
         <Table
           rowComponent={TableRow}
           columnExtensions={tableColumnExtensions}
         />
-        <TableColumnReordering defaultOrder={this.props.columnsOrder} />
+        <TableColumnReordering defaultOrder={columnsOrder} />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
-        {this.state.withDetails && (
-          <TableRowDetail contentComponent={RowDetail} />
+        {withDetails && (
+          <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
         )}
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
         <Toolbar />
         <SearchPanel />
         <ColumnChooser />
         <PagingPanel />
-        {withSelection && <TableSelection />}
+        {withSelection && (
+          <TableSelection
+            cellComponent={SelectComponent}
+            selectionColumnWidth={85}
+          />
+        )}
         {withSelection && compare_items}
+        {addToCart}
       </Grid>
     );
   }

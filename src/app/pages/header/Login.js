@@ -41,6 +41,7 @@ class Login extends Component {
     for (var property in value) {
       cookies.set(property, value[property], { path: '/' });
     }
+    cookies.set('cart', [], { path: '/' });
     history.push(value.userPath);
   };
 
