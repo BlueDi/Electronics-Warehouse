@@ -181,7 +181,11 @@ class RequestsTable extends Component {
 
   render() {
     return (
-      <Grid rows={this.state.cart} columns={this.state.columns} getRowId={row => row.id}>
+      <Grid
+        rows={this.state.cart}
+        columns={this.state.columns}
+        getRowId={row => row.id}
+      >
         <EditingState
           columnExtensions={[{ columnName: 'amount', editingEnabled: true }]}
           columnEditingEnabled={false}

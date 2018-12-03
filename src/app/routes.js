@@ -1,4 +1,13 @@
-import Root, { AddItem, Course, InDepthItem, NotFound, WHTable, RequestsCartList, RequestsList, Request } from '@pages';
+import Root, {
+  AddItem,
+  Course,
+  InDepthItem,
+  NotFound,
+  WHTable,
+  RequestsCartList,
+  RequestsList,
+  Request
+} from '@pages';
 
 export const routes = [
   {

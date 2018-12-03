@@ -79,7 +79,7 @@ const RowDetail = ({ row }) => <InDepthItem id={row.id} />;
  * Row of ComponentsTable
  */
 class TableRow extends Component {
-  handleClick(history, id) {
+  handleClick(history, id, e) {
     if (
       !['button', 'i', 'input', 'label'].includes(
         e.target.tagName.toLowerCase()
@@ -97,7 +97,7 @@ class TableRow extends Component {
         render={({ history }) => (
           <Table.Row
             {...this.props}
-            onClick={(e) =>
+            onClick={e =>
               this.handleClick(history, this.props.tableRow.row.id, e)
             }
           />
@@ -211,7 +211,12 @@ class ComponentsTable extends Component {
         <ColumnChooser />
         <PagingPanel />
         {addToCart}
-        {withSelection && <TableSelection cellComponent={SelectComponent} selectionColumnWidth={80}/>}
+        {withSelection && (
+          <TableSelection
+            cellComponent={SelectComponent}
+            selectionColumnWidth={80}
+          />
+        )}
         {withSelection && compare_items}
       </Grid>
     );

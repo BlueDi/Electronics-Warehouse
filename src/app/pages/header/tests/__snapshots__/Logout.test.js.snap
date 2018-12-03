@@ -6,7 +6,7 @@ exports[`<Logout /> Renders properly 1`] = `
 >
   <a
     className="item"
-    href="/user/undefined"
+    href=""
     onClick={[Function]}
   />
   <a

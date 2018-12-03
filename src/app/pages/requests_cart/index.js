@@ -80,38 +80,42 @@ class RequestsCartList extends Component {
   };
 
   professorForm = () => {
-    return (<Form.Dropdown
-      selection
-      search
-      label="Professor"
-      options={this.state.professors}
-      value={this.state.professor_id}
-      onChange={(e, { value }) =>
-        this.setState({ professor_id: value })
-      }
-    />);
-  }
+    return (
+      <Form.Dropdown
+        selection
+        search
+        label="Professor"
+        options={this.state.professors}
+        value={this.state.professor_id}
+        onChange={(e, { value }) => this.setState({ professor_id: value })}
+      />
+    );
+  };
 
   requestDetails = () => {
-    return (<Form.TextArea
-      required
-      label="Request Details"
-      placeholder="Details"
-      onChange={(e, { value }) => this.setState({ details: value })}
-    />);
-  }
+    return (
+      <Form.TextArea
+        required
+        label="Request Details"
+        placeholder="Details"
+        onChange={(e, { value }) => this.setState({ details: value })}
+      />
+    );
+  };
 
   buttons = () => {
-    return (<Button.Group>
-      <Button positive onClick={this.sendRequest}>
-        Send Request
-      </Button>
-      <Button.Or />
-      <Button negative onClick={this.clearRequests}>
-        Clear All
-      </Button>
-    </Button.Group>);
-  }
+    return (
+      <Button.Group>
+        <Button positive onClick={this.sendRequest}>
+          Send Request
+        </Button>
+        <Button.Or />
+        <Button negative onClick={this.clearRequests}>
+          Clear All
+        </Button>
+      </Button.Group>
+    );
+  };
 
   render() {
     return (

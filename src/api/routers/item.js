@@ -182,7 +182,6 @@ itemRouter.post('/request_items', async (req, res) => {
   }
 });
 
-
 itemRouter.post('/item_comments_increment', async (req, res) => {
   try {
     let parameters = [req.body.itemId, req.body.newComment.trimRight()];
