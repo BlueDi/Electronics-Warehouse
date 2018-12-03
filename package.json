@@ -155,7 +155,7 @@
     "sass-loader": "^7.1.0",
     "stats-webpack-plugin": "^0.7.0",
     "style-loader": "^0.23.1",
-    "stylelint": "^9.8.0",
+    "stylelint": "^9.9.0",
     "stylelint-config-sass-guidelines": "^5.2.0",
     "stylelint-scss": "^3.4.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
