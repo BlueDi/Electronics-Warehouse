@@ -84,17 +84,23 @@ class RequestsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [],
+      columns: [
+        { name: 'date_sent', title: 'Sent' },
+        { name: 'cancelled', title: 'Cancelled' },
+        { name: 'professor_accepted', title: 'Professor Accepted' },
+        { name: 'manager_accepted', title: 'Manager Accepted' },
+        { name: 'purpose', title: 'Purpose' },
+        { name: 'workflow', title: 'Workflow' },
+        { name: 'requester', title: 'Requester' },
+        { name: 'professor', title: 'Professor' },
+        { name: 'manager', title: 'Manager' }
+      ],
       tableColumnExtensions: [],
       detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
       rows: this.props.components,
       selection: []
     };
-  }
-
-  componentDidMount() {
-    this.mount_header();
   }
 
   changeSelection = selection => this.setState({ selection });
@@ -104,14 +110,6 @@ class RequestsTable extends Component {
     var selected = [];
     for (var i in selection) selected.push(rows[i]);
     return selected;
-  }
-
-  mount_header() {
-    var header_params = [];
-    for (var param in this.state.rows[0]) {
-      header_params.push({ name: param, title: param });
-    }
-    this.setState({ columns: header_params });
   }
 
   render() {
