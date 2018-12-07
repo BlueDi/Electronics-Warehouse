@@ -24,7 +24,7 @@ class AddToCart extends Component {
     let clean_txt = text.substring(0, text.length - 1);
     return clean_txt.split('\n').map(function(txt) {
       return (
-        <span key="success_msg">
+        <span key={txt}>
           {txt}
           <br />
         </span>

@@ -83,7 +83,6 @@ class TableRow extends Component {
 class RequestsTable extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       columns: [],
       tableColumnExtensions: [],

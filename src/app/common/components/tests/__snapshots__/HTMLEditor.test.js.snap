@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HTMLEditor Field Render 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "#ebebe4",
+      "fontSize": "12px",
+      "height": 400,
+      "overflowY": "scroll",
+      "width": 700,
+    }
+  }
+/>
+`;
