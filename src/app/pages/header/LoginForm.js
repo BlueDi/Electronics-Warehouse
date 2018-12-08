@@ -6,7 +6,7 @@ import { service } from '@utils';
 import logo from '@assets/images/logo.png';
 
 class LoginForm extends Component {
-  state = { error: false, name: '', password: '' };
+  state = { error: false, error_msg: '', name: '', password: '' };
 
   handleChange = (e, { name, value }) =>
     this.setState({ error: false, [name]: value });
@@ -17,22 +17,22 @@ class LoginForm extends Component {
       .then(response => {
         this.setupLoggedUser(response.data);
       })
-      .catch(() => {
-        this.failedLogin();
+      .catch(err => {
+        this.failedLogin(err.response.data);
       });
   };
 
   setupLoggedUser = value => {
-    const { cookies, history } = this.props;
+    console.log(value);
+    const { cookies } = this.props;
     for (var property in value) {
       cookies.set(property, value[property], { path: '/' });
     }
     cookies.set('cart', [], { path: '/' });
-    history.push(value.userPath);
   };
 
-  failedLogin = () => {
-    this.setState({ error: true });
+  failedLogin = err => {
+    this.setState({ error: true, error_msg: err });
   };
 
   render() {
@@ -65,11 +65,7 @@ class LoginForm extends Component {
             type="password"
             onChange={this.handleChange}
           />
-          <Message
-            error
-            header="Failed Login"
-            content="Please check again your user's info."
-          />
+          <Message error header="Failed Login" content={this.state.error_msg} />
           <Form.Button fluid>Login</Form.Button>
         </Form>
       </React.Fragment>

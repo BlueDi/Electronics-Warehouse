@@ -7,7 +7,9 @@ import logo from '@assets/images/logo.png';
 
 class SignupForm extends Component {
   state = {
-    error: undefined,
+    error: false,
+    error_header: '',
+    error_detail: '',
     name: '',
     password: '',
     email: '',
@@ -15,9 +17,9 @@ class SignupForm extends Component {
   };
 
   handleChange = (e, { name, value }) =>
-    this.setState({ error: undefined, [name]: value });
+    this.setState({ error: false, [name]: value });
 
-  handleAuthenticate = () => {
+  handleValidation = () => {
     const body = {
       name: this.state.name,
       password: this.state.password,
@@ -29,22 +31,26 @@ class SignupForm extends Component {
       .then(response => {
         this.setupLoggedUser(response.data);
       })
-      .catch(() => {
-        this.failedLogin();
+      .catch(err => {
+        this.failedSignup(err.response.data);
       });
   };
 
   setupLoggedUser = value => {
-    const { cookies, history } = this.props;
+    console.log(value);
+    const { cookies } = this.props;
     for (var property in value) {
       cookies.set(property, value[property], { path: '/' });
     }
     cookies.set('cart', [], { path: '/' });
-    history.push(value.userPath);
   };
 
-  failedLogin = () => {
-    this.setState({ error: true });
+  failedSignup = err => {
+    this.setState({
+      error: true,
+      error_header: err.header,
+      error_detail: err.detail
+    });
   };
 
   render() {
@@ -56,7 +62,7 @@ class SignupForm extends Component {
         <Form
           size="large"
           error={this.state.error}
-          onSubmit={this.handleAuthenticate}
+          onSubmit={this.handleValidation}
         >
           <Form.Input
             fluid
@@ -102,8 +108,8 @@ class SignupForm extends Component {
           />
           <Message
             error
-            header="Failed Login"
-            content="Please check again your user's info."
+            header={this.state.error_header}
+            content={this.state.error_detail}
           />
           <Form.Button fluid>Signup</Form.Button>
         </Form>

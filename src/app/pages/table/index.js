@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { Grid } from 'semantic-ui-react';
 import { service } from '@utils';
-import {
-  AddItemButton,
-  Loader,
-  PageTitle,
-  SearchBar
-} from '@common/components';
+import { AddItemButton, Loader, PageTitle } from '@common/components';
 import ComponentsTable from './Table';
 
 const urlAllItems = `/all_items`;
@@ -138,9 +133,6 @@ class WHTable extends Component {
       <Grid>
         <Grid.Column floated="left" width={5}>
           <AddItemButton />
-        </Grid.Column>
-        <Grid.Column floated="right" width={5}>
-          <SearchBar />
         </Grid.Column>
       </Grid>
     );

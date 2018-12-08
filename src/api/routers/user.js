@@ -14,8 +14,8 @@ const professors_query = 'SELECT id, login FROM Users WHERE user_permissions=2';
 const queryLogin = `
   SELECT id, login, password, password_salt, password_iterations, email, user_permissions
   FROM users WHERE login = $1 OR email = $1;`;
-const queryPermissions = ` SELECT * FROM permissions WHERE id = $1;`;
-const querySignup = `INSERT INTO users (login, password, password_salt, password_iterations, email, user_permissions) VALUES ($1, $2, $3, $4, $5, $6);`;
+const queryPermissions = ` SELECT can_read, can_request, can_edit, user_path FROM permissions WHERE id = $1;`;
+const querySignup = `INSERT INTO users (id, login, password, password_salt, password_iterations, email, user_permissions) VALUES (DEFAULT, $1, $2, $3, $4, $5, $6)`;
 const getPermissionsQuery = `SELECT * FROM permissions ORDER BY id DESC`;
 
 /**
@@ -38,75 +38,114 @@ var getPermissions = async function(given_key) {
     const stored_key = data.key;
     const salt = data.key_salt;
     const it = data.key_iterations;
-
-    const gen_key = crypto.pbkdf2Sync(given_key, salt, it, KEY_LEN, encryption);
-    if (gen_key.equals(stored_key) || stored_key.length == 0) {
+    if (
+      passwordMatches(given_key, stored_key, salt, it) ||
+      stored_key.length == 0
+    ) {
       return data;
     }
   }
 };
 
+var passwordMatches = function(attempt_key, stored_key, salt, it) {
+  const hash_salted_key = crypto.pbkdf2Sync(
+    attempt_key,
+    salt,
+    it,
+    KEY_LEN,
+    encryption
+  );
+  return hash_salted_key.equals(stored_key);
+};
+
 /**
  * Login the user.
- *
+ * @param {Object} req - Details of the request
+ * @param {String} req.body.name - Name of the user to login (can be username or email)
+ * @param {String} req.body.password - Plain-text password user inserted
  * @return {object} User details
  */
 userRouter.post('/login', async (req, res) => {
   try {
-    const dataLogin = await db.one(queryLogin, [req.body.name]);
-    const dataPermissions = await db.one(
-      queryPermissions,
-      dataLogin.user_permissions
-    );
-    delete dataPermissions['id'];
-    let merged = { ...dataLogin, ...dataPermissions };
-    res.status(200).send(merged);
+    const {
+      login,
+      password,
+      password_salt,
+      password_iterations,
+      user_permissions
+    } = await db.one(queryLogin, [req.body.name]);
+
+    if (
+      passwordMatches(
+        req.body.password,
+        password,
+        password_salt,
+        password_iterations
+      )
+    ) {
+      const { can_read, can_request, can_edit, user_path } = await db.one(
+        queryPermissions,
+        user_permissions
+      );
+
+      let body = { name: login, can_read, can_request, can_edit, user_path };
+      res.status(200).send(body);
+    } else {
+      res.status(401).send('Wrong password supplied!');
+    }
   } catch (e) {
-    res.status(401).send('Invalid login!');
+    res.status(401).send('Wrong username and/or password supplied!');
   }
 });
 
 /**
  * Signs up the user
  * @param {Object} req - Fields of the request
- * @param {String} req.name - Username to use for the user
- * @param {String} req.email - Email of the user
- * @param {String} req.password - Password to use for the user
+ * @param {String} req.body.name - Username to use for the user
+ * @param {String} req.body.email - Email of the user
+ * @param {String} req.body.password - Password to use for the user
  *
  * @type {String}
  */
 userRouter.post('/signup', async (req, res) => {
-  // genPermissionKeys();
-  console.log(req.body);
-  const name = req.body.name;
-  const email = req.body.email;
+  const { password, name, email } = req.body;
   const perm_key = req.body.permission;
-  const permissions = getPermissions(perm_key);
+  const permissions = await getPermissions(perm_key);
+  if (perm_key.length > 0 && permissions.id == 1) {
+    // If permission key is wrong
+    res.status(401).send({
+      header: 'Permission key wrong!',
+      detail: 'Try again or clear field to signup as a student'
+    });
+    return;
+  }
+
   const salt = genSalt();
   const iterations = Math.floor(Math.random() * MIN_IT + MIN_IT); // [500000, 1000000[
 
   try {
-    crypto.pbkdf2(
-      req.body.password,
+    const gen_key = crypto.pbkdf2Sync(
+      password,
       salt,
       iterations,
       KEY_LEN,
-      encryption,
-      function(err, gen_key) {
-        if (err) {
-          throw err;
-        }
-        db.none(querySignup, [
-          name,
-          gen_key,
-          salt,
-          iterations,
-          email,
-          permissions.id
-        ]);
-        res.sendStatus(200);
-      }
+      encryption
     );
+    await db.none(querySignup, [
+      name,
+      gen_key,
+      salt,
+      iterations,
+      email,
+      permissions.id
+    ]);
+    res.status(200).send({
+      name,
+      can_read: permissions.can_read,
+      can_request: permissions.can_request,
+      can_edit: permissions.can_edit,
+      user_path: permissions.user_path
+    });
   } catch (e) {
     console.error(e);
     res.status(400).send('Failed to signup!');
