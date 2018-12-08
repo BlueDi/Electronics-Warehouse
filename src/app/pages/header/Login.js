@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Header, Menu, Modal } from 'semantic-ui-react';
+import { Menu, Modal } from 'semantic-ui-react';
 import LoginForm from './LoginForm';
+import SignupForm from './SignupForm';
 
 class LoginModal extends Component {
   render() {
@@ -17,12 +18,9 @@ class LoginModal extends Component {
 class SignupModal extends Component {
   render() {
     return (
-      <Modal trigger={<Menu.Item>Signup</Menu.Item>}>
-        <Modal.Header>Sign Up</Modal.Header>
+      <Modal size="small" trigger={<Menu.Item>Signup</Menu.Item>}>
         <Modal.Content>
-          <Header>Shibboleth</Header>
-          <p>Maybe use a modal for the login.</p>
-          <p>To do.</p>
+          <SignupForm />
         </Modal.Content>
       </Modal>
     );

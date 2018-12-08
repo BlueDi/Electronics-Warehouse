@@ -64,6 +64,9 @@ CREATE TABLE item_property (
 CREATE TABLE permissions (
 	id SERIAL PRIMARY KEY,
 	name TEXT UNIQUE NOT NULL,
+  key BYTEA NOT NULL,
+  key_salt TEXT NOT NULL,
+  key_iterations INT NOT NULL,
 	user_path TEXT NOT NULL,
 	can_read BOOLEAN NOT NULL,
 	can_request BOOLEAN NOT NULL,
@@ -71,11 +74,13 @@ CREATE TABLE permissions (
 
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
-	login TEXT UNIQUE,
-	password TEXT NOT NULL,
+	login TEXT UNIQUE NOT NULL,
+	password BYTEA NOT NULL,
+  password_salt TEXT NOT NULL,
+  password_iterations INT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
 	user_permissions INT NOT NULL,
 	FOREIGN KEY(user_permissions) REFERENCES permissions(id));
-
 
 CREATE TABLE request_workflow (
 	id SERIAL PRIMARY KEY,
