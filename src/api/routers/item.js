@@ -180,6 +180,16 @@ itemRouter.post('/item_comments_increment', async (req, res) => {
   }
 });
 
+/**
+ * Requests the items to the professor
+ * @param {Object} req -                    Object containing the request
+ * @param {Object} req.body.cart -          Array of items
+ * @param {String} req.body.details -       Text of the details of the request
+ * @param {Number} req.body.professor_id -  Number representing the id of the professor to assign the request
+ * @param {Number} req.body.user_id -       Number of the student making the request
+ * @param {String} req.body.user_name -     Name of the user making the request
+ * @type {String} Error message or 'OK'
+ */
 itemRouter.post('/request_items', async (req, res) => {
   let { cart, details, professor_id, user_id, user_name } = req.body;
   let msg = emailHeader('', user_name),
@@ -205,6 +215,12 @@ itemRouter.post('/request_items', async (req, res) => {
   }
 });
 
+/**
+ * Inserts the items in the database
+ * @param  {Object} cart       Array of items to be added
+ * @param  {Number} request_id Id of the request
+ * @param  {String} items_msg  Message that will be built and later sent as an email
+ */
 var insertRequestItems = function(cart, request_id, items_msg) {
   for (let i = 0; i < cart.length; i++) {
     const info = cart[i];
@@ -218,6 +234,12 @@ var insertRequestItems = function(cart, request_id, items_msg) {
   }
 };
 
+/**
+ * Builds the email header
+ * @param  {String} msg  Current message
+ * @param  {String} name Name of the student that has made the request
+ * @return {String}      @msg but with added header
+ */
 var emailHeader = function(msg, name) {
   msg = writer.addText(msg, 'Student ');
   msg = writer.addBold(msg, name, ' ');
@@ -225,6 +247,14 @@ var emailHeader = function(msg, name) {
   return msg;
 };
 
+/**
+ * Inserts the body of the email
+ * @param  {String} msg        Current message
+ * @param  {Object} items      Array of items
+ * @param  {String} details    Details inserted by the user
+ * @param  {Number} request_id Number of the request, to be used for linking purposes
+ * @return {String}            @msg with added body
+ */
 var emailBody = function(msg, items, details, request_id) {
   msg = writer.addUnorderedList(msg, items, '\n\n');
   msg = writer.addBold(msg, 'Details:', '\n');
@@ -236,6 +266,13 @@ var emailBody = function(msg, items, details, request_id) {
   return msg;
 };
 
+/**
+ * Adds a footer to the message
+ * @param  {String}  msg            Current message
+ * @param  {Boolean} is_professor   Whether the message is to be sent to a professor or not
+ * @param  {String}  professor_name Name of the professor
+ * @return {String}                 @msg added with the footer
+ */
 var emailFooter = function(msg, is_professor, professor_name) {
   if (!is_professor) {
     let new_msg =
@@ -256,12 +293,17 @@ var mailOptions = {
   markdown: undefined
 };
 
+/**
+ * Sends the emails
+ * @param  {String} msg          Message to be sent
+ * @param  {Number} professor_id ID of the professor
+ * @param  {String} student_name Name of the student
+ */
 var sendEmails = async function(msg, professor_id, student_name) {
   const data = await db.any(emailsQuery, [professor_id]);
   const subject = 'Student "' + student_name + '" has made a new request';
 
   if (data.length > 0) {
-    console.log(data);
     if (data[0].permissions == 2) {
       let prof_name = data[0].name;
       const prof_msg = emailFooter(msg, true, undefined);
@@ -278,6 +320,12 @@ var sendEmails = async function(msg, professor_id, student_name) {
   }
 };
 
+/**
+ * Sends a single email to the given recepients
+ * @param  {String} msg     Message to be sent
+ * @param  {String} to      Email to send the message to
+ * @param  {String} subject Subject of the email
+ */
 var sendEmail = function(msg, to, subject) {
   mailOptions.to = to;
   mailOptions.subject = subject;

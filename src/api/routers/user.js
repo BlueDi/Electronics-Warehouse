@@ -30,6 +30,11 @@ var genSalt = function() {
     .slice(0, SALT_LEN); /** return required number of characters */
 };
 
+/**
+ * Checks if the given permissions key matches any of the permissions key
+ * @param  {string} given_key Key inserted by the user
+ * @return {Object}           Object representing a permission of the user (see table 'permissions')
+ */
 var getPermissions = async function(given_key) {
   const perm_data = await db.any(getPermissionsQuery);
 
@@ -47,6 +52,14 @@ var getPermissions = async function(given_key) {
   }
 };
 
+/**
+ * Checks if the given password matches the stored password
+ * @param  {String} attempt_key Password inserted by user
+ * @param  {Object} stored_key  Password stored in the database ( Buffer object)
+ * @param  {String} salt        Salt stored in the database
+ * @param  {Number} it          Number of iterations stored in database
+ * @return {Boolean}            Whether it matches or not
+ */
 var passwordMatches = function(attempt_key, stored_key, salt, it) {
   const hash_salted_key = crypto.pbkdf2Sync(
     attempt_key,
@@ -65,7 +78,7 @@ var passwordMatches = function(attempt_key, stored_key, salt, it) {
  * @param {String} req.body.password - Plain-text password user inserted
  * @return {object} User details
  */
-userRouter.post('/login', async (req, res) => {
+userRouter.post('/login', async function(req, res) {
   try {
     const {
       id,
@@ -115,7 +128,7 @@ userRouter.post('/login', async (req, res) => {
  *
  * @type {String}
  */
-userRouter.post('/signup', async (req, res) => {
+userRouter.post('/signup', async function(req, res) {
   const { password, name, email } = req.body;
   const perm_key = req.body.permission;
   const permissions = await getPermissions(perm_key);
@@ -173,6 +186,12 @@ userRouter.post('/logout', function(req, res) {
   res.sendStatus(200);
 });
 
+/**
+ * Gets all the professors name from the database
+ * @param  {Object} req Request object
+ * @param  {Object} res Response object
+ * @return {Object}     Array of objects with 'id' and 'name'
+ */
 userRouter.get('/professors', async function(req, res) {
   try {
     const data = await db.any(professors_query);
@@ -183,7 +202,14 @@ userRouter.get('/professors', async function(req, res) {
   }
 });
 
-userRouter.get('/user_permissions/:id', async (req, res) => {
+/**
+ * Gets the permissions of the user
+ * @param  {Object} req             Request object
+ * @param  {Number} req.params.id   ID of the user
+ * @param  {Object} res             Response object
+ * @return {Object}                 Object with the user permissions
+ */
+userRouter.get('/user_permissions/:id', async function(req, res) {
   const user_role_query = `SELECT users.user_permissions
     FROM users
     WHERE users.id = ${req.params.id}`;

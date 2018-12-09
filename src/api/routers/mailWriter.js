@@ -1,5 +1,8 @@
 const address = 'http://armazemdeec.fe.up.pt:49160';
 
+/**
+ * Module used to write an email using markdown elements
+ */
 module.exports = {
   /**
    * Adds simple text field to the current email text
@@ -61,10 +64,21 @@ module.exports = {
     return current + post_txt;
   },
 
+  /**
+   * Adds a horizontal rule to the text
+   * @param  {String} current  Current message
+   * @param  {String} post_txt Text to be added after the rule
+   * @return {String}          @current added with the rule and @post_txt
+   */
   addRule: function(current, post_txt) {
     return current + '\n---\n' + post_txt;
   },
 
+  /**
+   * Generic callback when sening an email
+   * @param  {Object} err  Error object
+   * @param  {Object} info Info  object
+   */
   mailCallBack: function(err, info) {
     if (err) {
       console.log(err);
