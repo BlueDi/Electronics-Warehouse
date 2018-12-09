@@ -282,13 +282,7 @@ var sendEmail = function(msg, to, subject) {
   mailOptions.to = to;
   mailOptions.subject = subject;
   mailOptions.markdown = msg;
-  transporter.sendMail(mailOptions, function(error, info) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent!\n - ' + info.response);
-    }
-  });
+  transporter.sendMail(mailOptions, writer.mailCallBack);
 };
 
 export default itemRouter;

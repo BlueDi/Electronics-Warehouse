@@ -63,5 +63,13 @@ module.exports = {
 
   addRule: function(current, post_txt) {
     return current + '\n---\n' + post_txt;
+  },
+
+  mailCallBack: function(err, info) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Email sent!\n - ' + info);
+    }
   }
 };

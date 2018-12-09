@@ -2,6 +2,7 @@ const express = require('express');
 var nodeMailer = require('nodemailer');
 const db = require('@api/db.js');
 const requestRouter = express.Router();
+var writer = require('./mailWriter');
 var markdown = require('nodemailer-markdown').markdown;
 
 const transporter = nodeMailer.createTransport({
@@ -13,6 +14,13 @@ const transporter = nodeMailer.createTransport({
   tls: { rejectUnauthorized: false }
 });
 transporter.use('compile', markdown(undefined));
+
+var mailOptions = {
+  from: 'plataforma.armazem@gmail.com',
+  to: undefined,
+  subject: undefined,
+  markdown: undefined
+};
 
 const queryManagerRequestAll = `
   SELECT DISTINCT ON(request_workflow.id) request_workflow.*, to_char(request_workflow.date_sent, 'DD Mon YYYY HH24hMIm') as date_sent,
@@ -92,6 +100,12 @@ const queryRequest = `
   WHERE request_workflow.id = $1
 `;
 
+const studentEmailQuery =
+  'SELECT email FROM users, request_workflow WHERE request_workflow.id = $1 AND request_workflow.requester_id = users.id';
+
+const studentProfEmailQuery =
+  'SELECT user_permissions, email FROM users, request_workflow WHERE request_workflow.id = $1 AND (request_workflow.requester_id=users.id OR request_workflow.professor_id=users.id) ORDER BY user_permissions';
+
 var simpleGet = async function(query, params, err_msg, req, res) {
   try {
     let data;
@@ -155,6 +169,21 @@ requestRouter.post('/request_evaluate_professor/', async (req, res) => {
     req,
     res
   );
+  if (!req.body.accept) {
+    const email = await db.one(studentEmailQuery, [req.body.id]);
+    console.log(email);
+    let msg =
+      'The professor you assigned the request to has **rejected** your ';
+    mailOptions.markdown = writer.addLink(
+      msg,
+      'request',
+      '/request/' + req.body.id,
+      '!'
+    );
+    mailOptions.to = email.email;
+    mailOptions.subject = 'Your request has been declined';
+    transporter.sendMail(mailOptions, writer.mailCallBack);
+  }
 });
 
 requestRouter.post('/request_evaluate_manager/', async (req, res) => {
@@ -162,7 +191,30 @@ requestRouter.post('/request_evaluate_manager/', async (req, res) => {
     err_msg = 'Failed to update request manager evaluation!',
     params = [req.body.accept, req.body.id];
   simplePost(queryManagerEvaluateRequest, params, err_msg, succ_msg, req, res);
+  if (!req.body.accept) {
+    const email = await db.any(studentProfEmailQuery, [req.body.id]);
+    let msg = 'A manager has **rejected** the ';
+    msg = writer.addLink(msg, 'request', '/request/' + req.body.id, '');
+    await sendToStudent(msg, email[0]);
+    sendToProfessor(msg, email[1]);
+  }
 });
+
+var sendToStudent = function(msg, student_data) {
+  msg = msg + ' you have previously made!';
+  mailOptions.to = student_data.email;
+  mailOptions.subject = 'Your request has been declined';
+  mailOptions.markdown = msg;
+  transporter.sendMail(mailOptions, writer.mailCallBack);
+};
+
+var sendToProfessor = function(msg, prof_data) {
+  msg = msg + ' you have previously accepted!';
+  mailOptions.to = prof_data.email;
+  mailOptions.subject = 'A request you approved has been denied';
+  mailOptions.markdown = msg;
+  transporter.sendMail(mailOptions, writer.mailCallBack);
+};
 
 requestRouter.get('/request_items/:id', async (req, res) => {
   const err_msg = 'Failed to retrieve selected request items!';
