@@ -6,13 +6,6 @@ exports[`<Logout /> Renders properly 1`] = `
 >
   <a
     className="item"
-    href="/requests_list"
-    onClick={[Function]}
-  >
-    Requests
-  </a>
-  <a
-    className="item"
     href=""
     onClick={[Function]}
   />
