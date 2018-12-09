@@ -15,7 +15,7 @@ const queryLogin = `
   SELECT id, login, password, password_salt, password_iterations, email, user_permissions
   FROM users WHERE login = $1 OR email = $1;`;
 const queryPermissions = ` SELECT can_read, can_request, can_edit, user_path FROM permissions WHERE id = $1;`;
-const querySignup = `INSERT INTO users (id, login, password, password_salt, password_iterations, email, user_permissions) VALUES (DEFAULT, $1, $2, $3, $4, $5, $6)`;
+const querySignup = `INSERT INTO users (id, login, password, password_salt, password_iterations, email, user_permissions) VALUES (DEFAULT, $1, $2, $3, $4, $5, $6) RETURNING id`;
 const getPermissionsQuery = `SELECT * FROM permissions ORDER BY id DESC`;
 
 /**
@@ -68,6 +68,7 @@ var passwordMatches = function(attempt_key, stored_key, salt, it) {
 userRouter.post('/login', async (req, res) => {
   try {
     const {
+      id,
       login,
       password,
       password_salt,
@@ -88,7 +89,14 @@ userRouter.post('/login', async (req, res) => {
         user_permissions
       );
 
-      let body = { name: login, can_read, can_request, can_edit, user_path };
+      let body = {
+        id,
+        name: login,
+        can_read,
+        can_request,
+        can_edit,
+        user_path
+      };
       res.status(200).send(body);
     } else {
       res.status(401).send('Wrong password supplied!');
@@ -131,7 +139,7 @@ userRouter.post('/signup', async (req, res) => {
       KEY_LEN,
       encryption
     );
-    await db.none(querySignup, [
+    const data = await db.one(querySignup, [
       name,
       gen_key,
       salt,
@@ -140,6 +148,7 @@ userRouter.post('/signup', async (req, res) => {
       permissions.id
     ]);
     res.status(200).send({
+      id: data.id,
       name,
       can_read: permissions.can_read,
       can_request: permissions.can_request,

@@ -1,13 +1,27 @@
 const express = require('express');
 const db = require('@api/db.js');
-
+var writer = require('./mailWriter');
+var nodeMailer = require('nodemailer');
+var markdown = require('nodemailer-markdown').markdown;
 const itemRouter = express.Router();
+
+var transporter = nodeMailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'plataforma.armazem@gmail.com',
+    pass: 'armazemplataforma1'
+  },
+  tls: { rejectUnauthorized: false }
+});
+
+transporter.use('compile', markdown(undefined));
 
 const all_items_query = `SELECT *, convert_from(item.image, 'UTF-8') as image FROM item`;
 const insert_request_query =
   'INSERT INTO request_workflow (id, cancelled, purpose, requester_id, professor_id) VALUES (DEFAULT, FALSE, $1, $2, $3) RETURNING id';
 const insert_request_item =
   'INSERT INTO request_items (request_id, item_id, count) VALUES ($1, $2, $3)';
+const emailsQuery = `SELECT login AS name, email, user_permissions AS permissions FROM users WHERE id=$1 OR user_permissions=3 ORDER BY user_permissions; `;
 
 itemRouter.get('/all_items', async (req, res) => {
   try {
@@ -155,33 +169,6 @@ itemRouter.post('/item_edit', async (req, res) => {
   }
 });
 
-itemRouter.post('/request_items', async (req, res) => {
-  let { cart, details, professor_id, user_id } = req.body;
-
-  if (cart != undefined && cart.length > 0) {
-    let query_data = [details, user_id, professor_id];
-
-    try {
-      const data = await db.one(insert_request_query, query_data);
-      const request_id = data.id;
-
-      for (let i = 0; i < cart.length; i++) {
-        const item_info = cart[i];
-        if (item_info.amount > 0) {
-          query_data = [request_id, item_info.id, item_info.amount];
-          db.none(insert_request_item, query_data);
-        }
-      }
-
-      res.send('OK');
-    } catch (e) {
-      throw new Error('Failed to insert the request\n - ' + e);
-    }
-  } else {
-    res.status(404).send('No items found in cart!');
-  }
-});
-
 itemRouter.post('/item_comments_increment', async (req, res) => {
   try {
     let parameters = [req.body.itemId, req.body.newComment.trimRight()];
@@ -192,5 +179,116 @@ itemRouter.post('/item_comments_increment', async (req, res) => {
     res.send('Failed to increment item comments!');
   }
 });
+
+itemRouter.post('/request_items', async (req, res) => {
+  let { cart, details, professor_id, user_id, user_name } = req.body;
+  let msg = emailHeader('', user_name),
+    items_msg = [];
+
+  if (cart != undefined && cart.length > 0) {
+    try {
+      const data = await db.one(insert_request_query, [
+        details,
+        user_id,
+        professor_id
+      ]);
+      insertRequestItems(cart, data.id, items_msg);
+
+      msg = emailBody(msg, items_msg, details, data.id);
+      sendEmails(msg, professor_id, user_name);
+      res.send('OK');
+    } catch (e) {
+      res.status(401).send(e);
+    }
+  } else {
+    res.status(404).send('No items found in cart!');
+  }
+});
+
+var insertRequestItems = function(cart, request_id, items_msg) {
+  for (let i = 0; i < cart.length; i++) {
+    const info = cart[i];
+    if (info.amount > 0) {
+      db.none(insert_request_item, [request_id, info.id, info.amount]);
+      let item_msg = writer.addBold('', info.amount, ' of ');
+      items_msg.push(
+        writer.addLink(item_msg, info.name, '/item/' + info.id, '')
+      );
+    }
+  }
+};
+
+var emailHeader = function(msg, name) {
+  msg = writer.addText(msg, 'Student ');
+  msg = writer.addBold(msg, name, ' ');
+  msg = writer.addText(msg, 'has requested the items:\n\n');
+  return msg;
+};
+
+var emailBody = function(msg, items, details, request_id) {
+  msg = writer.addUnorderedList(msg, items, '\n\n');
+  msg = writer.addBold(msg, 'Details:', '\n');
+  msg = writer.addRule(msg, '');
+  msg = writer.addText(msg, details + '\n');
+  msg = writer.addRule(msg, '\n');
+  msg = writer.addText(msg, 'Here is the direct link to the ');
+  msg = writer.addLink(msg, 'request', '/request/' + request_id, '');
+  return msg;
+};
+
+var emailFooter = function(msg, is_professor, professor_name) {
+  if (!is_professor) {
+    let new_msg =
+      msg + '\n\n' + 'Professor ' + writer.addBold('', professor_name, '');
+    return (
+      new_msg +
+      ' has received the request.\nYou will be notified once it is accepted!'
+    );
+  } else {
+    return msg + '\n\n' + 'Please review the request as soon as possible';
+  }
+};
+
+var mailOptions = {
+  from: 'plataforma.armazem@gmail.com',
+  to: undefined,
+  subject: undefined,
+  markdown: undefined
+};
+
+var sendEmails = async function(msg, professor_id, student_name) {
+  const data = await db.any(emailsQuery, [professor_id]);
+  const subject = 'Student "' + student_name + '" has made a new request';
+
+  if (data.length > 0) {
+    console.log(data);
+    if (data[0].permissions == 2) {
+      let prof_name = data[0].name;
+      const prof_msg = emailFooter(msg, true, undefined);
+      sendEmail(prof_msg, data[0].email, subject);
+
+      for (let i = 1; i < data.length; i++) {
+        sendEmail(emailFooter(msg, false, prof_name), data[1].email, subject);
+      }
+    } else {
+      throw new Error('No professor matching id(' + professor_id + ') found!');
+    }
+  } else {
+    throw new Error('No professor or manager found!');
+  }
+};
+
+var sendEmail = function(msg, to, subject) {
+  mailOptions.to = to;
+  mailOptions.subject = subject;
+  mailOptions.markdown = msg;
+  transporter.sendMail(mailOptions, function(error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent!\n - ' + info.response);
+    }
+  });
+};
 
 export default itemRouter;

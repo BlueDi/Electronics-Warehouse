@@ -1,14 +1,25 @@
 const express = require('express');
+var nodeMailer = require('nodemailer');
 const db = require('@api/db.js');
-
 const requestRouter = express.Router();
+var markdown = require('nodemailer-markdown').markdown;
+
+const transporter = nodeMailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'plataforma.armazem@gmail.com',
+    pass: 'armazemplataforma1'
+  },
+  tls: { rejectUnauthorized: false }
+});
+transporter.use('compile', markdown(undefined));
 
 requestRouter.get('/request_manager_all', async (req, res) => {
   const queryManagerRequestAll = `
     SELECT DISTINCT ON(request_workflow.id) request_workflow.*, to_char(request_workflow.date_sent, 'DD Mon YYYY HH24hMIm') as date_sent,
       to_char(request_workflow.date_cancelled, 'DD Mon YYYY HH24hMIm') as date_cancelled,
       to_char(request_workflow.date_professor_evaluated, 'DD Mon YYYY HH24hMIm') as date_professor_evaluated,
-      to_char(request_workflow.date_manager_evaluated, 'DD Mon YYYY HH24hMIm') as date_manager_evaluated, 
+      to_char(request_workflow.date_manager_evaluated, 'DD Mon YYYY HH24hMIm') as date_manager_evaluated,
       users.login AS requester, users2.login AS professor, users3.login AS manager
     FROM request_workflow
     INNER JOIN users

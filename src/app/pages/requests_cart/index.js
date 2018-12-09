@@ -55,19 +55,20 @@ class RequestsCartList extends Component {
       const cart = [];
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        cart.push({ id: item.id, amount: item.amount });
+        cart.push({ id: item.id, name: item.description, amount: item.amount });
       }
+
       const body = {
         cart,
         details: this.state.details,
         professor_id: this.state.professor_id,
-        user_id: this.props.allCookies.id
+        user_id: this.props.allCookies.id,
+        user_name: this.props.allCookies.name
       };
 
       service
         .post(request_path, body)
-        .then(response => {
-          console.log(response);
+        .then(() => {
           const { cookies } = this.props;
           cookies.set('cart', []);
           this.setState({ data: [] });
