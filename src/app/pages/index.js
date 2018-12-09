@@ -8,6 +8,8 @@ export const WHTable = loadComponent('table');
 export const WHHeader = loadComponent('header');
 export const WHMenu = loadComponent('menu');
 export const InDepthItem = loadComponent('inDepthItem');
+export const Requests = loadComponent('requests');
+export const Request = loadComponent('request');
 
 // export Root as default, and also NotFound as named
 export { default } from './root';
