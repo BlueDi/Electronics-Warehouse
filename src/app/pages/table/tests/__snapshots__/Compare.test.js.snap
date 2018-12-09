@@ -3,7 +3,11 @@
 exports[`Create a Compare for 2 items 1`] = `
 <button
   className="ui button"
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
   role="button"
 >
   Compare Items

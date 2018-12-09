@@ -236,8 +236,7 @@ exports[`<InDepthItemField /> Category Field 2`] = `
 exports[`<InDepthItemField /> Category Field 3`] = `
 <div>
   category
-  :
-   
+  : 
   <div
     className="ui breadcrumb"
   >

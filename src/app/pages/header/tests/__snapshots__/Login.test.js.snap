@@ -4,35 +4,51 @@ exports[`<Login /> Renders properly 1`] = `
 <div
   className="right menu"
 >
-  <div
+  <a
     className="item"
+    onBlur={[Function]}
     onClick={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
   >
     Signup
-  </div>
-  <div
+  </a>
+  <a
     className="item"
+    onBlur={[Function]}
     onClick={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
   >
     Login
-  </div>
+  </a>
 </div>
 `;
 
 exports[`<LoginModal /> Renders properly 1`] = `
-<div
+<a
   className="item"
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
 >
   Login
-</div>
+</a>
 `;
 
 exports[`<SignupModal /> Renders properly 1`] = `
-<div
+<a
   className="item"
+  onBlur={[Function]}
   onClick={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
 >
   Signup
-</div>
+</a>
 `;

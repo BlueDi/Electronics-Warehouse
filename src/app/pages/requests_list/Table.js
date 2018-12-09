@@ -113,17 +113,8 @@ class RequestsTable extends Component {
   }
 
   render() {
-    const {
-      rows,
-      columns,
-      tableColumnExtensions,
-      detailsColumns,
-      imageColumns,
-      selection
-    } = this.state;
-
     return (
-      <Grid rows={rows} columns={columns}>
+      <Grid rows={this.state.rows} columns={this.state.columns}>
         <PagingState defaultCurrentPage={0} pageSize={7} />
         <IntegratedPaging />
         <DragDropProvider />
@@ -133,15 +124,15 @@ class RequestsTable extends Component {
           defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
         />
         <IntegratedSorting />
-        <DetailsTypeProvider for={detailsColumns} />
-        <ImageTypeProvider for={imageColumns} />
+        <DetailsTypeProvider for={this.state.detailsColumns} />
+        <ImageTypeProvider for={this.state.imageColumns} />
         <SelectionState
-          selection={selection}
+          selection={this.state.selection}
           onSelectionChange={this.changeSelection}
         />
         <Table
           rowComponent={TableRow}
-          columnExtensions={tableColumnExtensions}
+          columnExtensions={this.state.tableColumnExtensions}
         />
         <TableColumnReordering defaultOrder={this.props.columnsOrder} />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />

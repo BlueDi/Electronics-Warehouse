@@ -292,7 +292,7 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     },
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.jsx?$",
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/"

@@ -12,6 +12,27 @@ const IMAGE_WIDTH = 400;
 const IMAGE_HEIGHT = 300;
 
 export class InDepthItemField extends Component {
+  nonEditableMap = {
+    image: () => {
+      return this.imageField(this.props.fieldContent);
+    },
+    description: () => {
+      return this.descriptionField(this.props.fieldContent);
+    },
+    'user comments': () => {
+      return this.comments(this.props.fieldContent, this.props.fieldName);
+    },
+    Workflow: () => {
+      return this.workflow(this.props.fieldContent, this.props.fieldName);
+    },
+    'add user comment': () => {
+      return this.userComments(this.props.fieldContent, this.props.fieldName);
+    },
+    category: () => {
+      return this.category(this.props.fieldContent, this.props.fieldName);
+    }
+  };
+
   constructor(props) {
     super(props);
   }
@@ -56,94 +77,87 @@ export class InDepthItemField extends Component {
     );
   }
 
+  imageField = content => {
+    let image_src = `data:image/png;base64,${content}`;
+    return (
+      <ReadjustableImage
+        src={image_src}
+        maxWidth={IMAGE_WIDTH}
+        maxHeight={IMAGE_HEIGHT}
+      />
+    );
+  };
+
+  descriptionField = content => {
+    return (
+      <h1 className="Title" style={{ textAlign: 'left', marginLeft: '5%' }}>
+        {content}
+      </h1>
+    );
+  };
+
+  comments = (content, name) => {
+    return (
+      <React.Fragment>
+        {name}: <br />
+        <HTMLEditor displayOnly={true} value={content} />
+      </React.Fragment>
+    );
+  };
+
+  workflow = (content, name) => {
+    return (
+      <React.Fragment>
+        {name}: <br />
+        <HTMLEditor displayOnly={true} value={content} />
+      </React.Fragment>
+    );
+  };
+
+  userComments = (content, name) => {
+    return (
+      <div style={{ marginTop: 20 }}>
+        <HTMLEditor
+          className={name.replace(/ /g, '_')}
+          canvasType="code"
+          height="200"
+          onChange={this.props.handleChange[0]}
+          value={content}
+        />
+        <div style={{ marginBottom: 10, position: 'relative' }}>
+          <Button primary key={name} onClick={this.props.handleChange[1]}>
+            Add comment
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  category = (content, name) => {
+    let category_tree = content.map((category, index) => {
+      let active = index === content.length - 1;
+      return {
+        key: category.id,
+        content: category.name,
+        link: false,
+        active: active
+      };
+    });
+    return (
+      <div>
+        {name}: <Breadcrumb icon="right angle" sections={category_tree} />
+      </div>
+    );
+  };
+
   // A general non-editable field is any field that is NOT a property
   nonEditableGeneralField() {
-    switch (this.props.fieldName) {
-      case 'image': {
-        let image_src = `data:image/png;base64,${this.props.fieldContent}`;
-        return (
-          <ReadjustableImage
-            src={image_src}
-            maxWidth={IMAGE_WIDTH}
-            maxHeight={IMAGE_HEIGHT}
-          />
-        );
-      }
+    let name = this.props.fieldName;
 
-      case 'description': {
-        return (
-          <h1 className="Title" style={{ textAlign: 'left', marginLeft: '5%' }}>
-            {this.props.fieldContent}
-          </h1>
-        );
-      }
-
-      case 'user comments': {
-        return (
-          <React.Fragment>
-            {this.props.fieldName}: <br />
-            <HTMLEditor displayOnly={true} value={this.props.fieldContent} />
-          </React.Fragment>
-        );
-      }
-
-      case 'Workflow': {
-        return (
-          <React.Fragment>
-            {this.props.fieldName}: <br />
-            <HTMLEditor displayOnly={true} value={this.props.fieldContent} />
-          </React.Fragment>
-        );
-      }
-
-      case 'add user comment': {
-        if (!this.props.isUserLogged) {
-          //only allow comment addition if user is logged in
-          return null;
-        }
-
-        return (
-          <div style={{ marginTop: 20 }}>
-            <HTMLEditor
-              className={this.props.fieldName.replace(/ /g, '_')}
-              canvasType="code"
-              height="200"
-              onChange={this.props.handleChange[0]}
-              value={this.props.fieldContent}
-            />
-            <div style={{ marginBottom: 10, position: 'relative' }}>
-              <Button
-                primary
-                key={this.props.fieldName}
-                onClick={this.props.handleChange[1]}
-              >
-                Add comment
-              </Button>
-            </div>
-          </div>
-        );
-      }
-
-      case 'category': {
-        let category_tree = this.props.fieldContent.map((category, index) => {
-          let active = index === this.props.fieldContent.length - 1;
-          return {
-            key: category.id,
-            content: category.name,
-            link: false,
-            active: active
-          };
-        });
-        return (
-          <div>
-            {this.props.fieldName}:{' '}
-            <Breadcrumb icon="right angle" sections={category_tree} />
-          </div>
-        );
-      }
-
-      default:
-        return `${this.props.fieldName}: ${this.props.fieldContent}`;
+    if (this.nonEditableMap.hasOwnProperty(name)) {
+      return this.nonEditableMap[name]();
+    } else {
+      return `${this.props.fieldName}: ${this.props.fieldContent}`;
     }
   }
 

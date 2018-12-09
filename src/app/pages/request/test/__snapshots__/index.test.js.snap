@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create request buttons 1`] = `
+<div
+  className="Request"
+  style={
+    Object {
+      "textAlign": "left",
+    }
+  }
+>
+  <column
+    style={
+      Object {
+        "columnWidth": "50%",
+      }
+    }
+  >
+    <div
+      className="Information"
+      style={
+        Object {
+          "float": "left",
+          "marginLeft": "5%",
+          "textAlign": "left",
+        }
+      }
+    >
+      <div>
+        Id: 1
+      </div>
+      <div>
+        Date sent: UNKNOWN
+      </div>
+      <div>
+        Date cancelled: UNKNOWN
+      </div>
+      <div>
+        Date professor evaluated: UNKNOWN
+      </div>
+      <div>
+        Date manager evaluated: UNKNOWN
+      </div>
+      <div>
+        Cancelled: UNKNOWN
+      </div>
+      <div>
+        Professor accept: UNKNOWN
+      </div>
+      <div>
+        Manager accept: UNKNOWN
+      </div>
+      <div>
+        Purpose: UNKNOWN
+      </div>
+      <div>
+        Workflow
+        : 
+        <br />
+        <div
+          style={
+            Object {
+              "backgroundColor": "#ebebe4",
+              "fontSize": "12px",
+              "height": 400,
+              "overflowY": "scroll",
+              "width": 700,
+            }
+          }
+        >
+          UNKNOWN
+        </div>
+      </div>
+      <div>
+        Requester: UNKNOWN
+      </div>
+      <div>
+        Professor: UNKNOWN
+      </div>
+      <div>
+        Manager: UNKNOWN
+      </div>
+      <div>
+        Items: 
+      </div>
+      <div
+        className="Buttons"
+        style={
+          Object {
+            "columnCount": "3",
+          }
+        }
+      />
+    </div>
+  </column>
+</div>
+`;

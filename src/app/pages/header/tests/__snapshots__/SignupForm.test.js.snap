@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<LoginForm /> Renders error message properly 1`] = `
+exports[`<SignupForm /> Renders error message properly 1`] = `
 Array [
   <div
     className="ui large header"
@@ -9,7 +9,7 @@ Array [
       className="ui image"
       src="test-file-stub"
     />
-     Login to your account
+     Signup an account
   </div>,
   <form
     className="ui large form"
@@ -19,7 +19,7 @@ Array [
       className="required field"
     >
       <label>
-        Name or E-mail
+        Name
       </label>
       <div
         className="ui fluid left icon input"
@@ -27,13 +27,35 @@ Array [
         <input
           name="name"
           onChange={[Function]}
-          placeholder="Name or E-mail"
+          placeholder="User name"
           required={true}
           type="text"
         />
         <i
           aria-hidden="true"
           className="user icon"
+        />
+      </div>
+    </div>
+    <div
+      className="required field"
+    >
+      <label>
+        E-mail
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="email"
+          onChange={[Function]}
+          placeholder="E-mail address"
+          required={true}
+          type="email"
+        />
+        <i
+          aria-hidden="true"
+          className="at icon"
         />
       </div>
     </div>
@@ -60,6 +82,27 @@ Array [
       </div>
     </div>
     <div
+      className="field"
+    >
+      <label>
+        Permission Key
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="permission"
+          onChange={[Function]}
+          placeholder="Permission key"
+          type="password"
+        />
+        <i
+          aria-hidden="true"
+          className="options icon"
+        />
+      </div>
+    </div>
+    <div
       className="ui error message"
     >
       <div
@@ -68,7 +111,7 @@ Array [
         <div
           className="header"
         >
-          Failed Login
+          
         </div>
         <p>
           
@@ -83,14 +126,14 @@ Array [
         onClick={[Function]}
         role="button"
       >
-        Login
+        Signup
       </button>
     </div>
   </form>,
 ]
 `;
 
-exports[`<LoginForm /> Renders properly 1`] = `
+exports[`<SignupForm /> Renders properly 1`] = `
 Array [
   <div
     className="ui large header"
@@ -99,7 +142,7 @@ Array [
       className="ui image"
       src="test-file-stub"
     />
-     Login to your account
+     Signup an account
   </div>,
   <form
     className="ui large form"
@@ -109,7 +152,7 @@ Array [
       className="required field"
     >
       <label>
-        Name or E-mail
+        Name
       </label>
       <div
         className="ui fluid left icon input"
@@ -117,13 +160,35 @@ Array [
         <input
           name="name"
           onChange={[Function]}
-          placeholder="Name or E-mail"
+          placeholder="User name"
           required={true}
           type="text"
         />
         <i
           aria-hidden="true"
           className="user icon"
+        />
+      </div>
+    </div>
+    <div
+      className="required field"
+    >
+      <label>
+        E-mail
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="email"
+          onChange={[Function]}
+          placeholder="E-mail address"
+          required={true}
+          type="email"
+        />
+        <i
+          aria-hidden="true"
+          className="at icon"
         />
       </div>
     </div>
@@ -150,6 +215,27 @@ Array [
       </div>
     </div>
     <div
+      className="field"
+    >
+      <label>
+        Permission Key
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="permission"
+          onChange={[Function]}
+          placeholder="Permission key"
+          type="password"
+        />
+        <i
+          aria-hidden="true"
+          className="options icon"
+        />
+      </div>
+    </div>
+    <div
       className="ui error message"
     >
       <div
@@ -158,7 +244,7 @@ Array [
         <div
           className="header"
         >
-          Failed Login
+          
         </div>
         <p>
           
@@ -173,7 +259,7 @@ Array [
         onClick={[Function]}
         role="button"
       >
-        Login
+        Signup
       </button>
     </div>
   </form>,

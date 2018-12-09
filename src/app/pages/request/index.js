@@ -69,7 +69,8 @@ class Request extends Component {
     service
       .get(apiUrl)
       .then(response => {
-        this.setState(response.data);
+        console.log(response);
+        this.setState(response.data[0]);
       })
       .then(response => {
         console.log(response);
@@ -248,9 +249,9 @@ class Request extends Component {
       fetching,
       user_permissions
     } = this.state;
-    const is_requester = user_id == requester_id && user_permissions == 0,
-      is_professor = user_id == professor_id && user_permissions == 1,
-      is_manager = user_permissions == 2;
+    const is_requester = user_id == requester_id && user_permissions == 1,
+      is_professor = user_id == professor_id && user_permissions == 2,
+      is_manager = user_permissions == 3;
 
     return fetching ||
       ((is_requester || is_professor || is_manager) && !fetching) ? (

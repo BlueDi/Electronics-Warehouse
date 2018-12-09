@@ -53,6 +53,78 @@ class SignupForm extends Component {
     });
   };
 
+  nameField = () => {
+    return (
+      <Form.Input
+        fluid
+        icon="user"
+        iconPosition="left"
+        label="Name"
+        name="name"
+        placeholder="User name"
+        required
+        onChange={this.handleChange}
+      />
+    );
+  };
+
+  emailField = () => {
+    return (
+      <Form.Input
+        fluid
+        icon="at"
+        iconPosition="left"
+        name="email"
+        label="E-mail"
+        type="email"
+        placeholder="E-mail address"
+        required
+        onChange={this.handleChange}
+      />
+    );
+  };
+
+  passwordField = () => {
+    return (
+      <Form.Input
+        fluid
+        icon="lock"
+        iconPosition="left"
+        name="password"
+        label="Password"
+        placeholder="Password"
+        required
+        type="password"
+        onChange={this.handleChange}
+      />
+    );
+  };
+
+  permissionField = () => {
+    return (
+      <Form.Input
+        fluid
+        icon="options"
+        iconPosition="left"
+        name="permission"
+        label="Permission Key"
+        type="password"
+        placeholder="Permission key"
+        onChange={this.handleChange}
+      />
+    );
+  };
+
+  errorMessage = () => {
+    return (
+      <Message
+        error
+        header={this.state.error_header}
+        content={this.state.error_detail}
+      />
+    );
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -64,53 +136,11 @@ class SignupForm extends Component {
           error={this.state.error}
           onSubmit={this.handleValidation}
         >
-          <Form.Input
-            fluid
-            icon="user"
-            iconPosition="left"
-            label="Name"
-            name="name"
-            placeholder="User name"
-            required
-            onChange={this.handleChange}
-          />
-          <Form.Input
-            fluid
-            icon="at"
-            iconPosition="left"
-            name="email"
-            label="E-mail"
-            type="email"
-            placeholder="E-mail address"
-            required
-            onChange={this.handleChange}
-          />
-          <Form.Input
-            fluid
-            icon="lock"
-            iconPosition="left"
-            name="password"
-            label="Password"
-            placeholder="Password"
-            required
-            type="password"
-            onChange={this.handleChange}
-          />
-          <Form.Input
-            fluid
-            icon="options"
-            iconPosition="left"
-            name="permission"
-            label="Permission Key"
-            type="password"
-            placeholder="Permission key"
-            onChange={this.handleChange}
-          />
-          <Message
-            error
-            header={this.state.error_header}
-            content={this.state.error_detail}
-          />
+          {this.nameField()}
+          {this.emailField()}
+          {this.passwordField()}
+          {this.permissionField()}
+          {this.errorMessage()}
           <Form.Button fluid>Signup</Form.Button>
         </Form>
       </React.Fragment>

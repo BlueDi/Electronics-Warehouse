@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create a selection button for 1 items 1`] = `
+<td
+  allCookies={Object {}}
+  aria-sort={null}
+  className="MuiTableCell-root-3 MuiTableCell-paddingCheckbox-9 TableSelectCell-cell-1"
+  cookies={
+    Cookies {
+      "HAS_DOCUMENT_COOKIE": true,
+      "changeListeners": Array [
+        [Function],
+      ],
+      "cookies": Object {},
+    }
+  }
+  style={null}
+>
+  <span
+    className="MuiButtonBase-root-27 MuiIconButton-root-21 MuiPrivateSwitchBase-root-17 MuiCheckbox-root-11 MuiCheckbox-colorSecondary-16 TableSelectCell-checkbox-2"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={null}
+  >
+    <span
+      className="MuiIconButton-label-26"
+    >
+      <svg
+        aria-hidden="true"
+        className="MuiSvgIcon-root-30"
+        focusable="false"
+        role="presentation"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+        />
+      </svg>
+      <input
+        checked={false}
+        className="MuiPrivateSwitchBase-input-20"
+        data-indeterminate={false}
+        onChange={[Function]}
+        type="checkbox"
+      />
+    </span>
+    <span
+      className="MuiTouchRipple-root-39"
+    />
+  </span>
+</td>
+`;

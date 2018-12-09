@@ -35,6 +35,43 @@ class LoginForm extends Component {
     this.setState({ error: true, error_msg: err });
   };
 
+  nameField = () => {
+    return (
+      <Form.Input
+        fluid
+        icon="user"
+        iconPosition="left"
+        name="name"
+        label="Name or E-mail"
+        placeholder="Name or E-mail"
+        required
+        onChange={this.handleChange}
+      />
+    );
+  };
+
+  passwordField = () => {
+    return (
+      <Form.Input
+        fluid
+        icon="lock"
+        iconPosition="left"
+        name="password"
+        label="Password"
+        placeholder="Password"
+        required
+        type="password"
+        onChange={this.handleChange}
+      />
+    );
+  };
+
+  errorMessage = () => {
+    return (
+      <Message error header="Failed Login" content={this.state.error_msg} />
+    );
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -46,26 +83,9 @@ class LoginForm extends Component {
           error={this.state.error}
           onSubmit={this.handleAuthenticate}
         >
-          <Form.Input
-            fluid
-            icon="user"
-            iconPosition="left"
-            name="name"
-            placeholder="E-mail address"
-            required
-            onChange={this.handleChange}
-          />
-          <Form.Input
-            fluid
-            icon="lock"
-            iconPosition="left"
-            name="password"
-            placeholder="Password"
-            required
-            type="password"
-            onChange={this.handleChange}
-          />
-          <Message error header="Failed Login" content={this.state.error_msg} />
+          {this.nameField()}
+          {this.passwordField()}
+          {this.errorMessage()}
           <Form.Button fluid>Login</Form.Button>
         </Form>
       </React.Fragment>
