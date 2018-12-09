@@ -1,4 +1,12 @@
-import Root, { AddItem, Course, InDepthItem, NotFound, WHTable } from '@pages';
+import Root, {
+    AddItem,
+    Course,
+    InDepthItem,
+    NotFound,
+    Request,
+    Requests,
+    WHTable
+} from '@pages';
 
 export const routes = [
   {
@@ -20,6 +28,14 @@ export const routes = [
     path: '/course',
     menu: 'Course',
     component: Course
+  },
+  {
+    path: '/request/:id',
+    component: Request
+  },
+  {
+    path: '/requests',
+    component: Requests
   },
   {
     path: '/table/:id',

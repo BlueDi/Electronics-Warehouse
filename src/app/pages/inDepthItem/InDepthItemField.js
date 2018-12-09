@@ -87,6 +87,15 @@ export class InDepthItemField extends Component {
         );
       }
 
+      case 'Workflow': {
+        return (
+          <React.Fragment>
+            {this.props.fieldName}: <br />
+            <HTMLEditor displayOnly={true} value={this.props.fieldContent} />
+          </React.Fragment>
+        );
+      }
+
       case 'add user comment': {
         if (!this.props.isUserLogged) {
           //only allow comment addition if user is logged in
@@ -313,6 +322,19 @@ export class InDepthItemField extends Component {
               onChange={this.props.handleChange}
             />
           </span>
+        );
+      }
+
+      case 'Workflow': {
+        return (
+          <div style={{ marginTop: 3 }}>
+            {this.props.fieldName}: <br />
+            <HTMLEditor
+              canvasType="code"
+              onChange={this.props.handleChange}
+              value={this.props.fieldContent}
+            />
+          </div>
         );
       }
 

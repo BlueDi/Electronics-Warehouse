@@ -75,7 +75,16 @@ const ImageTypeProvider = props => (
 
 const RowDetail = ({ row }) => <InDepthItem id={row.id} />;
 
+/**
+ * Row of ComponentsTable
+ */
 class TableRow extends Component {
+  handleClick(history, id) {
+    var pathName = history.location.pathname.split('/')[1];
+    var redirect = pathName === 'requests' ? 'request' : 'item';
+    return history.push('/' + redirect + '/' + id);
+  }
+
   render() {
     return (
       <Route
@@ -88,7 +97,7 @@ class TableRow extends Component {
                   e.target.tagName.toLowerCase()
                 )
               ) {
-                return history.push('/item/' + this.props.tableRow.row.id);
+                return this.handleClick(history, this.props.tableRow.row.id);
               }
             }}
           />
@@ -98,6 +107,14 @@ class TableRow extends Component {
   }
 }
 
+/**
+ * Creates a table to display our items.
+ *
+ * @param components Array of components to be displayed
+ * @param withDetails Boolean if the table should display the item page
+ * @param withImages Boolean, if true then components should have a param 'image'
+ * @param withSelection Boolean, if the user can select the items in the table
+ */
 class ComponentsTable extends Component {
   constructor(props) {
     super(props);
@@ -108,7 +125,10 @@ class ComponentsTable extends Component {
       detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
       rows: this.props.components,
-      selection: []
+      selection: [],
+      withDetails: this.props.withDetails,
+      withImages: this.props.withImages,
+      withSelection: this.props.withSelection
     };
   }
 
@@ -141,12 +161,15 @@ class ComponentsTable extends Component {
       tableColumnExtensions,
       detailsColumns,
       imageColumns,
-      selection
+      selection,
+      withDetails,
+      withImages,
+      withSelection
     } = this.state;
 
     let compare_items;
     let addToCart;
-    if (selection.length > 0) {
+    if (withSelection && selection.length > 0) {
       var selected_items = this.getItemsFromSelection();
       compare_items = <CompareItems items={selected_items} />;
       addToCart = <AddToCart items={selected_items} />;
@@ -161,13 +184,15 @@ class ComponentsTable extends Component {
           defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
         />
         <IntegratedSorting />
-        <DetailsTypeProvider for={detailsColumns} />
-        <ImageTypeProvider for={imageColumns} />
-        <RowDetailState />
-        <SelectionState
-          selection={selection}
-          onSelectionChange={this.changeSelection}
-        />
+        {withDetails && <DetailsTypeProvider for={detailsColumns} />}
+        {withImages && <ImageTypeProvider for={imageColumns} />}
+        {withDetails && <RowDetailState />}
+        {withSelection && (
+          <SelectionState
+            selection={selection}
+            onSelectionChange={this.changeSelection}
+          />
+        )}
         <PagingState defaultCurrentPage={0} pageSize={7} />
         <IntegratedPaging />
         <Table
@@ -176,17 +201,21 @@ class ComponentsTable extends Component {
         />
         <TableColumnReordering defaultOrder={columnsOrder} />
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
-        <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
+        {withDetails && (
+          <TableRowDetail contentComponent={RowDetail} toggleColumnWidth={50} />
+        )}
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
         <Toolbar />
         <SearchPanel />
         <ColumnChooser />
         <PagingPanel />
-        <TableSelection
-          cellComponent={SelectComponent}
-          selectionColumnWidth={85}
-        />
-        {compare_items}
+        {withSelection && (
+          <TableSelection
+            cellComponent={SelectComponent}
+            selectionColumnWidth={85}
+          />
+        )}
+        {withSelection && compare_items}
         {addToCart}
       </Grid>
     );
