@@ -1,20 +1,8 @@
 const express = require('express');
 const db = require('@api/db.js');
-var writer = require('./mailWriter');
-var nodeMailer = require('nodemailer');
-var markdown = require('nodemailer-markdown').markdown;
+var mail = require('./mailHandler');
+
 const itemRouter = express.Router();
-
-var transporter = nodeMailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'plataforma.armazem@gmail.com',
-    pass: 'armazemplataforma1'
-  },
-  tls: { rejectUnauthorized: false }
-});
-
-transporter.use('compile', markdown(undefined));
 
 const all_items_query = `SELECT *, convert_from(item.image, 'UTF-8') as image FROM item`;
 const insert_request_query =
@@ -192,7 +180,7 @@ itemRouter.post('/item_comments_increment', async (req, res) => {
  */
 itemRouter.post('/request_items', async (req, res) => {
   let { cart, details, professor_id, user_id, user_name } = req.body;
-  let msg = emailHeader('', user_name),
+  let msg = mail.emailHeader('', user_name),
     items_msg = [];
 
   if (cart != undefined && cart.length > 0) {
@@ -204,7 +192,7 @@ itemRouter.post('/request_items', async (req, res) => {
       ]);
       insertRequestItems(cart, data.id, items_msg);
 
-      msg = emailBody(msg, items_msg, details, data.id);
+      msg = mail.emailBody(msg, items_msg, details, data.id);
       sendEmails(msg, professor_id, user_name);
       res.send('OK');
     } catch (e) {
@@ -226,71 +214,10 @@ var insertRequestItems = function(cart, request_id, items_msg) {
     const info = cart[i];
     if (info.amount > 0) {
       db.none(insert_request_item, [request_id, info.id, info.amount]);
-      let item_msg = writer.addBold('', info.amount, ' of ');
-      items_msg.push(
-        writer.addLink(item_msg, info.name, '/item/' + info.id, '')
-      );
+      let item_msg = this.addBold('', info.amount, ' of ');
+      items_msg.push(this.addLink(item_msg, info.name, '/item/' + info.id, ''));
     }
   }
-};
-
-/**
- * Builds the email header
- * @param  {String} msg  Current message
- * @param  {String} name Name of the student that has made the request
- * @return {String}      @msg but with added header
- */
-var emailHeader = function(msg, name) {
-  msg = writer.addText(msg, 'Student ');
-  msg = writer.addBold(msg, name, ' ');
-  msg = writer.addText(msg, 'has requested the items:\n\n');
-  return msg;
-};
-
-/**
- * Inserts the body of the email
- * @param  {String} msg        Current message
- * @param  {Object} items      Array of items
- * @param  {String} details    Details inserted by the user
- * @param  {Number} request_id Number of the request, to be used for linking purposes
- * @return {String}            @msg with added body
- */
-var emailBody = function(msg, items, details, request_id) {
-  msg = writer.addUnorderedList(msg, items, '\n\n');
-  msg = writer.addBold(msg, 'Details:', '\n');
-  msg = writer.addRule(msg, '');
-  msg = writer.addText(msg, details + '\n');
-  msg = writer.addRule(msg, '\n');
-  msg = writer.addText(msg, 'Here is the direct link to the ');
-  msg = writer.addLink(msg, 'request', '/request/' + request_id, '');
-  return msg;
-};
-
-/**
- * Adds a footer to the message
- * @param  {String}  msg            Current message
- * @param  {Boolean} is_professor   Whether the message is to be sent to a professor or not
- * @param  {String}  professor_name Name of the professor
- * @return {String}                 @msg added with the footer
- */
-var emailFooter = function(msg, is_professor, professor_name) {
-  if (!is_professor) {
-    let new_msg =
-      msg + '\n\n' + 'Professor ' + writer.addBold('', professor_name, '');
-    return (
-      new_msg +
-      ' has received the request.\nYou will be notified once it is accepted!'
-    );
-  } else {
-    return msg + '\n\n' + 'Please review the request as soon as possible';
-  }
-};
-
-var mailOptions = {
-  from: 'plataforma.armazem@gmail.com',
-  to: undefined,
-  subject: undefined,
-  markdown: undefined
 };
 
 /**
@@ -306,11 +233,15 @@ var sendEmails = async function(msg, professor_id, student_name) {
   if (data.length > 0) {
     if (data[0].permissions == 2) {
       let prof_name = data[0].name;
-      const prof_msg = emailFooter(msg, true, undefined);
-      sendEmail(prof_msg, data[0].email, subject);
+      const prof_msg = mail.emailFooter(msg, true, undefined);
+      mail.sendEmail(prof_msg, data[0].email, subject);
 
       for (let i = 1; i < data.length; i++) {
-        sendEmail(emailFooter(msg, false, prof_name), data[1].email, subject);
+        mail.sendEmail(
+          mail.emailFooter(msg, false, prof_name),
+          data[1].email,
+          subject
+        );
       }
     } else {
       throw new Error('No professor matching id(' + professor_id + ') found!');
@@ -318,19 +249,6 @@ var sendEmails = async function(msg, professor_id, student_name) {
   } else {
     throw new Error('No professor or manager found!');
   }
-};
-
-/**
- * Sends a single email to the given recepients
- * @param  {String} msg     Message to be sent
- * @param  {String} to      Email to send the message to
- * @param  {String} subject Subject of the email
- */
-var sendEmail = function(msg, to, subject) {
-  mailOptions.to = to;
-  mailOptions.subject = subject;
-  mailOptions.markdown = msg;
-  transporter.sendMail(mailOptions, writer.mailCallBack);
 };
 
 export default itemRouter;
