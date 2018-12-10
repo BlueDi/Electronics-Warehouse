@@ -191,7 +191,6 @@ itemRouter.post('/request_items', async (req, res) => {
         professor_id
       ]);
       insertRequestItems(cart, data.id, items_msg);
-
       msg = mail.emailBody(msg, items_msg, details, data.id);
       sendEmails(msg, professor_id, user_name);
       res.send('OK');
@@ -214,8 +213,8 @@ var insertRequestItems = function(cart, request_id, items_msg) {
     const info = cart[i];
     if (info.amount > 0) {
       db.none(insert_request_item, [request_id, info.id, info.amount]);
-      let item_msg = this.addBold('', info.amount, ' of ');
-      items_msg.push(this.addLink(item_msg, info.name, '/item/' + info.id, ''));
+      let item_msg = mail.addBold('', info.amount, ' of ');
+      items_msg.push(mail.addLink(item_msg, info.name, '/item/' + info.id, ''));
     }
   }
 };
