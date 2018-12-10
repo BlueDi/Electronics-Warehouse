@@ -27,6 +27,9 @@ class Logout extends Component {
 
     return (
       <Menu.Menu position="right">
+        <Menu.Item as={Link} to={'/requests_list'}>
+          Requests
+        </Menu.Item>
         <Menu.Item as={Link} to={userPath}>
           {userName}
           {!emptyCart && <Label circular>{userCart.length}</Label>}

@@ -16,6 +16,9 @@ class LoginForm extends Component {
       .post('/login', this.state)
       .then(response => {
         this.setupLoggedUser(response.data);
+        if (response.data.user_path == '/requests_list') {
+          this.props.history.push('/requests_list');
+        }
       })
       .catch(err => {
         this.failedLogin(err.response.data);
@@ -23,7 +26,6 @@ class LoginForm extends Component {
   };
 
   setupLoggedUser = value => {
-    console.log(value);
     const { cookies } = this.props;
     for (var property in value) {
       cookies.set(property, value[property], { path: '/' });
