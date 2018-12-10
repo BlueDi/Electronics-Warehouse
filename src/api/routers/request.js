@@ -158,7 +158,7 @@ requestRouter.post('/request_evaluate_professor/', async (req, res) => {
       '/request/' + req.body.id,
       '!'
     );
-    mail.sendMail(msg, email.email, 'Your request has been declined');
+    mail.sendEmail(msg, email.email, 'Your request has been declined');
   }
 });
 
@@ -175,12 +175,12 @@ requestRouter.post('/request_evaluate_manager/', async (req, res) => {
       '/request/' + req.body.id,
       ''
     );
-    mail.sendMail(
+    mail.sendEmail(
       msg + ' you have previously made',
       emails[0].email,
       'Your request has been declined'
     );
-    mail.sendMail(
+    mail.sendEmail(
       msg + ' you have preiviously accepted',
       emails[1].email,
       'A request you approved has been denied'
