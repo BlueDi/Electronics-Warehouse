@@ -26,7 +26,7 @@ api
   .use(helmet())
   .use(cookieParser())
   .use(fileSession())
-  .use(express.json())
+  .use(express.json({ limit: '50mb' }))
   .use(express.urlencoded({ extended: true, limit: '10mb' }), hpp())
   .use(`/api/${ENV['API_VERSION']}`, routers);
 

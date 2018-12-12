@@ -2,7 +2,17 @@
 
 exports[`<InDepthItem /> Renders properly 1`] = `
 <div
-  className="ui loader"
-  text="Preparing Item"
-/>
+  className="ui active transition visible inverted dimmer"
+  onClick={[Function]}
+>
+  <div
+    className="content"
+  >
+    <div
+      className="ui indeterminate inverted text loader"
+    >
+      Preparing Item
+    </div>
+  </div>
+</div>
 `;
