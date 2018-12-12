@@ -5,6 +5,9 @@ const db = require('@api/db.js');
 
 const categoryRouter = express.Router();
 
+/**
+ * Fetch all categories in database
+ */
 categoryRouter.get('/all_categories', async (req, res) => {
   const all_categories_query = `SELECT category.id, category.name
     FROM category`;
@@ -18,6 +21,10 @@ categoryRouter.get('/all_categories', async (req, res) => {
   }
 });
 
+/**
+ * Fetch item properties for a given category (this will include both the category properties, and the item properties, which are independent from the category)
+ * post body: object containing the item and category ids
+ */
 categoryRouter.post('/item_category_properties', async (req, res) => {
   let promise = new Promise(resolve => {
     let parameters = [parseInt(req.body.itemId), req.body.newCategoryId];
@@ -40,6 +47,10 @@ categoryRouter.post('/item_category_properties', async (req, res) => {
   console.log(promise);
 });
 
+/**
+ * Fetch category ancestor tree (ancestors of the given category, including the category itself)
+ * get parameter: category id
+ */
 categoryRouter.get('/category_tree/:id', async (req, res) => {
   try {
     const data = await db.func('get_category_tree', req.params.id);
@@ -50,6 +61,10 @@ categoryRouter.get('/category_tree/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch category descendant tree (descendants of the given category - children, grandchildren, grandgrandchildren..., does not include the category itself)
+ * get parameter: category id
+ */
 categoryRouter.get('/category_descendant_tree/:id', async (req, res) => {
   try {
     const data = await db.func('get_category_descendant_tree', req.params.id);

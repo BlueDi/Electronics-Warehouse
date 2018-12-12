@@ -293,14 +293,22 @@ exports[`<InDepthItemField /> Description Field 2`] = `
 
 exports[`<InDepthItemField /> Image Field 1`] = `
 <div>
-  <img
-    height=""
-    onLoad={[Function]}
-    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG8AAABYCAYAAAD7uql1AAAgAElEQVR4Xu29e5RV5Znu+5vfN6/r
+  <div
+    style={
+      Object {
+        "height": 300,
+        "width": 400,
+      }
+    }
+  >
+    <img
+      className="ui image"
+      onLoad={[Function]}
+      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG8AAABYCAYAAAD7uql1AAAgAElEQVR4Xu29e5RV5Znu+5vfN6/r
 VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
 2umklcSEaFRuIiiIF0AUFQVFQSAlRRVVRdW6zut3/phrLs…"
-    width=""
-  />
+    />
+  </div>
   <button
     className="ui button"
     onClick={[Function]}
@@ -338,14 +346,22 @@ VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
 `;
 
 exports[`<InDepthItemField /> Image Field 2`] = `
-<img
-  height=""
-  onLoad={[Function]}
-  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG8AAABYCAYAAAD7uql1AAAgAElEQVR4Xu29e5RV5Znu+5vfN6/r
+<div
+  style={
+    Object {
+      "height": 300,
+      "width": 400,
+    }
+  }
+>
+  <img
+    className="ui image"
+    onLoad={[Function]}
+    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG8AAABYCAYAAAD7uql1AAAgAElEQVR4Xu29e5RV5Znu+5vfN6/r
 VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
 2umklcSEaFRuIiiIF0AUFQVFQSAlRRVVRdW6zut3/phrLs…"
-  width=""
-/>
+  />
+</div>
 `;
 
 exports[`<InDepthItemField /> Other Field 1`] = `

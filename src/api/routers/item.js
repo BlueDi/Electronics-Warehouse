@@ -8,6 +8,9 @@ const all_items_query = `
   FROM item
 `;
 
+/**
+ * Fetch information for all items available in database
+ */
 itemRouter.get('/all_items', async (req, res) => {
   try {
     const data = await db.any(all_items_query);
@@ -40,6 +43,10 @@ itemRouter.post('/add_new_item', async (req, res) => {
   }
 });
 
+/**
+ * Fetch all information for a given item
+ * Get parameter: item id
+ */
 itemRouter.get('/item_characteristics/:id', async (req, res) => {
   const item_description_query = `SELECT item.description, convert_from(item.image, 'UTF-8') as image, item.total_stock, item.free_stock,
   item.last_price, item.location, item.user_comments, item.details, item.manufacturer, item.reference, to_char(item.last_edit, 'DD Mon YYYY HH24hMIm') as last_edit
@@ -55,6 +62,10 @@ itemRouter.get('/item_characteristics/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch item properties
+ * get parameter: item id
+ */
 itemRouter.get('/item_properties/:id', async (req, res) => {
   const in_depth_item_ppt_list_query = `
     SELECT item_property.property_id, item_property.value, property.unit, property.name, property.number
@@ -70,6 +81,10 @@ itemRouter.get('/item_properties/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch item category
+ * get parameter: item id
+ */
 itemRouter.get('/item_category/:id', async (req, res) => {
   const in_depth_item_catg_query = `
     SELECT category.id, category.name, item.id AS item_id
@@ -86,6 +101,10 @@ itemRouter.get('/item_category/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch item packaging
+ * get parameter: item id
+ */
 itemRouter.get('/item_packaging/:id', async (req, res) => {
   const in_depth_item_packaging_query = `
     SELECT packaging.id, packaging.name
@@ -102,6 +121,10 @@ itemRouter.get('/item_packaging/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch item user comments
+ * get parameter: item id
+ */
 itemRouter.get('/item_comments/:id', async (req, res) => {
   const in_depth_item_comments_query = `
     SELECT item.user_comments
@@ -117,6 +140,10 @@ itemRouter.get('/item_comments/:id', async (req, res) => {
   }
 });
 
+/**
+ * Edit item
+ * post body: object containing all item information (equal to inDepthItem's state), even if some of it wasn't changed
+ */
 itemRouter.post('/item_edit', async (req, res) => {
   let newItem = req.body;
 
@@ -154,6 +181,11 @@ itemRouter.post('/item_edit', async (req, res) => {
   }
 });
 
+/**
+ * Add a comment to item user comments
+ * post body: object containing the item id and the comment that will be added
+ * White spaces after comment's last letter will be trimmed
+ */
 itemRouter.post('/item_comments_increment', async (req, res) => {
   try {
     let parameters = [req.body.itemId, req.body.newComment.trimRight()];

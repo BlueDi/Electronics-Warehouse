@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Button, TextArea, Divider } from 'semantic-ui-react';
 import ReactHtmlParser from 'react-html-parser';
 
+/**
+ * Default Editor type
+ * By default, the editor has both code an preview views
+ */
 const defaultState = {
   canvasType: 'code',
   displayOnly: false
@@ -16,6 +20,8 @@ const defaultState = {
  * - displayOnly: If desired, it can only allow html display, and no edition, by passing "displayOnly" prop with true value
  * - value: Value being displayed on the editor
  * - onChange: Event announcing the HTML code has been changed
+ * - width: canvas width (default is 700)
+ * - height: canvas height (default is 400)
  */
 class HTMLEditor extends Component {
   constructor(props) {
@@ -53,39 +59,67 @@ class HTMLEditor extends Component {
     this.setPreviewCanvas = this.setPreviewCanvas.bind(this);
   }
 
+  /**
+   * Changes the editor view to "code" mode
+   */
   setCodeCanvas() {
     this.setState({
       canvasType: 'code'
     });
   }
 
+  /**
+   * Changes the editor view to "preview" mode
+   */
   setPreviewCanvas() {
     this.setState({
       canvasType: 'preview'
     });
   }
 
+  /**
+   * Gives the code and preview buttons
+   * The button corresponding to the currently selected mode is highlighted
+   */
   getCanvasButtons() {
+    let writeActive = this.state.canvasType === 'code';
+    let previewActive = this.state.canvasType === 'preview';
+
     return (
       <React.Fragment>
         <Button.Group basic>
-          <Button compact size="mini" onClick={this.setCodeCanvas}>
-            Write
-          </Button>
-          <Button compact size="mini" onClick={this.setPreviewCanvas}>
-            Preview
-          </Button>
+          <Button
+            compact
+            size="mini"
+            active={writeActive}
+            onClick={this.setCodeCanvas}
+            content="Write"
+          />
+          <Button
+            compact
+            size="mini"
+            active={previewActive}
+            onClick={this.setPreviewCanvas}
+            content="Preview"
+          />
         </Button.Group>
-        <Divider style={{ marginTop: 1, marginBottom: 1 }} />
+        <Divider
+          style={{ marginTop: 1, marginBottom: 1, width: this.state.width }}
+        />
       </React.Fragment>
     );
   }
 
+  /**
+   * Returns the preview content
+   * Uses an HTML parser module, to convert the input to HTML
+   */
   getHTMLPreview() {
     return (
       <div
         style={{
           backgroundColor: '#ebebe4',
+          marginBottom: 4,
           height: this.state.height,
           width: this.state.width,
           overflowY: 'scroll',
@@ -97,6 +131,9 @@ class HTMLEditor extends Component {
     );
   }
 
+  /**
+   * Returns the text area where the user can introduce the code he wants to be converted to HTML
+   */
   getHTMLCodeEditor() {
     return (
       <TextArea
@@ -114,6 +151,11 @@ class HTMLEditor extends Component {
     );
   }
 
+  /**
+   * Renders the HTML editor according to the currently selected mode ("code" or "preview")
+   * Also decides if the buttons should be rendered
+   * There's the possibily to have the editor only in preview mode, in that case, no buttons are required
+   */
   render() {
     return (
       <React.Fragment>

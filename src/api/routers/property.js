@@ -11,6 +11,10 @@ const queryItemProperties = `
   		AND item_property.item_id = $1
 `;
 
+/**
+ * Fetch item properties
+ * get parameter: item id
+ */
 propertyRouter.get('/item_properties2/:id', async (req, res) => {
   try {
     const data = await db.any(queryItemProperties, req.params.id);
@@ -20,6 +24,10 @@ propertyRouter.get('/item_properties2/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch properties info (id, name, unit and if it's a number or not)
+ * post body: array containing the ids of the properties to be fetched
+ */
 propertyRouter.post('/properties_info', async (req, res) => {
   try {
     let propertyIds = req.body;
