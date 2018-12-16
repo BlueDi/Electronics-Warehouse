@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { MemoryRouter as Router } from 'react-router-dom';
 import WHMenu from '@pages/menu';
 
-describe('<InDepthItemButtons />', () => {
+describe('<WHMenu />', () => {
   test('Renders properly', () => {
     const component = renderer.create(
       <Router>

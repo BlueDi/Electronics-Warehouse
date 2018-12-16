@@ -19,7 +19,7 @@ class WHHeader extends Component {
     return (
       <Menu attached size="huge">
         <Menu.Item as={Link} to="/">
-          <Header size="medium">Warehouse</Header>
+          <Header size="medium">Engineering Warehouse</Header>
         </Menu.Item>
 
         {this.checkSecurity() ? <Logout /> : <Login />}

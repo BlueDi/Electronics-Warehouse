@@ -1,11 +1,11 @@
 import Root, {
-    AddItem,
-    Course,
-    InDepthItem,
-    NotFound,
-    Request,
-    Requests,
-    WHTable
+  AddItem,
+  Course,
+  InDepthItem,
+  NotFound,
+  Request,
+  Requests,
+  WHTable
 } from '@pages';
 
 export const routes = [

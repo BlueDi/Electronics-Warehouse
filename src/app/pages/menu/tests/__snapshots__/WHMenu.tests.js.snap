@@ -1,16 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<InDepthItemButtons /> Renders properly 1`] = `
+exports[`<WHMenu /> Renders properly 1`] = `
 <div
   className="ui horizontally padded grid"
 >
   <div
     className="three wide column"
-    style={
-      Object {
-        "backgroundColor": "#D2E0E8",
-      }
-    }
   >
     <div
       className="ui huge secondary vertical accordion ui menu"

@@ -12,7 +12,7 @@ exports[`<WHHeader /> Renders properly 1`] = `
     <div
       className="ui medium header"
     >
-      Warehouse
+      Engineering Warehouse
     </div>
   </a>
   <div

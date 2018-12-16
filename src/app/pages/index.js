@@ -19,10 +19,10 @@ export const WHMenu = loadComponent(() =>
 export const InDepthItem = loadComponent(() =>
   import(/* webpackChunkName: 'inDepthItem' */ './inDepthItem')
 );
-export const Request = loadComponent(() => 
+export const Request = loadComponent(() =>
   import(/* webpackChunkName: 'request' */ './request')
 );
-export const Requests = loadComponent(() => 
+export const Requests = loadComponent(() =>
   import(/* webpackChunkName: 'requests' */ './requests')
 );
 

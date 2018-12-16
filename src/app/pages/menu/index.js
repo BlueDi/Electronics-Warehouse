@@ -24,7 +24,7 @@ class WHMenu extends Component {
 
     return (
       <Grid padded="horizontally">
-        <Grid.Column width={3} style={{ backgroundColor: '#D2E0E8' }}>
+        <Grid.Column width={3}>
           <Accordion as={Menu} secondary size="huge" vertical>
             <Menu.Item link>
               <Accordion.Title
