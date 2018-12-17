@@ -36,7 +36,7 @@ itemRouter.post('/add_new_item', async (req, res) => {
 
   var get_packaging_id_query = `SELECT packaging.id FROM packaging WHERE name = '${body.packaging}';`
   
-  const data1;
+  var data1;
   try{
     data1 = await db.any(get_packaging_id_query, [true]);
   } catch (e) {
@@ -47,7 +47,7 @@ itemRouter.post('/add_new_item', async (req, res) => {
 
   if(data1[0] == undefined){
     var insert_packaging_id_query = `INSERT INTO packaging (name) VALUES ('${body.packaging}') RETURNING id;`
-    const data2;
+    var data2;
 
     try{
       data2 = await db.any(insert_packaging_id_query, [true]);
