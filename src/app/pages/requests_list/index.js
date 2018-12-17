@@ -5,7 +5,7 @@ import { service } from '@utils';
 import { Loader, PageTitle } from '@common/components';
 import ComponentsTable from '@pages/table/Table';
 
-class Requests extends Component {
+class RequestsList extends Component {
   constructor(props) {
     super(props);
 
@@ -29,8 +29,7 @@ class Requests extends Component {
       .then(response => {
         this.setState({ user_permissions: response.data.user_permissions });
       })
-      .then(response => {
-        console.log(response);
+      .then(() => {
         this.getData();
       })
       .catch(e => {
@@ -78,7 +77,7 @@ class Requests extends Component {
     ) : this.state.isFetching ? (
       <Loader text="Preparing Table" />
     ) : (
-      <PageTitle title="Requests">
+      <PageTitle title="Requests List">
         <ComponentsTable
           components={this.state.requests}
           columnsOrder={this.default_column_order()}
@@ -88,4 +87,4 @@ class Requests extends Component {
   }
 }
 
-export default withCookies(Requests);
+export default withCookies(RequestsList);

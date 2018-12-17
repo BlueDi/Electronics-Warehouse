@@ -1,11 +1,12 @@
 import Root, {
-    AddItem,
-    Course,
-    InDepthItem,
-    NotFound,
-    Request,
-    Requests,
-    WHTable
+  AddItem,
+  Course,
+  InDepthItem,
+  NotFound,
+  WHTable,
+  RequestsCartList,
+  RequestsList,
+  Request
 } from '@pages';
 
 export const routes = [
@@ -34,8 +35,12 @@ export const routes = [
     component: Request
   },
   {
-    path: '/requests',
-    component: Requests
+    path: '/requests_cart',
+    component: RequestsCartList
+  },
+  {
+    path: '/requests_list',
+    component: RequestsList
   },
   {
     path: '/table/:id',

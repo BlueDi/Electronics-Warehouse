@@ -3,6 +3,8 @@ const db = require('@api/db.js');
 
 const userRouter = express.Router();
 
+const professors_query = 'SELECT id, login FROM Users WHERE user_permissions=2';
+
 const queryLogin = `
   SELECT id, login, user_permissions
   FROM users
@@ -49,6 +51,16 @@ userRouter.post('/logout', function(req, res) {
     res.clearCookie(key, { path: '/' });
   }
   res.sendStatus(200);
+});
+
+userRouter.get('/professors', async function(req, res) {
+  try {
+    const data = await db.any(professors_query);
+    res.send(data);
+  } catch (e) {
+    console.error('Error retrieving professors!');
+    res.status(500).send('Failed to retrieve professors');
+  }
 });
 
 userRouter.get('/user_permissions/:id', async (req, res) => {

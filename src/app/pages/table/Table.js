@@ -79,10 +79,16 @@ const RowDetail = ({ row }) => <InDepthItem id={row.id} />;
  * Row of ComponentsTable
  */
 class TableRow extends Component {
-  handleClick(history, id) {
-    var pathName = history.location.pathname.split('/')[1];
-    var redirect = pathName === 'requests' ? 'request' : 'item';
-    return history.push('/' + redirect + '/' + id);
+  handleClick(history, id, e) {
+    if (
+      !['button', 'i', 'input', 'label'].includes(
+        e.target.tagName.toLowerCase()
+      )
+    ) {
+      var pathName = history.location.pathname.split('/')[1];
+      var redirect = pathName === 'requests_list' ? 'request' : 'item';
+      return history.push('/' + redirect + '/' + id);
+    }
   }
 
   render() {
@@ -91,15 +97,9 @@ class TableRow extends Component {
         render={({ history }) => (
           <Table.Row
             {...this.props}
-            onClick={e => {
-              if (
-                !['button', 'i', 'input', 'label'].includes(
-                  e.target.tagName.toLowerCase()
-                )
-              ) {
-                return this.handleClick(history, this.props.tableRow.row.id);
-              }
-            }}
+            onClick={e =>
+              this.handleClick(history, this.props.tableRow.row.id, e)
+            }
           />
         )}
       />

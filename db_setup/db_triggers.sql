@@ -35,9 +35,7 @@ RETURNS TABLE(id INT, name TEXT) AS $$
       FROM recur_categories, category
       WHERE category.id_parent = recur_categories.id
     )
-
     SELECT id, name FROM recur_categories;
-
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_category_tree(_main_category_id INT)
