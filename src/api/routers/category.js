@@ -10,16 +10,12 @@ const categoryRouter = express.Router();
  */
 categoryRouter.get('/all_categories', async (req, res) => {
   const all_categories_query = `SELECT category.id, category.name
-    FROM category`;
+    FROM category;`;
 
-  try {
-    const data = await db.any(all_categories_query);
+    const data = await db.any(all_categories_query, [true]);
     res.send(data);
-  } catch (e) {
-    console.log('Error retrieving all categories!', e);
-    res.send('Failed to retrieve all categories!');
-  }
 });
+
 
 /**
  * Fetch item properties for a given category (this will include both the category properties, and the item properties, which are independent from the category)
@@ -60,6 +56,32 @@ categoryRouter.get('/category_tree/:id', async (req, res) => {
     res.send('Failed to retrieve category tree!');
   }
 });
+
+/**
+ * Add category id and property_id to the category_property table
+ * 
+ */
+categoryRouter.post('/add_category_property', async (req, res) => {
+  var tempQuery = `INSERT INTO category_property (category_id, property_id) VALUES `;
+
+  for(var i = 0; i < req.body.length - 2; i++){
+    if(i < req.body.length - 3)
+      tempQuery += `('${req.body[req.body.length-2]}', '${req.body[i].key}'), `;
+    else
+      tempQuery += `('${req.body[req.body.length-2]}', '${req.body[i].key}'); `;
+  }
+
+  console.log(tempQuery);
+
+
+  try {
+    const data = await db.any(tempQuery, [true]);
+    res.send(data);
+  } catch (e) {
+    res.send('Failed to fetch all the categories!');
+  }
+});
+
 
 /**
  * Fetch category descendant tree (descendants of the given category - children, grandchildren, grandgrandchildren..., does not include the category itself)
