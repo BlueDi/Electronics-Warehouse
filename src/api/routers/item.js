@@ -36,14 +36,25 @@ itemRouter.post('/add_new_item', async (req, res) => {
 
   var get_packaging_id_query = `SELECT packaging.id FROM packaging WHERE name = '${body.packaging}';`
   
-  const data1 = await db.any(get_packaging_id_query, [true]);
+  const data1;
+  try{
+    data1 = await db.any(get_packaging_id_query, [true]);
+  } catch (e) {
+    res.send('Failed to retrieve packaging id!');
+  }
 
   console.log(data1[0]);
 
   if(data1[0] == undefined){
     var insert_packaging_id_query = `INSERT INTO packaging (name) VALUES ('${body.packaging}') RETURNING id;`
-    const data2 = await db.any(insert_packaging_id_query, [true]);
-    console.log(data2);
+    const data2;
+
+    try{
+      data2 = await db.any(insert_packaging_id_query, [true]);
+    } catch (e) {
+      res.send('Failed to insert package name!');
+    }
+
     new_packaging_id = data2[0].id;
   } else {
     new_packaging_id = data1[0].id;
@@ -56,10 +67,12 @@ itemRouter.post('/add_new_item', async (req, res) => {
                 '${body.categoryID}', NOW()) RETURNING id;`;
     
 
-    console.log(query);
-    const data = await db.any(query, [true]);
-    console.log(data)
-    res.send(data);
+    try{
+      const data = await db.any(query, [true]);
+      res.send(data);
+    } catch (e) {
+      res.send('Failed to add the item!');
+    }
 
 });
 
