@@ -79,7 +79,7 @@ CREATE TABLE users (
 
 CREATE TABLE request_workflow (
 	id SERIAL PRIMARY KEY,
-	date_sent TIMESTAMP WITH TIME ZONE NOT NULL,
+	date_sent TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 	date_cancelled TIMESTAMP WITH TIME ZONE,
 	date_professor_evaluated TIMESTAMP WITH TIME ZONE,
 	date_manager_evaluated TIMESTAMP WITH TIME ZONE,
