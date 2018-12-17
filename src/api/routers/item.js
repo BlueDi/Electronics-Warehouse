@@ -33,14 +33,53 @@ itemRouter.get('/all_items', async (req, res) => {
 
 itemRouter.post('/add_new_item', async (req, res) => {
   var body = req.body;
-  var query =
-    'INSERT INTO item (name, imageurl, count, condition, details, manufacturer, reference, category_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
+  var new_packaging_id;
+
+  var get_packaging_id_query = `SELECT packaging.id FROM packaging WHERE name = '${
+    body.packaging
+  }';`;
+
+  var data1;
+  try {
+    data1 = await db.any(get_packaging_id_query, [true]);
+  } catch (e) {
+    res.send('Failed to retrieve packaging id!');
+  }
+
+  console.log(data1[0]);
+
+  if (data1[0] == undefined) {
+    var insert_packaging_id_query = `INSERT INTO packaging (name) VALUES ('${
+      body.packaging
+    }') RETURNING id;`;
+    var data2;
+
+    try {
+      data2 = await db.any(insert_packaging_id_query, [true]);
+    } catch (e) {
+      res.send('Failed to insert package name!');
+    }
+
+    new_packaging_id = data2[0].id;
+  } else {
+    new_packaging_id = data1[0].id;
+  }
+
+  var query = `INSERT INTO item (description, image, total_stock, free_stock, last_price, location, user_comments, details, manufacturer, reference, packaging_id, category_id, last_edit)
+    VALUES ('${body.description}', '${body.image}', '${body.stock}', '${
+    body.stock
+  }',
+             '${body.price}', '${body.location}', '', 
+              '${body.details}', '${body.manufacturer}', '${
+    body.reference
+  }', '${new_packaging_id}',
+                '${body.categoryID}', NOW()) RETURNING id;`;
 
   try {
-    const data = await db.one(query, body);
+    const data = await db.any(query, [true]);
     res.send(data);
   } catch (e) {
-    res.send('Failed to retrieve items!');
+    res.send('Failed to add the item!');
   }
 });
 
@@ -230,6 +269,28 @@ itemRouter.post('/item_comments_increment', async (req, res) => {
     res.send(data);
   } catch (e) {
     res.send('Failed to increment item comments!');
+  }
+});
+
+itemRouter.post('/add_item_property', async (req, res) => {
+  var tempQuery = `INSERT INTO item_property (value, item_id, property_id) VALUES `;
+
+  for (var i = 0; i < req.body.length - 2; i++) {
+    if (i < req.body.length - 3)
+      tempQuery += `('${req.body[i].value}', '${
+        req.body[req.body.length - 1]
+      }', '${req.body[i].key}'), `;
+    else
+      tempQuery += `('${req.body[i].value}', '${
+        req.body[req.body.length - 1]
+      }', '${req.body[i].key}'); `;
+  }
+
+  try {
+    const data = await db.any(tempQuery, [true]);
+    res.send(data);
+  } catch (e) {
+    res.send('Failed to fetch all the categories!');
   }
 });
 
