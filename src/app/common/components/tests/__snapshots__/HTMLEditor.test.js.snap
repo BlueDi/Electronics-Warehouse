@@ -7,6 +7,7 @@ exports[`HTMLEditor Field Render 1`] = `
       "backgroundColor": "#ebebe4",
       "fontSize": "12px",
       "height": 400,
+      "marginBottom": 4,
       "overflowY": "scroll",
       "width": 700,
     }

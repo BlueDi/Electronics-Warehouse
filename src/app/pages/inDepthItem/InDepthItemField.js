@@ -8,9 +8,16 @@ import {
   Message
 } from 'semantic-ui-react';
 
+/**
+ * Item image maximum dimensions
+ */
 const IMAGE_WIDTH = 400;
 const IMAGE_HEIGHT = 300;
 
+/**
+ * Represents an item information field
+ * Exemples: description, image, packaging, properties, etc.
+ */
 export class InDepthItemField extends Component {
   nonEditableMap = {
     image: () => {
@@ -37,6 +44,11 @@ export class InDepthItemField extends Component {
     super(props);
   }
 
+  /**
+   * Decides what render function should be called based on the following criteria
+   * - Edit mode
+   * - Item field is a property or not
+   */
   getRender() {
     if (this.props.editable) {
       return this.props.fieldName === 'properties'
@@ -49,6 +61,9 @@ export class InDepthItemField extends Component {
     }
   }
 
+  /**
+   * Renders all item properties, in non-edit mode
+   */
   nonEditablePropertiesField() {
     let property_list = this.props.fieldContent.map(property => {
       let invalidProperty = property.value ? !property.value.trim() : true;
@@ -161,6 +176,9 @@ export class InDepthItemField extends Component {
     }
   }
 
+  /**
+   * Renders all item properties, in edit mode
+   */
   editablePropertiesField() {
     let property_list = this.props.fieldContent.map(property => {
       var type = property.isNumber ? 'number' : 'text';
@@ -193,7 +211,9 @@ export class InDepthItemField extends Component {
     );
   }
 
-  // A general editable field is any field that is NOT a property
+  /**
+   * Renders every item field that is not a property, in edit mode
+   */
   editableGeneralField() {
     switch (this.props.fieldName) {
       case 'description': {
@@ -238,10 +258,14 @@ export class InDepthItemField extends Component {
       case 'user comments': {
         return (
           <div style={{ marginTop: 3 }}>
-            {this.props.fieldName}: <br />
+            <div>
+              <h3>{this.props.fieldName}</h3>
+            </div>
             <HTMLEditor
               className={this.props.fieldName.replace(/ /g, '_')}
               canvasType="code"
+              height="450"
+              width="625"
               onChange={this.props.handleChange}
               value={this.props.fieldContent}
             />
@@ -368,6 +392,10 @@ export class InDepthItemField extends Component {
     }
   }
 
+  /**
+   * Default React component render function
+   * It's render responsibility is sent to "getRender" function
+   */
   render() {
     return this.getRender();
   }

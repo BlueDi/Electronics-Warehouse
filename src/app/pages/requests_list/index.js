@@ -29,8 +29,7 @@ class RequestsList extends Component {
       .then(response => {
         this.setState({ user_permissions: response.data.user_permissions });
       })
-      .then(response => {
-        console.log(response);
+      .then(() => {
         this.getData();
       })
       .catch(e => {

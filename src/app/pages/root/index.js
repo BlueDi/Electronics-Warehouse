@@ -22,21 +22,19 @@ class Root extends Component {
   render() {
     return (
       <AlertProvider template={AlertTemplate} {...options}>
-        <React.Fragment>
-          <Helmet {...HELMET} />
-          <Grid stretched style={{ height: '100vh' }}>
-            <Grid.Row style={{ height: '10%' }}>
-              <Grid.Column width={16}>
-                <WHHeader />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row style={{ height: '90%', padding: '0px' }}>
-              <Grid.Column width={16}>
-                <WHMenu key={'menu'} content={renderRoutes(routes)} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </React.Fragment>
+        <Helmet {...HELMET} />
+        <Grid stretched style={{ height: '100vh' }}>
+          <Grid.Row style={{ height: '10%' }}>
+            <Grid.Column width={16}>
+              <WHHeader />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row style={{ height: '90%', padding: '0px' }}>
+            <Grid.Column width={16}>
+              <WHMenu key={'menu'} content={renderRoutes(routes)} />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </AlertProvider>
     );
   }

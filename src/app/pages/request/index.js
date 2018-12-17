@@ -29,9 +29,9 @@ class Request extends Component {
       manager: 'UNKNOWN',
       items: [],
       edit: false,
-      fetching: true,
+      fetching: 0,
       user_id: props.cookies.get('id') || -1,
-      user_permissions: -1
+      user_permissions: props.cookies.get('user_permissions') || -1
     };
 
     //button handlers
@@ -56,7 +56,10 @@ class Request extends Component {
     service
       .get(urlGetRole)
       .then(response => {
-        this.setState({ user_permissions: response.data.user_permissions });
+        this.setState({
+          user_permissions: response.data.user_permissions,
+          fetching: this.state.fetching + 1
+        });
       })
       .catch(e => {
         throw e;
@@ -69,12 +72,8 @@ class Request extends Component {
     service
       .get(apiUrl)
       .then(response => {
-        console.log(response);
         this.setState(response.data[0]);
-      })
-      .then(response => {
-        console.log(response);
-        this.setState({ fetching: false });
+        this.setState({ fetching: this.state.fetching + 1 });
       })
       .catch(e => {
         throw e;
@@ -89,7 +88,8 @@ class Request extends Component {
         console.log('items', response.data);
 
         this.setState({
-          items: response.data
+          items: response.data,
+          fetching: this.state.fetching + 1
         });
       })
       .catch(e => {
@@ -253,8 +253,8 @@ class Request extends Component {
       is_professor = user_id == professor_id && user_permissions == 2,
       is_manager = user_permissions == 3;
 
-    return fetching ||
-      ((is_requester || is_professor || is_manager) && !fetching) ? (
+    return fetching < 3 ||
+      ((is_requester || is_professor || is_manager) && fetching == 3) ? (
       <PageTitle key={'Request'} title="Request">
         {this.renderItemFields()}
       </PageTitle>

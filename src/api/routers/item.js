@@ -11,6 +11,9 @@ const insert_request_item =
   'INSERT INTO request_items (request_id, item_id, count) VALUES ($1, $2, $3)';
 const emailsQuery = `SELECT login AS name, email, user_permissions AS permissions FROM users WHERE id=$1 OR user_permissions=3 ORDER BY user_permissions; `;
 
+/**
+ * Fetch information for all items available in database
+ */
 itemRouter.get('/all_items', async (req, res) => {
   try {
     const data = await db.any(all_items_query);
@@ -43,6 +46,10 @@ itemRouter.post('/add_new_item', async (req, res) => {
   }
 });
 
+/**
+ * Fetch all information for a given item
+ * Get parameter: item id
+ */
 itemRouter.get('/item_characteristics/:id', async (req, res) => {
   const item_description_query = `SELECT item.description, convert_from(item.image, 'UTF-8') as image, item.total_stock, item.free_stock,
   item.last_price, item.location, item.user_comments, item.details, item.manufacturer, item.reference, to_char(item.last_edit, 'DD Mon YYYY HH24hMIm') as last_edit
@@ -58,6 +65,10 @@ itemRouter.get('/item_characteristics/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch item properties
+ * get parameter: item id
+ */
 itemRouter.get('/item_properties/:id', async (req, res) => {
   const in_depth_item_ppt_list_query = `
     SELECT item_property.property_id, item_property.value, property.unit, property.name, property.number
@@ -73,6 +84,10 @@ itemRouter.get('/item_properties/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch item category
+ * get parameter: item id
+ */
 itemRouter.get('/item_category/:id', async (req, res) => {
   const in_depth_item_catg_query = `
     SELECT category.id, category.name, item.id AS item_id
@@ -89,6 +104,10 @@ itemRouter.get('/item_category/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch item packaging
+ * get parameter: item id
+ */
 itemRouter.get('/item_packaging/:id', async (req, res) => {
   const in_depth_item_packaging_query = `
     SELECT packaging.id, packaging.name
@@ -105,6 +124,10 @@ itemRouter.get('/item_packaging/:id', async (req, res) => {
   }
 });
 
+/**
+ * Fetch item user comments
+ * get parameter: item id
+ */
 itemRouter.get('/item_comments/:id', async (req, res) => {
   const in_depth_item_comments_query = `
     SELECT item.user_comments
@@ -120,6 +143,10 @@ itemRouter.get('/item_comments/:id', async (req, res) => {
   }
 });
 
+/**
+ * Edit item
+ * post body: object containing all item information (equal to inDepthItem's state), even if some of it wasn't changed
+ */
 itemRouter.post('/item_edit', async (req, res) => {
   let newItem = req.body;
 
@@ -157,6 +184,46 @@ itemRouter.post('/item_edit', async (req, res) => {
   }
 });
 
+/**
+ * Inserts a new request in the database as well as its associated items
+ * @param {Array} req.body.cart           Array containing the items to be added
+ * @param {String} req.body.details       Text with the details of the request
+ * @param {Number} req.body.professor_id  Number representing the professor's ID
+ * @param {Number} req.body.user_id       Number representing the requester's ID
+ * @type {Array}
+ */
+itemRouter.post('/request_items', async (req, res) => {
+  let { cart, details, professor_id, user_id } = req.body;
+
+  if (cart && details && cart.length > 0 && details.length > 0) {
+    let query_data = [details, user_id, professor_id];
+
+    try {
+      const data = await db.one(insert_request_query, query_data);
+      const request_id = data.id;
+
+      for (let i = 0; i < cart.length; i++) {
+        const item_info = cart[i];
+        if (item_info.amount > 0) {
+          query_data = [request_id, item_info.id, item_info.amount];
+          db.none(insert_request_item, query_data);
+        }
+      }
+
+      res.send('OK');
+    } catch (e) {
+      throw new Error('Failed to insert the request\n - ' + e);
+    }
+  } else {
+    res.status(404).send('No items found in cart!');
+  }
+});
+
+/**
+ * Add a comment to item user comments
+ * post body: object containing the item id and the comment that will be added
+ * White spaces after comment's last letter will be trimmed
+ */
 itemRouter.post('/item_comments_increment', async (req, res) => {
   try {
     let parameters = [req.body.itemId, req.body.newComment.trimRight()];

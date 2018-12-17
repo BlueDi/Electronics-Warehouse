@@ -8,9 +8,9 @@
 
 ## (30/10/2018)
 
-## (13/11/2019)
+## (13/11/2018)
 
--   What was incremented during Sprint 3:
+-   What was incremented during **Sprint 3**:
 
 -   Change the order of the columns
 -   Hide columns

@@ -86,7 +86,7 @@ class TableRow extends Component {
       )
     ) {
       var pathName = history.location.pathname.split('/')[1];
-      var redirect = pathName === 'requests' ? 'request' : 'item';
+      var redirect = pathName === 'requests_list' ? 'request' : 'item';
       return history.push('/' + redirect + '/' + id);
     }
   }
