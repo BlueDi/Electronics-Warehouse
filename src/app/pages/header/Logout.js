@@ -29,7 +29,11 @@ class Logout extends Component {
       <Menu.Menu position="right">
         <Menu.Item as={Link} to={'/user/' + userID}>
           {userName}
-          {!emptyCart && <Label circular>{userCart.length}</Label>}
+          {!emptyCart && (
+            <Label circular color="orange">
+              {userCart.length}
+            </Label>
+          )}
         </Menu.Item>
         <Menu.Item link onClick={this.handleLogout}>
           Logout
