@@ -1,3 +1,345 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<AddItem /> 1`] = `null`;
+exports[`<AddItem /> 1`] = `
+<div
+  className="ui centered grid"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="three wide column"
+    >
+      <img
+        className="ui fluid rounded image"
+        src="test-file-stub"
+      />
+      <label
+        className="ui left labeled button"
+        htmlFor="upload"
+        name="image"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": "2em",
+            "marginTop": "2em",
+          }
+        }
+      >
+        <div
+          className="ui right pointing basic label"
+          onClick={[Function]}
+        >
+          Upload Image
+        </div>
+        <button
+          className="ui icon button"
+        >
+          <i
+            aria-hidden="true"
+            className="upload icon"
+          />
+           
+        </button>
+      </label>
+      <input
+        hidden={true}
+        id="upload"
+        name="image"
+        onChange={[Function]}
+        type="file"
+      />
+    </div>
+    <div
+      className="ten wide column"
+    >
+      <form
+        className="ui form"
+        onSubmit={[Function]}
+      >
+        <div
+          className="required field"
+        >
+          <label>
+            Item's Name
+          </label>
+          <div
+            className="ui input"
+          >
+            <input
+              name="description"
+              onChange={[Function]}
+              placeholder="Item's Name"
+              required={true}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          className="equal width fields"
+        >
+          <div
+            className="required field"
+          >
+            <label>
+              Manufacturer
+            </label>
+            <div
+              className="ui input"
+            >
+              <input
+                name="manufacturer"
+                onChange={[Function]}
+                placeholder="Manufacturer"
+                required={true}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="required field"
+          >
+            <label>
+              Manufacturer's Reference Number
+            </label>
+            <div
+              className="ui input"
+            >
+              <input
+                name="reference"
+                onChange={[Function]}
+                placeholder="Manufacturer's Reference Number"
+                required={true}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="required field"
+          >
+            <label>
+              Packaging
+            </label>
+            <div
+              className="ui input"
+            >
+              <input
+                name="packaging"
+                onChange={[Function]}
+                placeholder="Packaging"
+                required={true}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="required field"
+        >
+          <label>
+            Location
+          </label>
+          <div
+            className="ui input"
+          >
+            <input
+              name="location"
+              onChange={[Function]}
+              placeholder="Location"
+              required={true}
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          className="equal width fields"
+        >
+          <div
+            className="required field"
+          >
+            <label>
+              Stock
+            </label>
+            <div
+              className="ui input"
+            >
+              <input
+                min={1}
+                name="stock"
+                onChange={[Function]}
+                required={true}
+                type="number"
+                value={1}
+              />
+            </div>
+          </div>
+          <div
+            className="required field"
+          >
+            <label>
+              Last Price per Unit
+            </label>
+            <div
+              className="ui input"
+            >
+              <input
+                min={0.01}
+                name="price"
+                onChange={[Function]}
+                required={true}
+                step=".01"
+                type="number"
+                value={0}
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="fields"
+        >
+          <div
+            className="required four wide field"
+          >
+            <label>
+              Category
+            </label>
+            <div
+              aria-expanded={false}
+              className="ui search selection dropdown"
+              name="selectedCategory"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onMouseDown={[Function]}
+              required={true}
+              role="combobox"
+            >
+              <input
+                aria-autocomplete="list"
+                autoComplete="off"
+                className="search"
+                onChange={[Function]}
+                style={
+                  Object {
+                    "width": undefined,
+                  }
+                }
+                tabIndex={0}
+                type="text"
+                value=""
+              />
+              <div
+                aria-live="polite"
+                className="default text"
+                role="alert"
+              >
+                Category
+              </div>
+              <i
+                aria-hidden="true"
+                className="dropdown icon"
+                onClick={[Function]}
+              />
+              <div
+                className="menu transition"
+                role="listbox"
+              >
+                <div
+                  className="message"
+                >
+                  No results found.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="disabled field"
+          >
+            <button
+              className="ui icon disabled left labeled button"
+              disabled={true}
+              onClick={[Function]}
+              role="button"
+              style={
+                Object {
+                  "marginLeft": "1em",
+                  "marginTop": "1.7em",
+                }
+              }
+              tabIndex={-1}
+            >
+              <i
+                aria-hidden="true"
+                className="plus icon"
+              />
+              Add a Property
+            </button>
+          </div>
+        </div>
+        <div
+          className="field"
+        >
+          <label>
+            Details
+          </label>
+          <textarea
+            name="details"
+            onChange={[Function]}
+            onInput={[Function]}
+            placeholder="Specify the item's characteristics..."
+            rows={3}
+            style={
+              Object {
+                "resize": "",
+              }
+            }
+            value=""
+          />
+        </div>
+        <div
+          style={
+            Object {
+              "float": "right",
+              "paddingTop": "2em",
+            }
+          }
+        >
+          <div
+            className="ui buttons"
+          >
+            <button
+              className="ui positive button"
+              onClick={[Function]}
+              role="button"
+              type="submit"
+            >
+              Save
+            </button>
+            <div
+              className="or"
+            />
+            <a
+              href="/table/1"
+              onClick={[Function]}
+            >
+              <button
+                className="ui button"
+                onClick={[Function]}
+                role="button"
+              >
+                Cancel
+              </button>
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

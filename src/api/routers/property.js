@@ -70,7 +70,6 @@ propertyRouter.post('/get_categories_properties', async (req, res) => {
   }
 });
 
-
 propertyRouter.get('/get_all_units', async (req, res) => {
   var query = `SELECT Prop.id, Prop.unit FROM Property as Prop`;
 
@@ -88,6 +87,5 @@ propertyRouter.get('/get_all_units', async (req, res) => {
     res.send('Failed to retrieve all units!');
   }
 });
-
 
 export default propertyRouter;

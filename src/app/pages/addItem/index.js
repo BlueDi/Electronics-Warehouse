@@ -39,7 +39,7 @@ class AddItem extends Component {
       selectedProperties: [],
       newProperties: [],
       propertyID: 0,
-      disableProperties:true,
+      disableProperties: true,
 
       selectedPropertyValue: '',
       selectedPropertyUnit: '',
@@ -76,7 +76,7 @@ class AddItem extends Component {
     service
       .get(apiUrl)
       .then(response => {
-        console.log(response)
+        console.log(response);
         let category_list = response.data.map(category => {
           return {
             key: category.id,
@@ -115,7 +115,7 @@ class AddItem extends Component {
 
   getCategoryProperties(cat) {
     service
-      .post('/get_categories_properties', {key: cat})
+      .post('/get_categories_properties', { key: cat })
       .then(response => {
         let newProperties = response.data.map(property => {
           return {
@@ -176,7 +176,7 @@ class AddItem extends Component {
       disableProperties: false
     });
 
-    console.log(catID)
+    console.log(catID);
 
     this.getCategoryProperties(catID);
   }
@@ -195,13 +195,16 @@ class AddItem extends Component {
     }
 
     for (var i = 0; i < this.state.properties.length; i++) {
-      if (this.state.properties[i].text == value && this.state.properties[i].unit != '') {
+      if (
+        this.state.properties[i].text == value &&
+        this.state.properties[i].unit != ''
+      ) {
         newProperties.push({
           key: this.state.properties[i].key,
           name: value,
           value: '',
-          isNumber: this.state.properties[i].isNumber, 
-          unit: this.state.properties[i].unit,
+          isNumber: this.state.properties[i].isNumber,
+          unit: this.state.properties[i].unit
         });
 
         var newPropertyID = this.state.propertyID;
@@ -218,7 +221,6 @@ class AddItem extends Component {
         break;
       }
     }
-
   }
 
   getNewItemId() {
@@ -240,14 +242,14 @@ class AddItem extends Component {
 
     var itemProperties = this.state.selectedProperties;
 
-    console.log(itemProperties)
+    console.log(itemProperties);
 
     service
       .post('/add_new_item', this.state)
       .then(response => {
         itemProperties.push(response.data[0].id);
-        
-        if(this.state.selectedProperties != []){
+
+        if (this.state.selectedProperties != []) {
           service
             .post('/add_category_property', categoryProperties)
             .then(response => {
@@ -256,10 +258,10 @@ class AddItem extends Component {
             .catch(e => {
               throw e;
             });
-    
-            console.log(itemProperties);
-    
-            service
+
+          console.log(itemProperties);
+
+          service
             .post('/add_item_property', itemProperties)
             .then(response => {
               console.log(response);
@@ -272,8 +274,6 @@ class AddItem extends Component {
       .catch(e => {
         throw e;
       });
-
-   
   }
 
   handlePropertyUnitAddition(e, { value }) {
@@ -300,7 +300,6 @@ class AddItem extends Component {
       selectedProperties: newPropertyValues,
       selectedPropertyUnit: value
     });
-
   }
 
   handlePropertyValueChange(e, { value }) {
@@ -316,7 +315,6 @@ class AddItem extends Component {
       selectedProperties: newPropertyValues,
       selectedPropertyValue: value
     });
-
   }
 
   /*handleCategoryAddition = (e, { value }) => {
@@ -453,7 +451,6 @@ class AddItem extends Component {
   }
 
   renderValueEditing() {
-
     if (this.state.selectedProperty != '') {
       return (
         <div>
@@ -617,7 +614,7 @@ class AddItem extends Component {
                           marginTop: '1.7em',
                           marginLeft: '1em'
                         }}
-                        disabled = {this.state.disableProperties}
+                        disabled={this.state.disableProperties}
                       >
                         <Icon name="plus" />
                         Add a Property
