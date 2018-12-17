@@ -31,7 +31,7 @@ class Request extends Component {
       edit: false,
       fetching: true,
       user_id: props.cookies.get('id') || -1,
-      user_permissions: -1
+      user_permissions: props.cookies.get('user_permissions') || -1
     };
 
     //button handlers
@@ -56,7 +56,9 @@ class Request extends Component {
     service
       .get(urlGetRole)
       .then(response => {
-        this.setState({ user_permissions: response.data.user_permissions });
+        this.setState({
+          user_permissions: response.data.user_permissions
+        });
       })
       .catch(e => {
         throw e;
@@ -70,9 +72,6 @@ class Request extends Component {
       .get(apiUrl)
       .then(response => {
         this.setState(response.data);
-      })
-      .then(response => {
-        console.log(response);
         this.setState({ fetching: false });
       })
       .catch(e => {
@@ -194,7 +193,7 @@ class Request extends Component {
       )
         continue;
 
-      if (!fieldContent) fieldContent = 'No value assigned';
+      if (!fieldContent) fieldContent = 'N/D';
 
       fieldName = fieldName.replace(/_/g, ' ');
       fieldName = fieldName.charAt(0).toUpperCase() + fieldName.substr(1);
@@ -244,18 +243,24 @@ class Request extends Component {
   }
 
   render() {
-    return this.state.user_id == -1 ||
-      (this.state.user_permissions == 1 &&
-        this.state.user_id != this.state.requester_id &&
-        this.state.fetching == false) ||
-      (this.state.user_permissions == 2 &&
-        this.state.user_id != this.state.professor_id &&
-        this.state.fetching == false) ? (
-      <Redirect to="/" />
-    ) : (
+    const {
+      user_id,
+      requester_id,
+      professor_id,
+      fetching,
+      user_permissions
+    } = this.state;
+    const is_requester = user_id == requester_id && user_permissions == 1,
+      is_professor = user_id == professor_id && user_permissions == 2,
+      is_manager = user_permissions == 3;
+
+    return fetching ||
+      ((is_requester || is_professor || is_manager) && !fetching) ? (
       <PageTitle key={'Request'} title="Request">
         {this.renderItemFields()}
       </PageTitle>
+    ) : (
+      <Redirect to="/" />
     );
   }
 }

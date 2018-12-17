@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchBar Field Render 1`] = `
+<div
+  className="ui search"
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseDown={[Function]}
+>
+  <div
+    className="ui fluid icon input"
+  >
+    <input
+      autoComplete="off"
+      className="prompt"
+      onChange={[Function]}
+      onClick={[Function]}
+      tabIndex="0"
+      type="text"
+      value=""
+    />
+    <i
+      aria-hidden="true"
+      className="search icon"
+    />
+  </div>
+  <div
+    className="results transition"
+  >
+    <div
+      className="message empty"
+    >
+      <div
+        className="header"
+      >
+        No results found.
+      </div>
+    </div>
+  </div>
+</div>
+`;

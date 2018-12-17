@@ -145,6 +145,7 @@ class WHTable extends Component {
       </Grid>
     );
   }
+
   render() {
     return this.state.isFetching ? (
       <Loader text="Preparing Table" />

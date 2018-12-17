@@ -27,16 +27,6 @@ class HTMLEditor extends Component {
   constructor(props) {
     super(props);
 
-    let height = 400;
-    if (props.height) {
-      height = parseInt(props.height);
-    }
-
-    let width = 700;
-    if (props.width) {
-      width = parseInt(props.width);
-    }
-
     let displayOnly = props.displayOnly;
     let canvasType;
 
@@ -51,8 +41,8 @@ class HTMLEditor extends Component {
     this.state = {
       displayOnly: displayOnly,
       canvasType: canvasType,
-      height: height,
-      width: width
+      height: props.height ? parseInt(props.height) : 400,
+      width: props.width ? parseInt(props.width) : 700
     };
 
     this.setCodeCanvas = this.setCodeCanvas.bind(this);

@@ -22,8 +22,11 @@ export const InDepthItem = loadComponent(() =>
 export const Request = loadComponent(() =>
   import(/* webpackChunkName: 'request' */ './request')
 );
-export const Requests = loadComponent(() =>
-  import(/* webpackChunkName: 'requests' */ './requests')
+export const RequestsCartList = loadComponent(() =>
+  import(/* webpackChunkName: 'requests_cart' */ './requests_cart')
+);
+export const RequestsList = loadComponent(() =>
+  import(/* webpackChunkName: 'requests_list' */ './requests_list')
 );
 
 // export Root as default, and also NotFound as named
