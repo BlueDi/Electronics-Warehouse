@@ -84,7 +84,8 @@ class RequestsCartList extends Component {
         cart,
         details: this.state.details,
         professor_id: this.state.professor_id,
-        user_id: this.props.cookies.get('id')
+        user_id: this.props.cookies.get('id'),
+        user_name: this.props.cookies.get('user_name')
       };
 
       service
