@@ -1,6 +1,6 @@
 module.exports = {
   htmlAttributes: { lang: 'en' },
-  titleTemplate: '%s | Warehouse',
+  titleTemplate: '%s | Engineering Warehouse',
   link: [
     {
       rel: 'icon',
