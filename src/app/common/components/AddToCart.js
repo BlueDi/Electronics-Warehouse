@@ -38,8 +38,9 @@ class AddToCart extends Component {
     });
   };
 
-  handleClick = () => {
-    const { cookies } = this.props;
+  handleClick = e => {
+    e.preventDefault();
+    const { alert, cookies } = this.props;
     const { amount, items } = this.state;
     var cart = cookies.get('cart'),
       requested_items = 'added to cart:\n';
@@ -59,7 +60,7 @@ class AddToCart extends Component {
       requested_items += amount + " of '" + item.description + "'\n";
     }
 
-    this.props.alert.show(this.transformTxt(requested_items));
+    alert.show(this.transformTxt(requested_items));
     cookies.set('cart', cart, { path: '/' });
   };
 
@@ -77,7 +78,7 @@ class AddToCart extends Component {
   };
 
   renderButton() {
-    const { simple } = this.state;
+    const { amount, simple } = this.state;
 
     return simple ? (
       <Input
@@ -86,7 +87,7 @@ class AddToCart extends Component {
         fluid
         placeholder="Buy"
         name="amount"
-        value={this.state.amount}
+        value={amount}
         onChange={this.handleChange}
       />
     ) : (
