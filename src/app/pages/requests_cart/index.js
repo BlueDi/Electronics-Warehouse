@@ -141,20 +141,15 @@ class RequestsCartList extends Component {
    */
   buttons = () => {
     return (
-      <div>
-        <Button
-          positive
-          floated="left"
-          content="Send Request"
-          onClick={this.sendRequest}
-        />
+      <React.Fragment>
+        <Button positive content="Send Request" onClick={this.sendRequest} />
         <Button
           negative
           floated="right"
           content="Clear Request"
           onClick={this.clearRequests}
         />
-      </div>
+      </React.Fragment>
     );
   };
 
