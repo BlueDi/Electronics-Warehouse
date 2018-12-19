@@ -52,6 +52,7 @@ class WHTable extends Component {
       })
       .catch(e => {
         this.setState({
+          components: [],
           isFetching: false
         });
         throw e;
