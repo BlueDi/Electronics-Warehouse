@@ -8,7 +8,6 @@ exports[`Create a Compare for 2 items 1`] = `
   onFocus={[Function]}
   onMouseEnter={[Function]}
   onMouseLeave={[Function]}
-  role="button"
 >
   Compare Items
 </button>

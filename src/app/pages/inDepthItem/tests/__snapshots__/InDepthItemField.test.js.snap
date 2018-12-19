@@ -50,7 +50,6 @@ exports[`<InDepthItemField /> Breadcrumb Field 2`] = `
   <button
     className="ui mini circular icon negative button"
     onClick={[Function]}
-    role="button"
     style={
       Object {
         "backgroundColor": "#e82b34",
@@ -311,7 +310,6 @@ VmtVFXWjoChABFERVCKgUUAjthFzMZqYxLjT3aP79D456d49zj5nZJzTo0f/0+fsHumT7O6xY/be
   <button
     className="ui button"
     onClick={[Function]}
-    role="button"
     style={
       Object {
         "display": "block",

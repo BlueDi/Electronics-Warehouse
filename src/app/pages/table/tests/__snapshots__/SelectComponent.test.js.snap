@@ -17,9 +17,10 @@ exports[`Create a selection button for 1 items 1`] = `
   style={null}
 >
   <span
-    className="MuiButtonBase-root-27 MuiIconButton-root-21 MuiPrivateSwitchBase-root-17 MuiCheckbox-root-11 MuiCheckbox-colorSecondary-16 TableSelectCell-checkbox-2"
+    className="MuiButtonBase-root-31 MuiIconButton-root-25 MuiPrivateSwitchBase-root-21 MuiCheckbox-root-15 MuiCheckbox-colorSecondary-20 TableSelectCell-checkbox-2"
     onBlur={[Function]}
     onClick={[Function]}
+    onContextMenu={[Function]}
     onFocus={[Function]}
     onKeyDown={[Function]}
     onKeyUp={[Function]}
@@ -32,11 +33,11 @@ exports[`Create a selection button for 1 items 1`] = `
     tabIndex={null}
   >
     <span
-      className="MuiIconButton-label-26"
+      className="MuiIconButton-label-30"
     >
       <svg
         aria-hidden="true"
-        className="MuiSvgIcon-root-30"
+        className="MuiSvgIcon-root-34"
         focusable="false"
         role="presentation"
         viewBox="0 0 24 24"
@@ -47,14 +48,14 @@ exports[`Create a selection button for 1 items 1`] = `
       </svg>
       <input
         checked={false}
-        className="MuiPrivateSwitchBase-input-20"
+        className="MuiPrivateSwitchBase-input-24"
         data-indeterminate={false}
         onChange={[Function]}
         type="checkbox"
       />
     </span>
     <span
-      className="MuiTouchRipple-root-39"
+      className="MuiTouchRipple-root-43"
     />
   </span>
 </td>

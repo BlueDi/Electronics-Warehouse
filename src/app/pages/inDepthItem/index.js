@@ -5,7 +5,6 @@ import { InDepthItemField } from './InDepthItemField';
 import EditButton from './EditButton';
 import { withCookies } from 'react-cookie';
 import { Loader } from '@common/components';
-import './styles/InDepthItem.scss';
 import { Grid } from 'semantic-ui-react';
 
 /**
@@ -735,14 +734,13 @@ class InDepthItem extends Component {
     return (
       <div>
         <InDepthItemField
-          style={{ textAlign: 'left', float: 'left' }}
           fieldName="description"
           fieldContent={this.state.description}
           editable={this.state.edit}
           handleChange={this.handleItemFieldChange}
         />
 
-        <Grid style={{ marginLeft: 20 }}>
+        <Grid>
           <Grid.Column width={7}>
             <Grid.Row>
               <InDepthItemField

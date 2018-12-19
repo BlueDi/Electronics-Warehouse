@@ -81,7 +81,6 @@ Array [
       <button
         className="ui fluid button"
         onClick={[Function]}
-        role="button"
       >
         Login
       </button>
@@ -171,7 +170,6 @@ Array [
       <button
         className="ui fluid button"
         onClick={[Function]}
-        role="button"
       >
         Login
       </button>
