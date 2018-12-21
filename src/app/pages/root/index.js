@@ -28,19 +28,17 @@ class Root extends Component {
 
     return (
       <AlertProvider template={AlertTemplate} {...options}>
-        <React.Fragment>
-          <Helmet {...HELMET} />
-          <Grid stretched style={{ height: '100%' }}>
-            <Grid.Row style={{ height: '10%' }}>
-              <Grid.Column>
-                <WHHeader />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row style={body_style}>
-              <Grid.Column>{renderRoutes(routes)}</Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </React.Fragment>
+        <Helmet {...HELMET} />
+        <Grid stretched style={{ height: '100%' }}>
+          <Grid.Row style={{ height: '10%' }}>
+            <Grid.Column>
+              <WHHeader />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row style={body_style}>
+            <Grid.Column>{renderRoutes(routes)}</Grid.Column>
+          </Grid.Row>
+        </Grid>
       </AlertProvider>
     );
   }
