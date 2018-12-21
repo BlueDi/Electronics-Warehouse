@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Layout renders properly 1`] = `
+<div
+  className="ui stretched grid"
+  style={
+    Object {
+      "height": "100%",
+    }
+  }
+>
+  <div
+    className="row"
+    style={
+      Object {
+        "height": "10%",
+      }
+    }
+  >
+    <div
+      className="column"
+    >
+      <div
+        className="ui active transition visible inverted dimmer"
+        onClick={[Function]}
+      >
+        <div
+          className="content"
+        >
+          <div
+            className="ui indeterminate inverted loader"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="row"
+    style={
+      Object {
+        "height": "90%",
+        "paddingLeft": "2%",
+        "paddingRight": "2%",
+      }
+    }
+  >
+    <div
+      className="column"
+    >
+      <div
+        className="ui active transition visible inverted dimmer"
+        onClick={[Function]}
+      >
+        <div
+          className="content"
+        >
+          <div
+            className="ui indeterminate inverted loader"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

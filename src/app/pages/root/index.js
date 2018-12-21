@@ -18,34 +18,39 @@ const options = {
   offset: '5px'
 };
 
+const body_style = {
+  height: '90%',
+  paddingLeft: '2%',
+  paddingRight: '2%'
+};
+
+const Layout = () => (
+  <Grid stretched style={{ height: '100%' }}>
+    <Grid.Row style={{ height: '10%' }}>
+      <Grid.Column>
+        <WHHeader />
+      </Grid.Column>
+    </Grid.Row>
+    <Grid.Row style={body_style}>
+      <Grid.Column>{renderRoutes(routes)}</Grid.Column>
+    </Grid.Row>
+  </Grid>
+);
+
 /**
  * Base of the app.
  * First component to be called.
  */
 class Root extends Component {
   render() {
-    const body_style = {
-      height: '90%',
-      paddingLeft: '2%',
-      paddingRight: '2%'
-    };
-
     return (
       <AlertProvider template={AlertTemplate} {...options}>
         <Helmet {...HELMET} />
-        <Grid stretched style={{ height: '100%' }}>
-          <Grid.Row style={{ height: '10%' }}>
-            <Grid.Column>
-              <WHHeader />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row style={body_style}>
-            <Grid.Column>{renderRoutes(routes)}</Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <Layout />
       </AlertProvider>
     );
   }
 }
 
+export { Layout };
 export default hot(module)(withCookies(Root));
