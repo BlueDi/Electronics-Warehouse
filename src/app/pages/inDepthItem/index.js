@@ -5,7 +5,7 @@ import { InDepthItemField } from './InDepthItemField';
 import EditButton from './EditButton';
 import { withCookies } from 'react-cookie';
 import { Loader } from '@common/components';
-import { Grid } from 'semantic-ui-react';
+import { Container, Grid } from 'semantic-ui-react';
 
 /**
  * Number of functions responsible for fetching item information from database, which needs to be obtained before we can render the item page
@@ -732,7 +732,7 @@ class InDepthItem extends Component {
     );
 
     return (
-      <div>
+      <Container>
         <InDepthItemField
           fieldName="description"
           fieldContent={this.state.description}
@@ -741,7 +741,7 @@ class InDepthItem extends Component {
         />
 
         <Grid>
-          <Grid.Column width={7}>
+          <Grid.Column width={8}>
             <Grid.Row>
               <InDepthItemField
                 fieldName="image"
@@ -765,9 +765,9 @@ class InDepthItem extends Component {
             </Grid.Row>
           </Grid.Column>
 
-          <Grid.Column width={9}>{rightColumnInformation}</Grid.Column>
+          <Grid.Column width={8}>{rightColumnInformation}</Grid.Column>
         </Grid>
-      </div>
+      </Container>
     );
   }
 
