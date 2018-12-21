@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import CompareItems from '../Compare';
+import CardGroup from '../CardGroup';
 
 var item1 = {
   description: 'BMW motor',
@@ -23,9 +23,13 @@ var item2 = {
   reference: '68760203'
 };
 
-describe('CompareItems', () => {
+describe('CardGroup', () => {
+  it('should be defined', () => {
+    expect(CardGroup).toBeDefined();
+  });
+
   it('renders properly', () => {
-    const component = renderer.create(<CompareItems items={[item1, item2]} />);
+    const component = renderer.create(<CardGroup items={[item1, item2]} />);
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });

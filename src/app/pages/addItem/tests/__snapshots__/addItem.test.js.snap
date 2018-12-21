@@ -269,7 +269,6 @@ exports[`<AddItem /> 1`] = `
               onFocus={[Function]}
               onMouseEnter={[Function]}
               onMouseLeave={[Function]}
-              role="button"
               style={
                 Object {
                   "marginLeft": "1em",
