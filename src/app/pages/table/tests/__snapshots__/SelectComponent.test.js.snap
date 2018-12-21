@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Create a selection button for 1 items 1`] = `
+exports[`SelectComponent creates a selection button for 1 item 1`] = `
 <td
   allCookies={Object {}}
   aria-sort={null}

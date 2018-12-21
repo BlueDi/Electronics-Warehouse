@@ -1,5 +1,6 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import TestRenderer from 'react-test-renderer';
+import { MemoryRouter as Router } from 'react-router-dom';
 import SelectComponent from '../SelectComponent';
 
 var item1 = {
@@ -13,8 +14,18 @@ var item1 = {
   reference: '213748227'
 };
 
-test('Create a selection button for 1 items', () => {
-  const component = renderer.create(<SelectComponent row={item1} />);
-  let tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
+describe('SelectComponent', () => {
+  it('should be defined', () => {
+    expect(SelectComponent).toBeDefined();
+  });
+
+  it('creates a selection button for 1 item', () => {
+    const component = TestRenderer.create(
+      <Router>
+        <SelectComponent row={item1} />
+      </Router>
+    );
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
