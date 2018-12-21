@@ -779,7 +779,7 @@ class InDepthItem extends Component {
     return this.state.isFetching ? (
       <Loader text="Preparing Item" />
     ) : (
-      <PageTitle key={'InDepthItem'} title="InDepthItem">
+      <PageTitle key="InDepthItem" title="InDepthItem">
         {this.renderItemFields()}
       </PageTitle>
     );

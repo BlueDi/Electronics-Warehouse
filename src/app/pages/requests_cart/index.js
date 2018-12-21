@@ -5,7 +5,6 @@ import { withAlert } from 'react-alert';
 import { withCookies } from 'react-cookie';
 import { service } from '@utils';
 import { PageTitle } from '@common/components';
-import { Divider } from 'semantic-ui-react';
 import { Authorization } from '@common/components';
 
 const professors_path = '/professors';
@@ -22,14 +21,20 @@ class RequestsCartList extends Component {
    */
   constructor(props) {
     super(props || undefined);
-    const { cookies } = this.props;
-
     this.state = {
-      columns_name: ['description', 'amount', 'details', 'location'],
-      data: cookies.get('cart'),
-      details: undefined,
+      columns: [
+        { name: 'description', title: 'Description' },
+        { name: 'amount', title: 'Amount' },
+        { name: 'details', title: 'Details' },
+        { name: 'location', title: 'Location' }
+      ],
+      tableColumnExtensions: [
+        { columnName: 'amount', width: 120, align: 'center' }
+      ],
+      editingColumnExtensions: [{ columnName: 'amount', editingEnabled: true }],
+      professors: [],
       professor_id: undefined,
-      professors: []
+      details: undefined
     };
   }
 
@@ -56,9 +61,37 @@ class RequestsCartList extends Component {
       });
   }
 
+  onCommitChanges({ changed, deleted }) {
+    let { data } = this.state;
+    if (deleted) {
+      const deletedSet = new Set(deleted);
+      data = data.filter(item => !deletedSet.has(item.id));
+    }
+    if (changed) {
+      var delete_rows = [];
+
+      data = data.map(item => {
+        if (changed[item.id]) {
+          if (changed[item.id].amount > 0) {
+            return { ...item, ...changed[item.id] };
+          } else if (changed[item.id].amount == 0) {
+            delete_rows.push(item.id);
+          }
+        }
+        return item;
+      });
+      if (delete_rows.length > 0) {
+        data = data.filter(item => !delete_rows.includes(item.id));
+      }
+    }
+    this.props.cookies.set('cart', data);
+    this.setState({ data });
+  }
+
   /**
    * Clears the requests cart
    */
+
   clearRequests = () => {
     let { cookies } = this.props;
     cookies.set('cart', []);
@@ -78,14 +111,14 @@ class RequestsCartList extends Component {
       const cart = [];
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        cart.push({ id: item.id, amount: item.amount });
+        cart.push({ id: item.id, name: item.description, amount: item.amount });
       }
       const body = {
         cart,
         details: this.state.details,
         professor_id: this.state.professor_id,
         user_id: this.props.cookies.get('id'),
-        user_name: this.props.cookies.get('user_name')
+        user_name: this.props.cookies.get('name')
       };
 
       service
@@ -184,23 +217,30 @@ class RequestsCartList extends Component {
     return (
       <Authorization param="can_request">
         <PageTitle title="Requests Table">
-          <RequestsTable cart={cart} />
-          <Divider hidden />
-          <Divider hidden />
-
-          <Grid>
-            <Grid.Row columns={3}>
-              <Grid.Column />
-              <Grid.Column>
-                <Form>
-                  {this.professorForm()}
-                  {this.requestDetails()}
-                  {this.buttons()}
-                </Form>
-              </Grid.Column>
-              <Grid.Column />
-            </Grid.Row>
-          </Grid>
+          <RequestsTable
+            items={cart}
+            columns={this.state.columns}
+            withDelete={true}
+            withEdit={true}
+            tableColumnExtensions={this.state.tableColumnExtensions}
+            editingColumnExtensions={this.state.editingColumnExtensions}
+            onCommitChanges={this.onCommitChanges.bind(this)}
+          />
+          <div style={{ paddingTop: '2em', float: 'left' }}>
+            <Form>
+              <Grid>
+                <Grid.Row columns={3}>
+                  <Grid.Column />
+                  <Grid.Column>
+                    {this.professorForm()}
+                    {this.requestDetails()}
+                    {this.buttons()}
+                  </Grid.Column>
+                  <Grid.Column />
+                </Grid.Row>
+              </Grid>
+            </Form>
+          </div>
         </PageTitle>
       </Authorization>
     );

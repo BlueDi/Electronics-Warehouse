@@ -4,6 +4,7 @@ import { withCookies } from 'react-cookie';
 import {
   PagingState,
   IntegratedPaging,
+  FilteringState,
   IntegratedFiltering,
   SortingState,
   EditingState,
@@ -15,6 +16,7 @@ import {
   Grid,
   Table,
   TableHeaderRow,
+  TableFilterRow,
   TableRowDetail,
   TableEditRow,
   TableEditColumn
@@ -197,41 +199,51 @@ const EditCell = props => {
  */
 class RequestsTable extends Component {
   /**
-   * Constructs the component
-   * @param {Object} props Properties of the components
+   * Constructs the Requests Table
+   * @param {Object} props                          The properties of the table
+   * @param {Object} props.items                    Items to show
+   * @param {Object} props.columns                  Columns to be shown
+   * @param {Boolean} props.withDelete              Whether to allow deletion of rows
+   * @param {Boolean} props.withEdit                Whether to allow edition of rows
+   * @param {Object} props.tableColumnExtensions    Extensions to the columns to be shown
+   * @param {Object} props.editingColumnExtensions  Extensions to the editing columns
+   * @param {Object} props.onCommitChanges           Callback after confirmation of row edit
    */
   constructor(props) {
     super(props);
-    const load = 'Loading...';
     this.state = {
-      columns: [
-        { name: 'description', title: 'Description' },
-        { name: 'amount', title: 'Amount' },
-        { name: 'details', title: 'Details' },
-        { name: 'location', title: 'Location' }
-      ],
-      tableColumnExtensions: [
-        { columnName: 'description', width: 200, align: 'center' },
-        { columnName: 'amount', width: 120, align: 'center' },
-        { columnName: 'location', width: 160, align: 'center' }
-      ],
-      cart: this.props.cart || [
-        {
-          description: load,
-          amount: load,
-          details: load,
-          location: load,
-          properties: load
-        }
-      ],
+      items: this.props.items,
+      columns: this.props.columns,
+      withDelete: this.props.withDelete,
+      withEdit: this.props.withEdit,
+      onCommitChanges: this.props.onCommitChanges,
       detailsColumns: ['details', 'properties'],
       rowChanges: {},
-      editingRowIds: []
+      editingRowIds: [],
+      editingColumnExtensions: this.props.editingColumnExtensions,
+      tableColumnExtensions: this.props.tableColumnExtensions
     };
-    this.commitChanges = this.commitChanges.bind(this);
     this.changeEditingRowIds = editingRowIds =>
       this.setState({ editingRowIds });
     this.changeRowChanges = rowChanges => this.setState({ rowChanges });
+  }
+
+  tableEditColumn(w_delete, w_edit) {
+    if (w_delete && w_edit) {
+      return (
+        <TableEditColumn
+          showDeleteCommand
+          showEditCommand
+          commandComponent={Command}
+        />
+      );
+    } else if (w_delete && !w_edit) {
+      return <TableEditColumn showDeleteCommand commandComponent={Command} />;
+    } else if (!w_delete && w_edit) {
+      console.log('Returning this');
+      return <TableEditColumn showEditCommand commandComponent={Command} />;
+    }
+    return undefined;
   }
 
   /**
@@ -240,15 +252,16 @@ class RequestsTable extends Component {
    * @param  {Object} deleted On components delete this is not undefined and contains information about it
    */
   commitChanges({ changed, deleted }) {
-    let { cart } = this.state;
+    let cart;
     if (deleted) {
       const deletedSet = new Set(deleted);
-      cart = cart.filter(item => !deletedSet.has(item.id));
+      cart = this.state.cart.filter(item => !deletedSet.has(item.id));
+      this.setState({ cart });
     }
     if (changed) {
       var delete_rows = [];
 
-      cart = cart.map(item => {
+      cart = this.state.cart.map(item => {
         if (changed[item.id]) {
           if (changed[item.id].amount > 0) {
             return { ...item, ...changed[item.id] };
@@ -259,11 +272,11 @@ class RequestsTable extends Component {
         return item;
       });
       if (delete_rows.length > 0) {
-        cart = cart.filter(item => !delete_rows.includes(item.id));
+        cart = this.state.cart.filter(item => !delete_rows.includes(item.id));
       }
+      this.setState({ cart });
     }
-    this.props.cookies.set('cart', cart);
-    this.setState({ cart });
+    return undefined;
   }
 
   /**
@@ -273,18 +286,20 @@ class RequestsTable extends Component {
   render() {
     return (
       <Grid
-        rows={this.props.cart || this.state.cart}
+        rows={this.state.items}
         columns={this.state.columns}
         getRowId={row => row.id}
       >
+        <FilteringState />
+        <IntegratedFiltering />
         <EditingState
-          columnExtensions={[{ columnName: 'amount', editingEnabled: true }]}
+          columnExtensions={this.state.editingColumnExtensions}
           columnEditingEnabled={false}
           editingRowIds={this.state.editingRowIds}
           onEditingRowIdsChange={this.changeEditingRowIds}
           rowChanges={this.state.rowChanges}
           onRowChangesChange={this.changeRowChanges}
-          onCommitChanges={this.commitChanges}
+          onCommitChanges={this.state.onCommitChanges}
         />
         <IntegratedFiltering />
         <SortingState
@@ -300,12 +315,9 @@ class RequestsTable extends Component {
           rowComponent={TableRow}
           cellComponent={Cell}
         />
+        <TableFilterRow />
         <TableEditRow cellComponent={EditCell} />
-        <TableEditColumn
-          showDeleteCommand
-          showEditCommand
-          commandComponent={Command}
-        />
+        {this.tableEditColumn(this.state.withDelete, this.state.withEdit)}
         <TableHeaderRow showSortingControls sortLabelComponent={SortLabel} />
         <TableRowDetail contentComponent={RowDetail} />
       </Grid>

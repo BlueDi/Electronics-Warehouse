@@ -8,6 +8,7 @@ const cn = {
   password: 'postgres'
 };
 
+
 const db = pgp(cn);
 
 module.exports = db;

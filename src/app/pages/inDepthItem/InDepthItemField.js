@@ -5,6 +5,7 @@ import {
   Breadcrumb,
   Input,
   Button,
+  Divider,
   Message
 } from 'semantic-ui-react';
 
@@ -27,10 +28,10 @@ export class InDepthItemField extends Component {
       return this.descriptionField(this.props.fieldContent);
     },
     'user comments': () => {
-      return this.comments(this.props.fieldContent, this.props.fieldName);
+      return this.comments(this.props.fieldContent);
     },
     Workflow: () => {
-      return this.workflow(this.props.fieldContent, this.props.fieldName);
+      return this.workflow(this.props.fieldContent);
     },
     'add user comment': () => {
       return this.userComments(this.props.fieldContent, this.props.fieldName);
@@ -111,40 +112,38 @@ export class InDepthItemField extends Component {
     );
   };
 
-  comments = (content, name) => {
+  comments = content => {
     return (
       <React.Fragment>
-        {name}: <br />
-        <HTMLEditor displayOnly={true} value={content} />
+        <HTMLEditor header="User Comments" displayOnly={true} value={content} />
+        <Divider hidden />
       </React.Fragment>
     );
   };
 
-  workflow = (content, name) => {
+  workflow = content => {
     return (
       <React.Fragment>
-        {name}: <br />
-        <HTMLEditor displayOnly={true} value={content} />
+        <HTMLEditor header="Workflow" displayOnly={true} value={content} />
+        <Divider hidden />
       </React.Fragment>
     );
   };
 
   userComments = (content, name) => {
     return (
-      <div style={{ marginTop: 20 }}>
+      <React.Fragment>
         <HTMLEditor
           className={name.replace(/ /g, '_')}
           canvasType="code"
           height="200"
+          header="Add comment"
           onChange={this.props.handleChange[0]}
+          onSave={this.props.handleChange[1]}
           value={content}
         />
-        <div style={{ marginBottom: 10, position: 'relative' }}>
-          <Button primary key={name} onClick={this.props.handleChange[1]}>
-            Add comment
-          </Button>
-        </div>
-      </div>
+        <Divider section hidden />
+      </React.Fragment>
     );
   };
 
@@ -258,14 +257,10 @@ export class InDepthItemField extends Component {
       case 'user comments': {
         return (
           <div style={{ marginTop: 3 }}>
-            <div>
-              <h3>{this.props.fieldName}</h3>
-            </div>
             <HTMLEditor
               className={this.props.fieldName.replace(/ /g, '_')}
               canvasType="code"
-              height="450"
-              width="625"
+              header="User Comments"
               onChange={this.props.handleChange}
               value={this.props.fieldContent}
             />

@@ -37,7 +37,6 @@ class SignupForm extends Component {
   };
 
   setupLoggedUser = value => {
-    console.log(value);
     const { cookies } = this.props;
     for (var property in value) {
       cookies.set(property, value[property], { path: '/' });
