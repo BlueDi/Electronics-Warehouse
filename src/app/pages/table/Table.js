@@ -25,10 +25,9 @@ import {
   Toolbar,
   TableSelection
 } from '@devexpress/dx-react-grid-material-ui';
-import { Button, Icon, Image, Grid as SemanticGrid } from 'semantic-ui-react';
-import CompareItems from './Compare';
+import { Button, Icon, Image } from 'semantic-ui-react';
+import TablePlugins from './ToolbarPlugins';
 import SelectComponent from './SelectComponent';
-import { AddToCart } from '@common/components';
 import InDepthItem from '@pages/inDepthItem';
 
 const toLowerCase = value => String(value).toLowerCase();
@@ -106,7 +105,6 @@ class TableRow extends Component {
         render={({ history }) => (
           <Table.Row
             {...this.props}
-            key={this.props.tableRow.row.id}
             onClick={e =>
               this.handleClick(history, this.props.tableRow.row.id, e)
             }
@@ -120,8 +118,6 @@ class TableRow extends Component {
 /**
  * Creates a table to display our items.
  *
- * @param columns Object The columns to be shown
- * @param columnsOrder Array The order of the columns to be shown
  * @param components Array of components to be displayed
  * @param withDetails Boolean if the table should display the item page
  * @param withImages Boolean, if true then components should have a param 'image'
@@ -132,9 +128,9 @@ class ComponentsTable extends Component {
     super(props);
     this.state = {
       rows: this.props.components,
-      columns: this.props.columns,
+      columns: [],
       columnsOrder: this.props.columnsOrder,
-      tableColumnExtensions: this.props.tableColumnExtensions,
+      tableColumnExtensions: this.props.tableColumnExtensions || [],
       detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
       selection: [],
@@ -152,7 +148,7 @@ class ComponentsTable extends Component {
   }
 
   componentDidMount() {
-    // this.mount_header();
+    this.mount_header();
   }
 
   changeSelection = selection => this.setState({ selection });
@@ -188,14 +184,6 @@ class ComponentsTable extends Component {
       integratedFilteringColumnExtensions
     } = this.state;
 
-    let compare_items;
-    let addToCart;
-    if (withSelection && selection.length > 0) {
-      var selected_items = this.getItemsFromSelection();
-      compare_items = <CompareItems items={selected_items} />;
-      addToCart = <AddToCart items={selected_items} />;
-    }
-
     return (
       <Grid rows={rows} columns={columns}>
         <DragDropProvider />
@@ -216,7 +204,7 @@ class ComponentsTable extends Component {
             onSelectionChange={this.changeSelection}
           />
         )}
-        <PagingState defaultCurrentPage={0} pageSize={7} />
+        <PagingState defaultCurrentPage={0} pageSize={6} />
         <IntegratedPaging />
         <Table
           rowComponent={TableRow}
@@ -229,6 +217,7 @@ class ComponentsTable extends Component {
         )}
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
         <Toolbar />
+        <TablePlugins selection={this.getItemsFromSelection()} />
         <TableFilterRow />
         <ColumnChooser />
         <PagingPanel />
@@ -238,10 +227,6 @@ class ComponentsTable extends Component {
             selectionColumnWidth={85}
           />
         )}
-        <SemanticGrid.Column>
-          {withSelection && compare_items}
-          {addToCart}
-        </SemanticGrid.Column>
       </Grid>
     );
   }
