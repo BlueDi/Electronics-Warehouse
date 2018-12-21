@@ -1,6 +1,5 @@
 import React from 'react';
 import TestRenderer from 'react-test-renderer';
-import { MemoryRouter as Router } from 'react-router-dom';
 import SelectComponent from '../SelectComponent';
 
 var item1 = {
@@ -20,11 +19,7 @@ describe('SelectComponent', () => {
   });
 
   it('creates a selection button for 1 item', () => {
-    const component = TestRenderer.create(
-      <Router>
-        <SelectComponent row={item1} />
-      </Router>
-    );
+    const component = TestRenderer.create(<SelectComponent row={item1} />);
     let tree = component.toJSON();
     expect(tree).toMatchSnapshot();
   });
