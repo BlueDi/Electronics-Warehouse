@@ -81,16 +81,17 @@ class AddToCart extends Component {
 
     return simple ? (
       <Input
+        floated="left"
+        fluid
         action={<Button color="teal" icon="cart" onClick={this.handleClick} />}
         actionPosition="left"
-        fluid
         placeholder="Buy"
         name="amount"
         value={this.state.amount}
         onChange={this.handleChange}
       />
     ) : (
-      <Button onClick={this.handleClick}>Add to Cart</Button>
+      <Button floated="left" onClick={this.handleClick} content="Add to Cart" />
     );
   }
 

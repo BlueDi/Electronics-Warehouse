@@ -3,10 +3,10 @@ import { Route } from 'react-router-dom';
 import {
   PagingState,
   IntegratedPaging,
-  SearchState,
-  IntegratedFiltering,
   SortingState,
   IntegratedSorting,
+  FilteringState,
+  IntegratedFiltering,
   RowDetailState,
   DataTypeProvider,
   SelectionState
@@ -20,16 +20,25 @@ import {
   PagingPanel,
   ColumnChooser,
   TableColumnVisibility,
+  TableFilterRow,
   TableRowDetail,
-  SearchPanel,
   Toolbar,
   TableSelection
 } from '@devexpress/dx-react-grid-material-ui';
-import { Button, Icon, Image } from 'semantic-ui-react';
+import { Button, Icon, Image, Grid as SemanticGrid } from 'semantic-ui-react';
 import CompareItems from './Compare';
 import SelectComponent from './SelectComponent';
 import { AddToCart } from '@common/components';
 import InDepthItem from '@pages/inDepthItem';
+
+const toLowerCase = value => String(value).toLowerCase();
+const contains = (value, filter) =>
+  toLowerCase(value).indexOf(toLowerCase(filter.value)) !== -1;
+var obj_contains = function(value, filter) {
+  return Object.values(value).some(element => {
+    return contains(element, filter);
+  });
+};
 
 const SortingIcon = ({ direction }) =>
   direction === 'asc' ? <Icon name="arrow up" /> : <Icon name="arrow down" />;
@@ -38,7 +47,7 @@ const SortLabel = ({ onSort, children, direction }) => {
   return children.props.children !== 'image' &&
     children.props.children !== 'details' &&
     children.props.children !== 'properties' ? (
-    <Button fluid icon labelPosition="right" onClick={onSort}>
+    <Button size="small" fluid icon onClick={onSort}>
       {children}
       {direction && <SortingIcon direction={direction} />}
     </Button>
@@ -97,6 +106,7 @@ class TableRow extends Component {
         render={({ history }) => (
           <Table.Row
             {...this.props}
+            key={this.props.tableRow.row.id}
             onClick={e =>
               this.handleClick(history, this.props.tableRow.row.id, e)
             }
@@ -110,6 +120,8 @@ class TableRow extends Component {
 /**
  * Creates a table to display our items.
  *
+ * @param columns Object The columns to be shown
+ * @param columnsOrder Array The order of the columns to be shown
  * @param components Array of components to be displayed
  * @param withDetails Boolean if the table should display the item page
  * @param withImages Boolean, if true then components should have a param 'image'
@@ -119,13 +131,20 @@ class ComponentsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [],
+      rows: this.props.components,
+      columns: this.props.columns,
       columnsOrder: this.props.columnsOrder,
-      tableColumnExtensions: [],
+      tableColumnExtensions: this.props.tableColumnExtensions,
       detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
-      rows: this.props.components,
       selection: [],
+      integratedFilteringColumnExtensions: [
+        { columnName: 'details', predicate: obj_contains },
+        { columnName: 'properties', predicate: obj_contains }
+      ],
+      filteringStateColumnExtensions: [
+        { columnName: 'image', filteringEnabled: false }
+      ],
       withDetails: this.props.withDetails,
       withImages: this.props.withImages,
       withSelection: this.props.withSelection
@@ -133,7 +152,7 @@ class ComponentsTable extends Component {
   }
 
   componentDidMount() {
-    this.mount_header();
+    // this.mount_header();
   }
 
   changeSelection = selection => this.setState({ selection });
@@ -164,7 +183,9 @@ class ComponentsTable extends Component {
       selection,
       withDetails,
       withImages,
-      withSelection
+      withSelection,
+      filteringStateColumnExtensions,
+      integratedFilteringColumnExtensions
     } = this.state;
 
     let compare_items;
@@ -178,8 +199,10 @@ class ComponentsTable extends Component {
     return (
       <Grid rows={rows} columns={columns}>
         <DragDropProvider />
-        <SearchState />
-        <IntegratedFiltering />
+        <FilteringState columnExtensions={filteringStateColumnExtensions} />
+        <IntegratedFiltering
+          columnExtensions={integratedFilteringColumnExtensions}
+        />
         <SortingState
           defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
         />
@@ -206,7 +229,7 @@ class ComponentsTable extends Component {
         )}
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
         <Toolbar />
-        <SearchPanel />
+        <TableFilterRow />
         <ColumnChooser />
         <PagingPanel />
         {withSelection && (
@@ -215,8 +238,10 @@ class ComponentsTable extends Component {
             selectionColumnWidth={85}
           />
         )}
-        {withSelection && compare_items}
-        {addToCart}
+        <SemanticGrid.Column>
+          {withSelection && compare_items}
+          {addToCart}
+        </SemanticGrid.Column>
       </Grid>
     );
   }

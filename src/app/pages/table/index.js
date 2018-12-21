@@ -14,8 +14,33 @@ class WHTable extends Component {
     super(props);
 
     this.state = {
+      columns: [
+        { name: 'description', title: 'Description' },
+        { name: 'image', title: 'Image' },
+        { name: 'total_stock', title: 'Total Stock' },
+        { name: 'free_stock', title: 'Free Stock' },
+        { name: 'last_price', title: 'Last Price' },
+        { name: 'location', title: 'Location' },
+        { name: 'user_comments', title: 'User Comments' },
+        { name: 'details', title: 'Details' },
+        { name: 'reference', title: 'Reference' },
+        { name: 'packaging_id', title: 'Packaging ID' },
+        { name: 'last_edit', title: 'Last Edit' },
+        { name: 'properties', title: 'Properties' },
+        { name: 'category', title: 'Category' }
+      ],
+      tableColumnExtensions: [
+        { columnName: 'total_stock', align: 'center' },
+        { columnName: 'free_stock', align: 'center' },
+        { columnName: 'last_price', align: 'center' },
+        { columnName: 'reference', align: 'center' },
+        { columnName: 'user_comments', wordWrapEnabled: true },
+        { columnName: 'last_edit', align: 'center' }
+      ],
       id: this.props.match.params.id,
-      isFetching: true
+      fetchDone: 0,
+      fetchFailed: 0,
+      fetchEnd: 1
     };
   }
 
@@ -38,6 +63,7 @@ class WHTable extends Component {
         });
       })
       .catch(e => {
+        this.setState({ fetchEnd: -1 });
         throw e;
       });
   }
@@ -51,14 +77,13 @@ class WHTable extends Component {
         );
       })
       .catch(e => {
-        this.setState({
-          isFetching: false
-        });
+        this.setState({ fetchEnd: -1 });
         throw e;
       });
   }
 
   getItemsAdditionalInfo(components) {
+    this.setState({ fetchEnd: components.length * 2 });
     for (var i in components) {
       const id = components[i].id - 1;
       this.getItemProperties(id);
@@ -82,12 +107,14 @@ class WHTable extends Component {
         this.setState(
           {
             components: newComponents,
-            isFinishedProperties: true
+            isFinishedProperties: true,
+            fetchDone: this.state.fetchDone + 1
           },
           this.checkFinishedGets()
         );
       })
       .catch(e => {
+        this.setState({ fetchFailed: this.state.fetchFailed + 1 });
         throw e;
       });
   }
@@ -104,12 +131,14 @@ class WHTable extends Component {
         this.setState(
           {
             components: newComponents,
-            isFinishedCategory: true
+            isFinishedCategory: true,
+            fetchDone: this.state.fetchDone + 1
           },
           this.checkFinishedGets()
         );
       })
       .catch(e => {
+        this.setState({ fetchFailed: this.state.fetchFailed + 1 });
         throw e;
       });
   }
@@ -139,12 +168,16 @@ class WHTable extends Component {
   }
 
   render() {
-    return this.state.isFetching ? (
+    const { fetchDone, fetchFailed, fetchEnd } = this.state;
+
+    return fetchDone + fetchFailed < fetchEnd ? (
       <Loader text="Preparing Table" />
     ) : (
       <PageTitle title="Table">
         {this.renderUserFunctions()}
         <ComponentsTable
+          tableColumnExtensions={this.state.tableColumnExtensions}
+          columns={this.state.columns}
           components={this.state.components}
           columnsOrder={this.default_column_order()}
           withDetails
