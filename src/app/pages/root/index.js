@@ -18,6 +18,10 @@ const options = {
   offset: '5px'
 };
 
+/**
+ * Base of the app.
+ * First component to be called.
+ */
 class Root extends Component {
   render() {
     const body_style = {

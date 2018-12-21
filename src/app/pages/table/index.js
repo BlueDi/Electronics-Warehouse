@@ -9,6 +9,9 @@ const urlCategories = `/all_categories`;
 const urlItemCategory = id => `/item_category/${id}`;
 const urlItemProperties = id => `/item_properties2/${id}`;
 
+/**
+ * Creates the table with all the components of the warehouse.
+ */
 class WHTable extends Component {
   constructor(props) {
     super(props);

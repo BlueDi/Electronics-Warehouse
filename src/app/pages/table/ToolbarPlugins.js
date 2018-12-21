@@ -8,18 +8,29 @@ import {
 import CompareItems from './Compare';
 import { AddToCart } from '@common/components';
 
+/**
+ * Creates the buttons in the toolbar.
+ * One button for compare the selected items.
+ * One button to add the selected items to the cart.
+ *
+ * @param props Array of selected items
+ */
 const ActionsForSelected = props => {
-  const { selection } = props;
-  if (typeof selection !== 'undefined' && selection.length > 0) {
+  if (typeof props !== 'undefined' && props.length > 0) {
     return (
       <React.Fragment>
-        <CompareItems items={selection} />
-        <AddToCart items={selection} />
+        <CompareItems items={props} />
+        <AddToCart items={props} />
       </React.Fragment>
     );
   } else return <React.Fragment />;
 };
 
+/**
+ * Plugin to render buttons in the table toolbar.
+ *
+ * @param selection Array of selected items
+ */
 class TablePlugins extends Component {
   render() {
     return (
@@ -27,7 +38,7 @@ class TablePlugins extends Component {
         <Template name="toolbarContent">
           <TemplatePlaceholder />
           <TemplateConnector>
-            {() => ActionsForSelected(this.props)}
+            {() => ActionsForSelected(this.props.selection)}
           </TemplateConnector>
         </Template>
       </Plugin>
