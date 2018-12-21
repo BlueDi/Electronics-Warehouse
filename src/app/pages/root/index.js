@@ -7,7 +7,7 @@ import { Provider as AlertProvider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
 import { HELMET } from '@config';
 import { routes } from '@app/routes';
-import { WHHeader, WHMenu } from '@pages';
+import { WHHeader } from '@pages';
 import '@common/styles/global.css';
 import { Grid } from 'semantic-ui-react';
 
@@ -20,21 +20,27 @@ const options = {
 
 class Root extends Component {
   render() {
+    const body_style = {
+      height: '90%',
+      paddingLeft: '2%',
+      paddingRight: '2%'
+    };
+
     return (
       <AlertProvider template={AlertTemplate} {...options}>
-        <Helmet {...HELMET} />
-        <Grid stretched style={{ height: '100vh' }}>
-          <Grid.Row style={{ height: '10%' }}>
-            <Grid.Column width={16}>
-              <WHHeader />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row style={{ height: '90%', padding: '0px' }}>
-            <Grid.Column width={16}>
-              <WHMenu key={'menu'} content={renderRoutes(routes)} />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <React.Fragment>
+          <Helmet {...HELMET} />
+          <Grid stretched style={{ height: '100%' }}>
+            <Grid.Row style={{ height: '10%' }}>
+              <Grid.Column>
+                <WHHeader />
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row style={body_style}>
+              <Grid.Column>{renderRoutes(routes)}</Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </React.Fragment>
       </AlertProvider>
     );
   }

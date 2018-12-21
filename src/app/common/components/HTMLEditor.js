@@ -1,6 +1,21 @@
 import React, { Component } from 'react';
-import { Button, TextArea, Divider } from 'semantic-ui-react';
+import {
+  Button,
+  TextArea,
+  Divider,
+  Grid,
+  Header,
+  Message,
+  Form
+} from 'semantic-ui-react';
 import ReactHtmlParser from 'react-html-parser';
+
+var replaceNL = function(text) {
+  if (text) {
+    return text.replace('\r\n\r\n', '<br/>').replace('\n\n', '<br/>');
+  }
+  return '';
+};
 
 /**
  * Default Editor type
@@ -20,17 +35,17 @@ const defaultState = {
  * - displayOnly: If desired, it can only allow html display, and no edition, by passing "displayOnly" prop with true value
  * - value: Value being displayed on the editor
  * - onChange: Event announcing the HTML code has been changed
+ * - onSave: Event announcing the HTML code has been saved
+ * - onReset: Event announcing the HTML code should be resetted (if undefined no button will appear)
  * - width: canvas width (default is 700)
  * - height: canvas height (default is 400)
  */
 class HTMLEditor extends Component {
   constructor(props) {
     super(props);
-
-    let displayOnly = props.displayOnly;
     let canvasType;
 
-    if (displayOnly) {
+    if (props.displayOnly) {
       canvasType = 'preview';
     } else if (props.canvasType === 'code' || props.canvasType === 'preview') {
       canvasType = props.canvasType;
@@ -39,63 +54,89 @@ class HTMLEditor extends Component {
     }
 
     this.state = {
-      displayOnly: displayOnly,
+      displayOnly: this.props.displayOnly,
       canvasType: canvasType,
+      header: this.props.header,
+      value: this.props.value,
+      onChange: this.props.onChange,
+      onSave: this.props.onSave,
+      onReset: this.props.onReset,
       height: props.height ? parseInt(props.height) : 400,
       width: props.width ? parseInt(props.width) : 700
     };
-
-    this.setCodeCanvas = this.setCodeCanvas.bind(this);
-    this.setPreviewCanvas = this.setPreviewCanvas.bind(this);
   }
 
-  /**
-   * Changes the editor view to "code" mode
-   */
-  setCodeCanvas() {
-    this.setState({
-      canvasType: 'code'
-    });
+  setCanvasCode() {
+    this.setState({ canvasType: 'code' });
   }
 
-  /**
-   * Changes the editor view to "preview" mode
-   */
-  setPreviewCanvas() {
-    this.setState({
-      canvasType: 'preview'
-    });
+  setCanvasPreview() {
+    this.setState({ canvasType: 'preview' });
   }
 
-  /**
-   * Gives the code and preview buttons
-   * The button corresponding to the currently selected mode is highlighted
-   */
-  getCanvasButtons() {
-    let writeActive = this.state.canvasType === 'code';
-    let previewActive = this.state.canvasType === 'preview';
-
-    return (
-      <React.Fragment>
-        <Button.Group basic>
+  renderHeader() {
+    let writing = this.state.canvasType === 'code',
+      previewing = this.state.canvasType === 'preview';
+    let name = (
+      <Grid.Column>
+        <Header as="h2" content={this.state.header} />
+      </Grid.Column>
+    );
+    let buttons = (
+      <Grid.Column>
+        <Button.Group floated="right">
           <Button
-            compact
-            size="mini"
-            active={writeActive}
-            onClick={this.setCodeCanvas}
-            content="Write"
+            labelPosition="left"
+            toggle
+            active={writing}
+            icon="edit"
+            size="medium"
+            content={writing ? 'Writing...' : 'Write'}
+            onClick={this.setCanvasCode.bind(this)}
           />
           <Button
-            compact
-            size="mini"
-            active={previewActive}
-            onClick={this.setPreviewCanvas}
-            content="Preview"
+            labelPosition="right"
+            toggle
+            active={previewing}
+            icon="eye"
+            size="medium"
+            content={previewing ? 'Previewing...' : 'Preview'}
+            onClick={this.setCanvasPreview.bind(this)}
           />
         </Button.Group>
-        <Divider
-          style={{ marginTop: 1, marginBottom: 1, width: this.state.width }}
-        />
+      </Grid.Column>
+    );
+
+    return (
+      <Grid>
+        <Grid.Row columns={2}>
+          {name}
+          {!this.state.displayOnly && buttons}
+        </Grid.Row>
+      </Grid>
+    );
+  }
+
+  renderFooter() {
+    return (
+      <React.Fragment>
+        <Divider clearing />
+        {this.state.onSave && (
+          <Button
+            floated="left"
+            icon="save"
+            content="Save"
+            onClick={this.state.onSave}
+          />
+        )}
+        {this.state.onReset && (
+          <Button
+            floated="right"
+            icon="undo"
+            content="Reset"
+            onClick={this.state.onReset}
+          />
+        )}
       </React.Fragment>
     );
   }
@@ -106,18 +147,7 @@ class HTMLEditor extends Component {
    */
   getHTMLPreview() {
     return (
-      <div
-        style={{
-          backgroundColor: '#ebebe4',
-          marginBottom: 4,
-          height: this.state.height,
-          width: this.state.width,
-          overflowY: 'scroll',
-          fontSize: '12px'
-        }}
-      >
-        {ReactHtmlParser(this.props.value)}
-      </div>
+      <Message fluid content={ReactHtmlParser(replaceNL(this.props.value))} />
     );
   }
 
@@ -126,18 +156,20 @@ class HTMLEditor extends Component {
    */
   getHTMLCodeEditor() {
     return (
-      <TextArea
-        className={this.props.className}
-        style={{
-          height: this.state.height,
-          width: this.state.width,
-          overflowY: 'scroll',
-          fontSize: '12px'
-        }}
-        placeholder="Add a comment"
-        onChange={this.props.onChange}
-        value={this.props.value}
-      />
+      <Form>
+        <TextArea
+          fluid
+          className={this.props.className}
+          style={{
+            minHeight: 80,
+            overflowY: 'scroll',
+            fontSize: '12px'
+          }}
+          placeholder="Write something"
+          onChange={this.props.onChange}
+          value={this.props.value}
+        />
+      </Form>
     );
   }
 
@@ -149,10 +181,11 @@ class HTMLEditor extends Component {
   render() {
     return (
       <React.Fragment>
-        {!this.state.displayOnly && this.getCanvasButtons()}
-
+        {this.renderHeader()}
+        <Divider style={{ marginTop: 8, marginBottom: 8 }} />
         {this.state.canvasType === 'code' && this.getHTMLCodeEditor()}
         {this.state.canvasType === 'preview' && this.getHTMLPreview()}
+        {!this.state.displayOnly && this.renderFooter()}
       </React.Fragment>
     );
   }

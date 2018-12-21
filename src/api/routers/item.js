@@ -71,7 +71,7 @@ itemRouter.post('/add_new_item', async (req, res) => {
     VALUES ('${body.description}', '${body.image}', '${body.stock}', '${
     body.stock
   }',
-             '${body.price}', '${body.location}', '', 
+             '${body.price}', '${body.location}', '',
               '${body.details}', '${body.manufacturer}', '${
     body.reference
   }', '${new_packaging_id}',

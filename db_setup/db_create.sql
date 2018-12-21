@@ -90,6 +90,7 @@ CREATE TABLE request_workflow (
 	date_manager_evaluated TIMESTAMP WITH TIME ZONE,
 	cancelled BOOLEAN NOT NULL,
 	professor_accept BOOLEAN,
+  professor_cost_center TEXT,
 	manager_accept BOOLEAN,
 	purpose TEXT NOT NULL,
 	workflow TEXT,
@@ -105,5 +106,6 @@ CREATE TABLE request_items (
 	request_id INT NOT NULL,
 	item_id INT NOT NULL,
 	count REAL NOT NULL CHECK (count > 0),
+  returned REAL NOT NULL CHECK (returned >= 0 AND returned <= count) DEFAULT 0,
 	FOREIGN KEY(request_id) REFERENCES request_workflow(id),
 	FOREIGN KEY(item_id) REFERENCES item(id));

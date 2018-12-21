@@ -1,16 +1,40 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`HTMLEditor Field Render 1`] = `
-<div
-  style={
-    Object {
-      "backgroundColor": "#ebebe4",
-      "fontSize": "12px",
-      "height": 400,
-      "marginBottom": 4,
-      "overflowY": "scroll",
-      "width": 700,
+Array [
+  <div
+    className="ui grid"
+  >
+    <div
+      className="two column row"
+    >
+      <div
+        className="column"
+      >
+        <h2
+          className="ui header"
+        />
+      </div>
+    </div>
+  </div>,
+  <div
+    className="ui divider"
+    style={
+      Object {
+        "marginBottom": 8,
+        "marginTop": 8,
+      }
     }
-  }
-/>
+  />,
+  <div
+    className="ui message"
+    fluid={true}
+  >
+    <div
+      className="content"
+    >
+      <p />
+    </div>
+  </div>,
+]
 `;

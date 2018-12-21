@@ -1,54 +1,61 @@
 import React, { Component } from 'react';
-import { PageTitle } from '@common/components';
+import {
+  Header,
+  Grid,
+  Input,
+  Button,
+  Divider,
+  Message
+} from 'semantic-ui-react';
+import { PageTitle, Loader } from '@common/components';
 import { service } from '@utils';
 import { withCookies } from 'react-cookie';
 import { Redirect } from 'react-router-dom';
-import { InDepthItemField } from '@pages/inDepthItem/InDepthItemField';
-import { RequestButtons } from './RequestButtons';
-import '@common/styles/global.css';
+import RequestInfoGrid from './RequestInfoGrid';
 
+/**
+ * Page of a single request
+ * @extends Component
+ */
 class Request extends Component {
+  /**
+   * Constructor of the page
+   * @param {Object} props The properties of the component
+   */
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.id || this.props.match.params.id,
-      date_sent: 'UNKNOWN',
-      date_cancelled: 'UNKNOWN',
-      date_professor_evaluated: 'UNKNOWN',
-      date_manager_evaluated: 'UNKNOWN',
-      cancelled: 'UNKNOWN',
-      professor_accept: 'UNKNOWN',
-      manager_accept: 'UNKNOWN',
-      purpose: 'UNKNOWN',
-      workflow: 'UNKNOWN',
-      requester_id: 'UNKNOWN',
-      professor_id: 'UNKNOWN',
-      manager_id: 'UNKNOWN',
-      requester: 'UNKNOWN',
-      professor: 'UNKNOWN',
-      manager: 'UNKNOWN',
-      items: [],
-      edit: false,
+      id: this.props.id || props.match.params.id,
+      user_permissions: -1,
+      cost_center: undefined,
+      error: false,
       fetching: 0,
-      user_id: props.cookies.get('id') || -1,
-      user_permissions: props.cookies.get('user_permissions') || -1
+      user_id: this.props.cookies.get('id') || -1,
+      items: undefined,
+      request: undefined
     };
-
-    //button handlers
-    this.handleAccept = this.handleAccept.bind(this);
-    this.handleReject = this.handleReject.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.handleSaveEdition = this.handleSaveEdition.bind(this);
-    this.handleCancelEdition = this.handleCancelEdition.bind(this);
-    this.handleRequestFieldChange = this.handleRequestFieldChange.bind(this);
   }
 
+  /**
+   * When component has mounted
+   */
   componentDidMount() {
     this.getRole();
     this.getRequestInfo();
     this.getRequestItems();
   }
 
+  /**
+   * Callback function when cost center is altered
+   * @param  {Object} e Event representing the change
+   */
+  costCenterChange(e) {
+    this.setState({ cost_center: e.target.value, error: false });
+  }
+
+  /**
+   * Gets the user permissions from the server
+   */
   getRole() {
     if (this.state.user_id === -1) return;
 
@@ -66,29 +73,17 @@ class Request extends Component {
       });
   }
 
+  /**
+   * Gets the request info from the server
+   */
   getRequestInfo() {
     const apiUrl = `/request/${this.state.id}`;
 
     service
       .get(apiUrl)
       .then(response => {
-        this.setState(response.data[0]);
-        this.setState({ fetching: this.state.fetching + 1 });
-      })
-      .catch(e => {
-        throw e;
-      });
-  }
-
-  getRequestItems() {
-    const apiUrl = `/request_items/${this.state.id}`;
-    service
-      .get(apiUrl)
-      .then(response => {
-        console.log('items', response.data);
-
         this.setState({
-          items: response.data,
+          request: response.data[0],
           fetching: this.state.fetching + 1
         });
       })
@@ -97,170 +92,230 @@ class Request extends Component {
       });
   }
 
-  editRequestWorkflow() {
-    const apiUrl = `/request_workflow_update`;
+  /**
+   * Fetches the items associated with the request from the server
+   */
+  getRequestItems() {
+    const apiUrl = `/request_items/${this.state.id}`;
     service
-      .post(apiUrl, this.state)
+      .get(apiUrl)
       .then(response => {
-        console.log('edit workflow response', response.data);
-      })
-      .then(response => {
-        this.componentDidMount();
-        return response;
+        let items = response.data;
+        items.forEach(function(item) {
+          item.image = item.image.data
+            .map(x => String.fromCharCode(x))
+            .join('');
+          item.details = {
+            details: item.details,
+            manufacturer: item.manufacturer
+          };
+        });
+        this.setState({
+          items: response.data || [],
+          fetching: this.state.fetching + 1
+        });
       })
       .catch(e => {
         throw e;
       });
   }
 
-  handleAccept() {
-    let apiUrl = `/none`;
-    if (this.state.user_permissions === 2)
+  /**
+   * Generic callback function to handle a decision to either accept or reject the request
+   * @param  {Boolean} is_accept Whether the decision was to accept or not
+   */
+  handleDecision(is_accept) {
+    let cost_center = this.state.cost_center;
+    let apiUrl = `/none`,
+      acceptID = undefined,
+      dateID = undefined,
+      is_manager = this.state.user_permissions === 3,
+      is_professor = this.state.user_permissions === 2;
+    if (is_professor) {
       apiUrl = `/request_evaluate_professor`;
-    else if (this.state.user_permissions === 3)
+      acceptID = 'professor_accept';
+      dateID = 'date_professor_evaluated';
+    } else if (is_manager) {
       apiUrl = `/request_evaluate_manager`;
-
-    const reqBody = { id: this.state.id, accept: true };
-    service
-      .post(apiUrl, reqBody)
-      .then(response => {
-        console.log('edit item response', response.data);
-      })
-      .then(response => {
-        this.componentDidMount();
-        return response;
-      })
-      .catch(e => {
-        throw e;
-      });
-  }
-
-  handleReject() {
-    let apiUrl = `/none`;
-    if (this.state.user_permissions === 2)
-      apiUrl = `/request_evaluate_professor`;
-    else if (this.state.user_permissions === 3)
-      apiUrl = `/request_evaluate_manager`;
-
-    const reqBody = { id: this.state.id, accept: false };
-    service
-      .post(apiUrl, reqBody)
-      .then(response => {
-        console.log('edit item response', response.data);
-      })
-      .then(response => {
-        this.componentDidMount();
-        return response;
-      })
-      .catch(e => {
-        throw e;
-      });
-  }
-
-  handleEdit() {
-    this.setState({ edit: true });
-  }
-
-  handleSaveEdition() {
-    this.editRequestWorkflow();
-    this.setState({ edit: false });
-  }
-
-  handleCancelEdition() {
-    this.setState({ edit: false });
-    this.componentDidMount();
-  }
-
-  handleRequestFieldChange(event) {
-    this.setState({ workflow: event.target.value });
-  }
-
-  renderItemFields() {
-    let stateContents = Object.values(this.state);
-    stateContents = stateContents.slice(0, stateContents.length - 4);
-
-    let stateFields = Object.keys(this.state);
-    stateFields = stateFields.slice(0, stateFields.length - 4);
-
-    let itemCharacteristics = [];
-
-    for (let i = 0; i < stateContents.length; i++) {
-      let fieldName = stateFields[i];
-      let fieldContent = stateContents[i];
-      let changeHandler = this.handleRequestFieldChange;
-      if (
-        fieldName == 'requester_id' ||
-        fieldName == 'professor_id' ||
-        fieldName == 'manager_id'
-      )
-        continue;
-
-      if (!fieldContent) fieldContent = 'N/D';
-
-      fieldName = fieldName.replace(/_/g, ' ');
-      fieldName = fieldName.charAt(0).toUpperCase() + fieldName.substr(1);
-
-      itemCharacteristics.push(
-        <div>
-          <InDepthItemField
-            key={fieldName}
-            fieldName={fieldName}
-            fieldContent={fieldContent}
-            editable={fieldName === 'Workflow' && this.state.edit}
-            handleChange={changeHandler}
-          />
-        </div>
-      );
+      acceptID = 'manager_accept';
+      dateID = 'date_manager_evaluated';
     }
 
-    return (
-      <div className="Request" style={{ textAlign: 'left' }}>
-        <column style={{ columnWidth: '50%' }}>
-          <div
-            className="Information"
-            style={{ float: 'left', textAlign: 'left', marginLeft: '5%' }}
-          >
-            {itemCharacteristics}
+    console.log(cost_center);
+    if (
+      !is_accept ||
+      is_manager ||
+      (cost_center !== undefined &&
+        cost_center != null &&
+        cost_center.length > 0)
+    ) {
+      const reqBody = { id: this.state.id, accept: is_accept, cost_center };
+      service
+        .post(apiUrl, reqBody)
+        .then(response => {
+          let update = this.state.request;
+          update[acceptID] = is_accept;
+          update[dateID] = response.data.date;
+          this.setState({ request: update, cost_center: '' });
+        })
+        .catch(e => {
+          throw e;
+        });
+    } else {
+      if (is_accept) {
+        this.setState({ error: true });
+      }
+    }
+  }
 
-            <div className="Buttons" style={{ columnCount: '3' }}>
-              <RequestButtons
-                acceptState={this.state.manager_accept}
-                editing={this.state.edit}
-                handleEdit={this.handleEdit}
-                handleAccept={this.handleAccept}
-                handleReject={this.handleReject}
-                handleSaveEdition={this.handleSaveEdition}
-                handleCancelEdition={this.handleCancelEdition}
-                user_permissions={this.state.user_permissions}
-                professor_accept={this.state.professor_accept}
-              />
-            </div>
-          </div>
-        </column>
-      </div>
+  /**
+   * Callback on accept
+   */
+  handleAccept() {
+    this.handleDecision(true);
+  }
+
+  /**
+   * Callback on reject
+   */
+  handleReject() {
+    this.handleDecision(false);
+  }
+
+  /**
+   * Renders the page while it is still fetching data from the server
+   * @return {Object} React object representing the page
+   */
+  renderFetching() {
+    return (
+      <PageTitle key="Request" title="Request">
+        <Loader text="Loading Request Info" />
+      </PageTitle>
     );
   }
 
-  render() {
-    const {
-      user_id,
-      requester_id,
-      professor_id,
-      fetching,
-      user_permissions
-    } = this.state;
-    const is_requester = user_id == requester_id && user_permissions == 1,
-      is_professor = user_id == professor_id && user_permissions == 2,
-      is_manager = user_permissions == 3;
+  /**
+   * Renders the header of the page
+   * @param  {Boolean} is_requester Whether the user is the requester or not
+   * @param  {Boolean} is_professor Whether the user is the designed professor or not
+   * @return {Object}               Header to be rendered
+   */
+  renderHeader(is_requester, is_professor) {
+    if (is_requester) {
+      return (
+        <Header textAlign="center" as="h1">
+          {'Request #' + this.state.id}
+        </Header>
+      );
+    }
+    return this.renderButtons(is_professor);
+  }
 
-    return fetching < 3 ||
-      ((is_requester || is_professor || is_manager) && fetching == 3) ? (
-      <PageTitle key={'Request'} title="Request">
-        {this.renderItemFields()}
-      </PageTitle>
-    ) : (
-      <Redirect to="/" />
+  /**
+   * Renders the buttons associated with the decision
+   * @param  {Boolean} is_professor [description]
+   * @return {[type]}               [description]
+   */
+  renderButtons(is_professor) {
+    let prof_accept = this.state.request.professor_accept;
+    let form = (
+      <Input
+        fluid
+        placeholder="Professor's Cost Center"
+        required
+        value={this.state.cost_center}
+        error={this.state.error}
+        onChange={this.costCenterChange.bind(this)}
+      />
     );
+
+    let msg = (
+      <Message
+        center
+        style={{ textAlign: 'center' }}
+        header="Professor's Cost Center"
+        content={this.state.request.professor_cost_center || 'Not yet inserted'}
+      />
+    );
+    return (
+      <Grid>
+        <Grid.Row columns={5}>
+          <Grid.Column />
+          <Grid.Column>
+            <Header textAlign="left" as="h1">
+              {'Request #' + this.state.id}
+            </Header>
+          </Grid.Column>
+          <Grid.Column>{is_professor ? form : msg}</Grid.Column>
+          <Grid.Column>
+            {is_professor || prof_accept ? (
+              <div>
+                <Button
+                  floated="left"
+                  positive
+                  onClick={this.handleAccept.bind(this)}
+                  content="Accept"
+                />
+                <Button
+                  floated="right"
+                  negative
+                  onClick={this.handleReject.bind(this)}
+                  content="Reject"
+                />
+              </div>
+            ) : (
+              undefined
+            )}
+          </Grid.Column>
+          <Grid.Column />
+        </Grid.Row>
+      </Grid>
+    );
+  }
+
+  /**
+   * Renders the page when the fetching has ended
+   * @param  {Boolean} is_requester Whether the user is the requester or not
+   * @param  {Boolean} is_professor Whether the user is the designated professor or not
+   * @param  {Boolean} is_manager   Whether the user is a manager or not
+   * @return {Object}               Page to be rendered
+   */
+  renderReady(is_requester, is_professor, is_manager) {
+    return (
+      <PageTitle key="Request" title="Request">
+        {this.renderHeader(is_requester, is_professor)}
+        <Divider hidden />
+        <RequestInfoGrid
+          request={this.state.request}
+          items={this.state.items}
+          is_manager={is_manager}
+        />
+      </PageTitle>
+    );
+  }
+
+  /**
+   * Renders the page
+   * @return {Object} Page to be rendered
+   */
+  render() {
+    const { request, user_id, user_permissions } = this.state;
+    const fetching = this.state.fetching;
+
+    if (fetching < 3) {
+      return this.renderFetching();
+    } else {
+      const is_requester =
+          user_id == request.requester_id && user_permissions == 1,
+        is_professor = user_id == request.professor_id && user_permissions == 2,
+        is_manager = user_permissions == 3;
+
+      if (is_requester || is_professor || is_manager) {
+        return this.renderReady(is_requester, is_professor, is_manager);
+      } else {
+        return <Redirect to="/" />;
+      }
+    }
   }
 }
 

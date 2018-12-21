@@ -50,17 +50,16 @@ const queryStudentRequestAll = `
   WHERE request_workflow.requester_id = $1
 `;
 
-const queryUpdateWorkflowRequest = `UPDATE request_workflow SET workflow = '$1' WHERE id = '$2'`;
+const queryUpdateWorkflowRequest = `UPDATE request_workflow SET workflow = $1 WHERE id = $2`;
 
 const queryProfessorEvaluateRequest = `UPDATE request_workflow
-  SET date_professor_evaluated = NOW(), professor_accept = $1 WHERE id = '$2';`;
+  SET date_professor_evaluated = NOW(), professor_accept = $1, professor_cost_center = $2 WHERE id = $3 RETURNING to_char(date_professor_evaluated, 'DD Mon YYYY HH24hMIm') AS date;`;
 
 const queryManagerEvaluateRequest = `UPDATE request_workflow
-  SET date_manager_evaluated = NOW(), manager_accept = $1 WHERE id = '$2';
-`;
+  SET date_manager_evaluated = NOW(), manager_accept = $1 WHERE id = $2 RETURNING to_char(date_manager_evaluated, 'DD Mon YYYY HH24hMIm') AS date;`;
 
 const queryRequestItems = `
-  SELECT item.id
+  SELECT item.id, item.description, item.image, item.total_stock, item.free_stock, item.last_price, item.location, item.user_comments, item.details, item.manufacturer, item.reference, request_items.count, request_items.returned
   FROM item, request_items
   WHERE request_items.request_id = $1 AND request_items.item_id = item.id
 `;
@@ -87,6 +86,8 @@ const studentEmailQuery =
 const studentProfEmailQuery =
   'SELECT user_permissions, email FROM users, request_workflow WHERE request_workflow.id = $1 AND (request_workflow.requester_id=users.id OR request_workflow.professor_id=users.id) ORDER BY user_permissions';
 
+const returnItemsQuery = `UPDATE request_items SET returned=$1 WHERE request_id=$2 AND item_id=$3 RETURNING returned`;
+
 var simpleGet = async function(query, params, err_msg, req, res) {
   try {
     let data;
@@ -107,6 +108,7 @@ var simplePost = async function(query, params, err_msg, succ_msg, req, res) {
     await db.none(query, params);
     res.status(200).send(succ_msg);
   } catch (err) {
+    console.log(err);
     res.status(401).send(err_msg);
   }
 };
@@ -139,58 +141,81 @@ requestRouter.post('/request_workflow_update/', async (req, res) => {
 });
 
 requestRouter.post('/request_evaluate_professor/', async (req, res) => {
-  const succ_msg = 'Request professor evaluation completed successfully',
-    err_msg = 'Failed to update request professor evaluation!',
-    params = [req.body.accept, req.body.id];
-  simplePost(
-    queryProfessorEvaluateRequest,
-    params,
-    err_msg,
-    succ_msg,
-    req,
-    res
-  );
-  if (!req.body.accept) {
-    const email = await db.one(studentEmailQuery, [req.body.id]);
-    let msg = mail.addLink(
-      'The professor you assigned the request to has **rejected** your ',
-      'request',
-      '/request/' + req.body.id,
-      '!'
-    );
-    mail.sendEmail(msg, email.email, 'Your request has been declined');
+  const err_msg = 'Failed to update request professor evaluation!',
+    params = [req.body.accept, req.body.cost_center, req.body.id];
+  try {
+    if (
+      !req.body.accept ||
+      (req.body.cost_center && req.body.cost_center.length > 0)
+    ) {
+      let data = await db.one(queryProfessorEvaluateRequest, params);
+      res.status(200).send(data);
+      if (!req.body.accept) {
+        const email = await db.one(studentEmailQuery, [req.body.id]);
+        let msg = mail.addLink(
+          'The professor you assigned the request to has **rejected** your ',
+          'request',
+          '/request/' + req.body.id,
+          '!'
+        );
+        mail.sendEmail(msg, email.email, 'Your request has been declined');
+      }
+    } else {
+      throw 'Cost center is not defined!';
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(401).send(err_msg);
   }
 });
 
 requestRouter.post('/request_evaluate_manager/', async (req, res) => {
-  const succ_msg = 'Request manager evaluation completed successfully',
-    err_msg = 'Failed to update request manager evaluation!',
+  const err_msg = 'Failed to update request manager evaluation!',
     params = [req.body.accept, req.body.id];
-  simplePost(queryManagerEvaluateRequest, params, err_msg, succ_msg, req, res);
-  if (!req.body.accept) {
-    const emails = await db.any(studentProfEmailQuery, [req.body.id]);
-    let msg = mail.addLink(
-      'A manager has **rejected** the ',
-      'request',
-      '/request/' + req.body.id,
-      ''
-    );
-    mail.sendEmail(
-      msg + ' you have previously made',
-      emails[0].email,
-      'Your request has been declined'
-    );
-    mail.sendEmail(
-      msg + ' you have preiviously accepted',
-      emails[1].email,
-      'A request you approved has been denied'
-    );
+  try {
+    let data = await db.one(queryManagerEvaluateRequest, params);
+    res.status(200).send(data);
+    if (!req.body.accept) {
+      const emails = await db.any(studentProfEmailQuery, [req.body.id]);
+      let msg = mail.addLink(
+        'A manager has **rejected** the ',
+        'request',
+        '/request/' + req.body.id,
+        ''
+      );
+      mail.sendEmail(
+        msg + ' you have previously made',
+        emails[0].email,
+        'Your request has been declined'
+      );
+      mail.sendEmail(
+        msg + ' you have preiviously accepted',
+        emails[1].email,
+        'A request you approved has been denied'
+      );
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(401).send(err_msg);
   }
 });
 
 requestRouter.get('/request_items/:id', async (req, res) => {
   const err_msg = 'Failed to retrieve selected request items!';
   simpleGet(queryRequestItems, req.params.id, err_msg, req, res);
+});
+
+requestRouter.post('/return_items', async (req, res) => {
+  let { req_id, item_id, new_returned } = req.body;
+  const err_msg =
+    'Failed to update request #' + req_id + ' on item #' + item_id;
+  try {
+    let data = await db.one(returnItemsQuery, [new_returned, req_id, item_id]);
+    res.status(200).send(data);
+  } catch (err) {
+    console.log(err);
+    res.status(401).send(err_msg);
+  }
 });
 
 export default requestRouter;

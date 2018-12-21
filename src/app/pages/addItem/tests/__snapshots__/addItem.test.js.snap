@@ -264,7 +264,11 @@ exports[`<AddItem /> 1`] = `
             <button
               className="ui icon disabled left labeled button"
               disabled={true}
+              onBlur={[Function]}
               onClick={[Function]}
+              onFocus={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
               role="button"
               style={
                 Object {
