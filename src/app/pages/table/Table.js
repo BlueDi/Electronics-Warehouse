@@ -204,7 +204,7 @@ class ComponentsTable extends Component {
             onSelectionChange={this.changeSelection}
           />
         )}
-        <PagingState defaultCurrentPage={0} pageSize={6} />
+        <PagingState defaultCurrentPage={0} pageSize={5} />
         <IntegratedPaging />
         <Table
           rowComponent={TableRow}

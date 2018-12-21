@@ -6,7 +6,7 @@ import {
   TemplateConnector
 } from '@devexpress/dx-react-core';
 import CompareItems from './Compare';
-import { AddToCart } from '@common/components';
+import { AddItemButton, AddToCart } from '@common/components';
 
 /**
  * Creates the buttons in the toolbar.
@@ -21,9 +21,10 @@ const ActionsForSelected = props => {
       <React.Fragment>
         <CompareItems items={props} />
         <AddToCart items={props} />
+        <AddItemButton />
       </React.Fragment>
     );
-  } else return <React.Fragment />;
+  } else return <AddItemButton />;
 };
 
 /**

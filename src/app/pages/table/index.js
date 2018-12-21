@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Grid } from 'semantic-ui-react';
 import { service } from '@utils';
-import { AddItemButton, Loader, PageTitle } from '@common/components';
+import { Loader, PageTitle } from '@common/components';
 import ComponentsTable from './Table';
 
 const urlAllItems = `/all_items`;
@@ -142,22 +141,11 @@ class WHTable extends Component {
     return columnOrder;
   }
 
-  renderUserFunctions() {
-    return (
-      <Grid>
-        <Grid.Column floated="left" width={5}>
-          <AddItemButton />
-        </Grid.Column>
-      </Grid>
-    );
-  }
-
   render() {
     return this.state.isFetching ? (
       <Loader text="Preparing Table" />
     ) : (
       <PageTitle title="Table">
-        {this.renderUserFunctions()}
         <ComponentsTable
           components={this.state.components}
           columnsOrder={this.default_column_order()}
