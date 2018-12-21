@@ -12,9 +12,6 @@ export const WHTable = loadComponent(() =>
 export const WHHeader = loadComponent(() =>
   import(/* webpackChunkName: 'header' */ './header')
 );
-export const WHMenu = loadComponent(() =>
-  import(/* webpackChunkName: 'menu' */ './menu')
-);
 export const InDepthItem = loadComponent(() =>
   import(/* webpackChunkName: 'inDepthItem' */ './inDepthItem')
 );

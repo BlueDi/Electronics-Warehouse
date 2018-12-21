@@ -91,7 +91,6 @@ class RequestsCartList extends Component {
   /**
    * Clears the requests cart
    */
-
   clearRequests = () => {
     let { cookies } = this.props;
     cookies.set('cart', []);

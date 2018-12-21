@@ -13,12 +13,10 @@ export const routes = [
   {
     path: '/',
     exact: true,
-    menu: 'Home',
     component: WHTable
   },
   {
     path: '/addNewItem/',
-    menu: 'AddItem',
     component: AddItem
   },
   {
@@ -27,7 +25,6 @@ export const routes = [
   },
   {
     path: '/course',
-    menu: 'Course',
     component: Course
   },
   {
@@ -44,7 +41,6 @@ export const routes = [
   },
   {
     path: '/table/:id',
-    menu: 'Table',
     component: WHTable
   },
   {
