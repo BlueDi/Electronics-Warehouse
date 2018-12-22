@@ -1547,33 +1547,22 @@ INSERT INTO item_property (value, item_id, property_id) VALUES
  ('24', 7, 1), ('200', 7, 3), ('Yes', 7, 6), ('12', 7, 9),
  ('1.5', 8, 1), ('50', 8, 3), ('12', 8, 10), ('80', 8, 10);
 
-INSERT INTO permissions (name, user_path, can_read, can_request, can_edit) VALUES
- ('student', '/table/1', TRUE, TRUE, FALSE),
- ('professor', '/table/1', TRUE, FALSE, FALSE),
- ('manager', '/table/1', TRUE, FALSE, TRUE);
+INSERT INTO permissions (name, user_path, key, key_salt, key_iterations, can_read, can_request, can_edit) VALUES
+ ('student', '/requests_cart', '', '', 0, TRUE, TRUE, FALSE),
+ ('professor', '/requests_list', decode('b27eacc1c9f760dc0a74b8786c2d11be709f554795c32c830df06c74c3d2ea11c3076e6dbe4762f476572946d84b5e5b01214972062f1bee53b8db565034ee68', 'hex'), 'ed30e362029c8d0acf8f520daafcc5c7', 763872, TRUE, FALSE, FALSE),
+ ('manager', '/requests_list', decode('c8cbe71880331fd278f82ad7fe2e0e39a0e9e35326a32554479f4bf153d4ff40b02d79e2269972e60d9da03cb8a9f63c0ccfde86c7fcfad535076da0f04b3b98', 'hex'), 'fd5d0bdaafd5e167aff00b73d74e202a', 959480,  TRUE, FALSE, TRUE);
 
-INSERT INTO users (login, password, user_permissions) VALUES
- ('student1', '1234', 1),
- ('student2', 'qwer', 1),
- ('professor1', '1234', 2),
- ('professor2', 'qwer', 2),
- ('manager1', '1234', 3),
- ('manager2', 'qwer', 3);
+INSERT INTO users (login, password, password_salt, password_iterations, email, user_permissions) VALUES
+ ('student1', decode('8d0fef2eb51b89b214813d08e963c2ba64b953731b72dd56d82d0ee6cd25fc734d4113180d77e6ab7e9cb37ea3f7f10ea06ae9fa39dfd0ed84312acc3a3832ef', 'hex'), 'c5f5867bc9d5bdfacd125c801678b15d', 765298, 'brawlrocker@gmail.com', 1),
+ ('professor1', decode('8d0fef2eb51b89b214813d08e963c2ba64b953731b72dd56d82d0ee6cd25fc734d4113180d77e6ab7e9cb37ea3f7f10ea06ae9fa39dfd0ed84312acc3a3832ef', 'hex'), 'c5f5867bc9d5bdfacd125c801678b15d', 765298, 'joaof2@sapo.pt', 2),
+ ('manager1', decode('8d0fef2eb51b89b214813d08e963c2ba64b953731b72dd56d82d0ee6cd25fc734d4113180d77e6ab7e9cb37ea3f7f10ea06ae9fa39dfd0ed84312acc3a3832ef', 'hex'), 'c5f5867bc9d5bdfacd125c801678b15d', 765298, 'intjalmeida@gmail.com', 3);
 
 INSERT INTO request_workflow (date_sent, date_cancelled, date_professor_evaluated, date_manager_evaluated, cancelled, professor_accept, manager_accept, purpose, workflow, requester_id, professor_id, manager_id) VALUES
-  (NOW(), NULL, NULL, NULL, FALSE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
-  (NOW() - interval '1 hour', NOW()::timestamp, NULL, NULL, TRUE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, NULL),
-  (NOW()- interval '6 hours', NULL, NOW() - interval '3 hours', NOW(), FALSE, TRUE, TRUE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 5),
-  (NOW() - interval '7 hours', NULL, NOW() - interval '2 hours', NULL, FALSE, TRUE, FALSE, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 3, 6),
-  (NOW() - interval '9 hours', NULL, NOW() - interval '5 hours', NULL, FALSE, TRUE, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 4, NULL);
+  (NOW(), NULL, NULL, NULL, FALSE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 2, NULL),
+  (NOW() - interval '1 hour', NOW()::timestamp, NULL, NULL, TRUE, NULL, NULL, 'string for student to explain purpose of the request', 'text that both student and manager can see but only manager can edit containing info related to the request workflow', 1, 2, NULL);
 
 INSERT INTO request_items (request_id, item_id, count) VALUES
  (1, 1, 2),
  (1, 2, 4),
  (2, 1, 1),
- (2, 3, 3),
- (3, 4, 2),
- (4, 5, 47),
- (5, 1, 3),
- (5, 7, 2),
- (5, 8, 5);
+ (2, 3, 3);

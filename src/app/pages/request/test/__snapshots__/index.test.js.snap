@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create request buttons 1`] = `
+<div
+  className="ui active transition visible inverted dimmer"
+  onClick={[Function]}
+>
+  <div
+    className="content"
+  >
+    <div
+      className="ui indeterminate inverted text loader"
+    >
+      Loading Request Info
+    </div>
+  </div>
+</div>
+`;

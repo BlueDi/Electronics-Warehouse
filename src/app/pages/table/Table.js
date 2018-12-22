@@ -3,10 +3,10 @@ import { Route } from 'react-router-dom';
 import {
   PagingState,
   IntegratedPaging,
-  SearchState,
-  IntegratedFiltering,
   SortingState,
   IntegratedSorting,
+  FilteringState,
+  IntegratedFiltering,
   RowDetailState,
   DataTypeProvider,
   SelectionState
@@ -20,16 +20,24 @@ import {
   PagingPanel,
   ColumnChooser,
   TableColumnVisibility,
+  TableFilterRow,
   TableRowDetail,
-  SearchPanel,
   Toolbar,
   TableSelection
 } from '@devexpress/dx-react-grid-material-ui';
 import { Button, Icon, Image } from 'semantic-ui-react';
-import CompareItems from './Compare';
+import TablePlugins from './ToolbarPlugins';
 import SelectComponent from './SelectComponent';
-import { AddToCart } from '@common/components';
 import InDepthItem from '@pages/inDepthItem';
+
+const toLowerCase = value => String(value).toLowerCase();
+const contains = (value, filter) =>
+  toLowerCase(value).indexOf(toLowerCase(filter.value)) !== -1;
+var obj_contains = function(value, filter) {
+  return Object.values(value).some(element => {
+    return contains(element, filter);
+  });
+};
 
 const SortingIcon = ({ direction }) =>
   direction === 'asc' ? <Icon name="arrow up" /> : <Icon name="arrow down" />;
@@ -38,7 +46,7 @@ const SortLabel = ({ onSort, children, direction }) => {
   return children.props.children !== 'image' &&
     children.props.children !== 'details' &&
     children.props.children !== 'properties' ? (
-    <Button fluid icon labelPosition="right" onClick={onSort}>
+    <Button size="small" fluid icon onClick={onSort}>
       {children}
       {direction && <SortingIcon direction={direction} />}
     </Button>
@@ -79,10 +87,16 @@ const RowDetail = ({ row }) => <InDepthItem id={row.id} />;
  * Row of ComponentsTable
  */
 class TableRow extends Component {
-  handleClick(history, id) {
-    var pathName = history.location.pathname.split('/')[1];
-    var redirect = pathName === 'requests' ? 'request' : 'item';
-    return history.push('/' + redirect + '/' + id);
+  handleClick(history, id, e) {
+    if (
+      !['button', 'i', 'input', 'label'].includes(
+        e.target.tagName.toLowerCase()
+      )
+    ) {
+      var pathName = history.location.pathname.split('/')[1];
+      var redirect = pathName === 'requests_list' ? 'request' : 'item';
+      return history.push('/' + redirect + '/' + id);
+    }
   }
 
   render() {
@@ -91,15 +105,9 @@ class TableRow extends Component {
         render={({ history }) => (
           <Table.Row
             {...this.props}
-            onClick={e => {
-              if (
-                !['button', 'i', 'input', 'label'].includes(
-                  e.target.tagName.toLowerCase()
-                )
-              ) {
-                return this.handleClick(history, this.props.tableRow.row.id);
-              }
-            }}
+            onClick={e =>
+              this.handleClick(history, this.props.tableRow.row.id, e)
+            }
           />
         )}
       />
@@ -119,13 +127,20 @@ class ComponentsTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      rows: this.props.components,
       columns: [],
       columnsOrder: this.props.columnsOrder,
-      tableColumnExtensions: [],
+      tableColumnExtensions: this.props.tableColumnExtensions || [],
       detailsColumns: ['details', 'properties'],
       imageColumns: ['image'],
-      rows: this.props.components,
       selection: [],
+      integratedFilteringColumnExtensions: [
+        { columnName: 'details', predicate: obj_contains },
+        { columnName: 'properties', predicate: obj_contains }
+      ],
+      filteringStateColumnExtensions: [
+        { columnName: 'image', filteringEnabled: false }
+      ],
       withDetails: this.props.withDetails,
       withImages: this.props.withImages,
       withSelection: this.props.withSelection
@@ -164,22 +179,18 @@ class ComponentsTable extends Component {
       selection,
       withDetails,
       withImages,
-      withSelection
+      withSelection,
+      filteringStateColumnExtensions,
+      integratedFilteringColumnExtensions
     } = this.state;
-
-    let compare_items;
-    let addToCart;
-    if (withSelection && selection.length > 0) {
-      var selected_items = this.getItemsFromSelection();
-      compare_items = <CompareItems items={selected_items} />;
-      addToCart = <AddToCart items={selected_items} />;
-    }
 
     return (
       <Grid rows={rows} columns={columns}>
         <DragDropProvider />
-        <SearchState />
-        <IntegratedFiltering />
+        <FilteringState columnExtensions={filteringStateColumnExtensions} />
+        <IntegratedFiltering
+          columnExtensions={integratedFilteringColumnExtensions}
+        />
         <SortingState
           defaultSorting={[{ columnName: 'description', direction: 'asc' }]}
         />
@@ -193,7 +204,7 @@ class ComponentsTable extends Component {
             onSelectionChange={this.changeSelection}
           />
         )}
-        <PagingState defaultCurrentPage={0} pageSize={7} />
+        <PagingState defaultCurrentPage={0} pageSize={5} />
         <IntegratedPaging />
         <Table
           rowComponent={TableRow}
@@ -206,7 +217,8 @@ class ComponentsTable extends Component {
         )}
         <TableColumnVisibility defaultHiddenColumnNames={[]} />
         <Toolbar />
-        <SearchPanel />
+        <TablePlugins selection={this.getItemsFromSelection()} />
+        <TableFilterRow />
         <ColumnChooser />
         <PagingPanel />
         {withSelection && (
@@ -215,8 +227,6 @@ class ComponentsTable extends Component {
             selectionColumnWidth={85}
           />
         )}
-        {withSelection && compare_items}
-        {addToCart}
       </Grid>
     );
   }

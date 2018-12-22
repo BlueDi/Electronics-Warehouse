@@ -1,10 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Create a Compare for 2 items 1`] = `
+exports[`CompareItems renders properly 1`] = `
 <button
   className="ui button"
+  onBlur={[Function]}
   onClick={[Function]}
-  role="button"
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
 >
   Compare Items
 </button>

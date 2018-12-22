@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
-import { Grid } from 'semantic-ui-react';
 import { service } from '@utils';
-import {
-  AddItemButton,
-  Loader,
-  PageTitle,
-  SearchBar
-} from '@common/components';
+import { Loader, PageTitle } from '@common/components';
 import ComponentsTable from './Table';
 
 const urlAllItems = `/all_items`;
@@ -14,13 +8,24 @@ const urlCategories = `/all_categories`;
 const urlItemCategory = id => `/item_category/${id}`;
 const urlItemProperties = id => `/item_properties2/${id}`;
 
+/**
+ * Creates the table with all the components of the warehouse.
+ */
 class WHTable extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       id: this.props.match.params.id,
-      isFetching: true
+      isFetching: true,
+      tableColumnExtensions: [
+        { columnName: 'total_stock', align: 'center' },
+        { columnName: 'free_stock', align: 'center' },
+        { columnName: 'last_price', align: 'center' },
+        { columnName: 'reference', align: 'center' },
+        { columnName: 'user_comments', wordWrapEnabled: true },
+        { columnName: 'last_edit', align: 'center' }
+      ]
     };
   }
 
@@ -57,8 +62,10 @@ class WHTable extends Component {
       })
       .catch(e => {
         this.setState({
+          components: [],
           isFetching: false
         });
+
         throw e;
       });
   }
@@ -120,7 +127,8 @@ class WHTable extends Component {
   }
 
   checkFinishedGets() {
-    if (this.state.isFinishedCategory && this.state.isFinishedProperties)
+    var { isFinishedCategory, isFinishedProperties } = this.state;
+    if (isFinishedCategory && isFinishedProperties)
       this.setState({ isFetching: false });
   }
 
@@ -133,27 +141,15 @@ class WHTable extends Component {
     return columnOrder;
   }
 
-  renderUserFunctions() {
-    return (
-      <Grid>
-        <Grid.Column floated="left" width={5}>
-          <AddItemButton />
-        </Grid.Column>
-        <Grid.Column floated="right" width={5}>
-          <SearchBar />
-        </Grid.Column>
-      </Grid>
-    );
-  }
   render() {
     return this.state.isFetching ? (
       <Loader text="Preparing Table" />
     ) : (
       <PageTitle title="Table">
-        {this.renderUserFunctions()}
         <ComponentsTable
           components={this.state.components}
           columnsOrder={this.default_column_order()}
+          tableColumnExtensions={this.state.tableColumnExtensions}
           withDetails
           withImages
           withSelection

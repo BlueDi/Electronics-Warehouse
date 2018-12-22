@@ -18,10 +18,7 @@ class SelectComponent extends Component {
     var canRequest = cookies.get('can_request') === 'true';
     return canRequest ? (
       <td>
-        <TableSelection.Cell
-          style={{ borderBottomWidth: '0px' }}
-          {...pseudoProps}
-        />
+        <TableSelection.Cell {...pseudoProps} />
         {this.renderAddToCart()}
       </td>
     ) : (

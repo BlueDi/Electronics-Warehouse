@@ -8,7 +8,7 @@ import AlertTemplate from 'react-alert-template-basic';
 import { Grid } from 'semantic-ui-react';
 import { HELMET } from '@config';
 import { routes } from '@app/routes';
-import { WHHeader, WHMenu } from '@pages';
+import { WHHeader } from '@pages';
 import '@common/styles/global.css';
 import background from '@assets/images/background.png';
 
@@ -28,26 +28,33 @@ const background_style = {
   padding: '0px'
 };
 
+const Layout = () => (
+  <Grid stretched style={{ height: '100%' }}>
+    <Grid.Row style={{ height: '10%' }}>
+      <Grid.Column>
+        <WHHeader />
+      </Grid.Column>
+    </Grid.Row>
+    <Grid.Row style={background_style}>
+      <Grid.Column>{renderRoutes(routes)}</Grid.Column>
+    </Grid.Row>
+  </Grid>
+);
+
+/**
+ * Base of the app.
+ * First component to be called.
+ */
 class Root extends Component {
   render() {
     return (
       <AlertProvider template={AlertTemplate} {...options}>
         <Helmet {...HELMET} />
-        <Grid stretched style={{ height: '100vh' }}>
-          <Grid.Row style={{ height: '10%' }}>
-            <Grid.Column width={16}>
-              <WHHeader />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row style={background_style}>
-            <Grid.Column width={16}>
-              <WHMenu key={'menu'} content={renderRoutes(routes)} />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <Layout />
       </AlertProvider>
     );
   }
 }
 
+export { Layout };
 export default hot(module)(withCookies(Root));

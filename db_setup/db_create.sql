@@ -64,6 +64,9 @@ CREATE TABLE item_property (
 CREATE TABLE permissions (
 	id SERIAL PRIMARY KEY,
 	name TEXT UNIQUE NOT NULL,
+  key BYTEA NOT NULL,
+  key_salt TEXT NOT NULL,
+  key_iterations INT NOT NULL,
 	user_path TEXT NOT NULL,
 	can_read BOOLEAN NOT NULL,
 	can_request BOOLEAN NOT NULL,
@@ -71,20 +74,23 @@ CREATE TABLE permissions (
 
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
-	login TEXT UNIQUE,
-	password TEXT NOT NULL,
+	login TEXT UNIQUE NOT NULL,
+	password BYTEA NOT NULL,
+  password_salt TEXT NOT NULL,
+  password_iterations INT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
 	user_permissions INT NOT NULL,
 	FOREIGN KEY(user_permissions) REFERENCES permissions(id));
 
-
 CREATE TABLE request_workflow (
 	id SERIAL PRIMARY KEY,
-	date_sent TIMESTAMP WITH TIME ZONE NOT NULL,
+	date_sent TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 	date_cancelled TIMESTAMP WITH TIME ZONE,
 	date_professor_evaluated TIMESTAMP WITH TIME ZONE,
 	date_manager_evaluated TIMESTAMP WITH TIME ZONE,
 	cancelled BOOLEAN NOT NULL,
 	professor_accept BOOLEAN,
+  professor_cost_center TEXT,
 	manager_accept BOOLEAN,
 	purpose TEXT NOT NULL,
 	workflow TEXT,
@@ -100,5 +106,6 @@ CREATE TABLE request_items (
 	request_id INT NOT NULL,
 	item_id INT NOT NULL,
 	count REAL NOT NULL CHECK (count > 0),
+  returned REAL NOT NULL CHECK (returned >= 0 AND returned <= count) DEFAULT 0,
 	FOREIGN KEY(request_id) REFERENCES request_workflow(id),
 	FOREIGN KEY(item_id) REFERENCES item(id));

@@ -1,13 +1,17 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { MemoryRouter as Router } from 'react-router-dom';
-import WHMenu from '@pages/menu';
+import RequestsCartList from '@pages/requests_cart';
 
-describe('<WHMenu />', () => {
-  test('Renders properly', () => {
+describe('RequestsCartList', () => {
+  it('should be defined', () => {
+    expect(RequestsCartList).toBeDefined();
+  });
+
+  it('renders properly', () => {
     const component = renderer.create(
       <Router>
-        <WHMenu />
+        <RequestsCartList />
       </Router>
     );
     let tree = component.toJSON();

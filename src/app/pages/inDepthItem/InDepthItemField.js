@@ -5,17 +5,51 @@ import {
   Breadcrumb,
   Input,
   Button,
+  Divider,
   Message
 } from 'semantic-ui-react';
 
+/**
+ * Item image maximum dimensions
+ */
 const IMAGE_WIDTH = 400;
 const IMAGE_HEIGHT = 300;
 
+/**
+ * Represents an item information field
+ * Exemples: description, image, packaging, properties, etc.
+ */
 export class InDepthItemField extends Component {
+  nonEditableMap = {
+    image: () => {
+      return this.imageField(this.props.fieldContent);
+    },
+    description: () => {
+      return this.descriptionField(this.props.fieldContent);
+    },
+    'user comments': () => {
+      return this.comments(this.props.fieldContent);
+    },
+    Workflow: () => {
+      return this.workflow(this.props.fieldContent);
+    },
+    'add user comment': () => {
+      return this.userComments(this.props.fieldContent, this.props.fieldName);
+    },
+    category: () => {
+      return this.category(this.props.fieldContent, this.props.fieldName);
+    }
+  };
+
   constructor(props) {
     super(props);
   }
 
+  /**
+   * Decides what render function should be called based on the following criteria
+   * - Edit mode
+   * - Item field is a property or not
+   */
   getRender() {
     if (this.props.editable) {
       return this.props.fieldName === 'properties'
@@ -28,6 +62,9 @@ export class InDepthItemField extends Component {
     }
   }
 
+  /**
+   * Renders all item properties, in non-edit mode
+   */
   nonEditablePropertiesField() {
     let property_list = this.props.fieldContent.map(property => {
       let invalidProperty = property.value ? !property.value.trim() : true;
@@ -56,97 +93,91 @@ export class InDepthItemField extends Component {
     );
   }
 
+  imageField = content => {
+    let image_src = `data:image/png;base64,${content}`;
+    return (
+      <ReadjustableImage
+        src={image_src}
+        maxWidth={IMAGE_WIDTH}
+        maxHeight={IMAGE_HEIGHT}
+      />
+    );
+  };
+
+  descriptionField = content => {
+    return (
+      <h1 className="Title" style={{ textAlign: 'left', marginLeft: '5%' }}>
+        {content}
+      </h1>
+    );
+  };
+
+  comments = content => {
+    return (
+      <React.Fragment>
+        <HTMLEditor header="User Comments" displayOnly={true} value={content} />
+        <Divider hidden />
+      </React.Fragment>
+    );
+  };
+
+  workflow = content => {
+    return (
+      <React.Fragment>
+        <HTMLEditor header="Workflow" displayOnly={true} value={content} />
+        <Divider hidden />
+      </React.Fragment>
+    );
+  };
+
+  userComments = (content, name) => {
+    return (
+      <React.Fragment>
+        <HTMLEditor
+          className={name.replace(/ /g, '_')}
+          canvasType="code"
+          height="200"
+          header="Add comment"
+          onChange={this.props.handleChange[0]}
+          onSave={this.props.handleChange[1]}
+          value={content}
+        />
+        <Divider section hidden />
+      </React.Fragment>
+    );
+  };
+
+  category = (content, name) => {
+    let category_tree = content.map((category, index) => {
+      let active = index === content.length - 1;
+      return {
+        key: category.id,
+        content: category.name,
+        link: false,
+        active: active
+      };
+    });
+    return (
+      <div>
+        {name}: <Breadcrumb icon="right angle" sections={category_tree} />
+      </div>
+    );
+  };
+
   // A general non-editable field is any field that is NOT a property
   nonEditableGeneralField() {
-    switch (this.props.fieldName) {
-      case 'image': {
-        let image_src = `data:image/png;base64,${this.props.fieldContent}`;
-        return (
-          <ReadjustableImage
-            src={image_src}
-            maxWidth={IMAGE_WIDTH}
-            maxHeight={IMAGE_HEIGHT}
-          />
-        );
-      }
+    let name = this.props.fieldName;
 
-      case 'description': {
-        return (
-          <h1 className="Title" style={{ textAlign: 'left', marginLeft: '5%' }}>
-            {this.props.fieldContent}
-          </h1>
-        );
-      }
-
-      case 'user comments': {
-        return (
-          <React.Fragment>
-            {this.props.fieldName}: <br />
-            <HTMLEditor displayOnly={true} value={this.props.fieldContent} />
-          </React.Fragment>
-        );
-      }
-
-      case 'Workflow': {
-        return (
-          <React.Fragment>
-            {this.props.fieldName}: <br />
-            <HTMLEditor displayOnly={true} value={this.props.fieldContent} />
-          </React.Fragment>
-        );
-      }
-
-      case 'add user comment': {
-        if (!this.props.isUserLogged) {
-          //only allow comment addition if user is logged in
-          return null;
-        }
-
-        return (
-          <div style={{ marginTop: 20 }}>
-            <HTMLEditor
-              className={this.props.fieldName.replace(/ /g, '_')}
-              canvasType="code"
-              height="200"
-              onChange={this.props.handleChange[0]}
-              value={this.props.fieldContent}
-            />
-            <div style={{ marginBottom: 10, position: 'relative' }}>
-              <Button
-                primary
-                key={this.props.fieldName}
-                onClick={this.props.handleChange[1]}
-              >
-                Add comment
-              </Button>
-            </div>
-          </div>
-        );
-      }
-
-      case 'category': {
-        let category_tree = this.props.fieldContent.map((category, index) => {
-          let active = index === this.props.fieldContent.length - 1;
-          return {
-            key: category.id,
-            content: category.name,
-            link: false,
-            active: active
-          };
-        });
-        return (
-          <div>
-            {this.props.fieldName}:{' '}
-            <Breadcrumb icon="right angle" sections={category_tree} />
-          </div>
-        );
-      }
-
-      default:
-        return `${this.props.fieldName}: ${this.props.fieldContent}`;
+    if (this.nonEditableMap.hasOwnProperty(name)) {
+      return this.nonEditableMap[name]();
+    } else {
+      return `${this.props.fieldName}: ${this.props.fieldContent}`;
     }
   }
 
+  /**
+   * Renders all item properties, in edit mode
+   */
   editablePropertiesField() {
     let property_list = this.props.fieldContent.map(property => {
       var type = property.isNumber ? 'number' : 'text';
@@ -179,7 +210,9 @@ export class InDepthItemField extends Component {
     );
   }
 
-  // A general editable field is any field that is NOT a property
+  /**
+   * Renders every item field that is not a property, in edit mode
+   */
   editableGeneralField() {
     switch (this.props.fieldName) {
       case 'description': {
@@ -224,10 +257,10 @@ export class InDepthItemField extends Component {
       case 'user comments': {
         return (
           <div style={{ marginTop: 3 }}>
-            {this.props.fieldName}: <br />
             <HTMLEditor
               className={this.props.fieldName.replace(/ /g, '_')}
               canvasType="code"
+              header="User Comments"
               onChange={this.props.handleChange}
               value={this.props.fieldContent}
             />
@@ -354,6 +387,10 @@ export class InDepthItemField extends Component {
     }
   }
 
+  /**
+   * Default React component render function
+   * It's render responsibility is sent to "getRender" function
+   */
   render() {
     return this.getRender();
   }

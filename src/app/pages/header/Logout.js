@@ -1,8 +1,40 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { withCookies } from 'react-cookie';
-import { Label, Menu } from 'semantic-ui-react';
+import { Dropdown, Icon, Label, Menu } from 'semantic-ui-react';
 import { service } from '@utils';
+
+class UserMenu extends Component {
+  render() {
+    var { userCartLength, userName, userPath } = this.props;
+    var emptyCart = userCartLength <= 0;
+    return (
+      <Dropdown
+        icon={
+          !emptyCart && (
+            <Label circular color="orange">
+              {userCartLength}
+            </Label>
+          )
+        }
+        item
+        pointing
+        trigger={userName}
+      >
+        <Dropdown.Menu>
+          <Dropdown.Item as={Link} to={userPath}>
+            <Icon name="cart" />
+            Cart
+          </Dropdown.Item>
+          <Dropdown.Item as={Link} to={'/requests_list'}>
+            <Icon name="clipboard" />
+            Requests
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    );
+  }
+}
 
 class Logout extends Component {
   handleLogout = () => {
@@ -19,22 +51,18 @@ class Logout extends Component {
   };
 
   render() {
+    var userPath = this.props.cookies.get('user_path') || '/';
     var userCart = this.props.cookies.get('cart') || [];
-    var userID = this.props.cookies.get('id') || undefined;
     var userName = this.props.cookies.get('name') || undefined;
     var cartLength = userCart.length;
-    var emptyCart = cartLength <= 0;
 
     return (
       <Menu.Menu position="right">
-        <Menu.Item as={Link} to={'/user/' + userID}>
-          {userName}
-          {!emptyCart && (
-            <Label circular color="orange">
-              {userCart.length}
-            </Label>
-          )}
-        </Menu.Item>
+        <UserMenu
+          userName={userName}
+          userCartLength={cartLength}
+          userPath={userPath}
+        />
         <Menu.Item link onClick={this.handleLogout}>
           Logout
         </Menu.Item>
@@ -43,4 +71,5 @@ class Logout extends Component {
   }
 }
 
+export { UserMenu };
 export default withRouter(withCookies(Logout));

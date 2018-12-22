@@ -23,8 +23,8 @@ module.exports = {
   // for more about performance hints
   // @see: https://webpack.js.org/configuration/performance/#performance
   performance: {
-    maxEntrypointSize: 400000,
-    maxAssetSize: 400000
+    maxEntrypointSize: 250000,
+    maxAssetSize: 250000
   },
   entry: [
     ...(DEV
@@ -53,10 +53,11 @@ module.exports = {
   },
   module: {
     rules: [
-      ...commonConfig.babelRule(),
-      ...commonConfig.fileRule(),
-      ...commonConfig.cssModulesRule(ExtractCssChunks),
-      ...commonConfig.globalStylesRule(ExtractCssChunks)
+      commonConfig.getBabelRule(),
+      commonConfig.getImagesRule(),
+      commonConfig.getFontsRule(),
+      commonConfig.getCssModulesRule(ExtractCssChunks),
+      commonConfig.getGlobalStylesRule(ExtractCssChunks)
     ]
   },
   plugins: [

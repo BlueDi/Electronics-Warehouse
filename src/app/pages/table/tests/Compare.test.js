@@ -23,8 +23,10 @@ var item2 = {
   reference: '68760203'
 };
 
-test('Create a Compare for 2 items', () => {
-  const component = renderer.create(<CompareItems items={[item1, item2]} />);
-  let tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
+describe('CompareItems', () => {
+  it('renders properly', () => {
+    const component = renderer.create(<CompareItems items={[item1, item2]} />);
+    let tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

@@ -1,19 +1,109 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Logout /> Renders properly 1`] = `
+exports[`Logout renders properly 1`] = `
 <div
   className="right menu"
 >
-  <a
-    className="item"
-    href="/user/undefined"
+  <div
+    aria-expanded={false}
+    className="ui item pointing dropdown"
+    onBlur={[Function]}
+    onChange={[Function]}
     onClick={[Function]}
-  />
+    onFocus={[Function]}
+    onMouseDown={[Function]}
+    role="listbox"
+    tabIndex={0}
+  >
+    <div
+      aria-live="polite"
+      className="text"
+      role="alert"
+    />
+    <div
+      className="menu transition"
+    >
+      <a
+        className="item"
+        href="/"
+        onClick={[Function]}
+        role="option"
+      >
+        <i
+          aria-hidden="true"
+          className="cart icon"
+        />
+        Cart
+      </a>
+      <a
+        className="item"
+        href="/requests_list"
+        onClick={[Function]}
+        role="option"
+      >
+        <i
+          aria-hidden="true"
+          className="clipboard icon"
+        />
+        Requests
+      </a>
+    </div>
+  </div>
   <a
     className="link item"
     onClick={[Function]}
   >
     Logout
   </a>
+</div>
+`;
+
+exports[`UserMenu renders properly 1`] = `
+<div
+  aria-expanded={false}
+  className="ui item pointing dropdown"
+  onBlur={[Function]}
+  onChange={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onMouseDown={[Function]}
+  role="listbox"
+  tabIndex={0}
+>
+  Test
+  <div
+    className="ui circular label"
+    onClick={[Function]}
+  >
+    1
+  </div>
+  <div
+    className="menu transition"
+  >
+    <a
+      className="item"
+      href="/test"
+      onClick={[Function]}
+      role="option"
+    >
+      <i
+        aria-hidden="true"
+        className="cart icon"
+      />
+      Cart
+    </a>
+    <a
+      className="item"
+      href="/requests_list"
+      onClick={[Function]}
+      role="option"
+    >
+      <i
+        aria-hidden="true"
+        className="clipboard icon"
+      />
+      Requests
+    </a>
+  </div>
 </div>
 `;

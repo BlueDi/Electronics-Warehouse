@@ -18,13 +18,13 @@ describe('<LoginForm />', () => {
   test('Renders error message properly', () => {
     const instance = component.root;
     const input_name = instance.find(
-      el => el.type == 'input' && el.props.name == 'name'
+      el => el.type === 'input' && el.props.name === 'name'
     );
     input_name.props.onChange({
       target: { value: 'stu' }
     });
 
-    const form = instance.find(el => el.type == 'form');
+    const form = instance.find(el => el.type === 'form');
     form.props.onSubmit();
 
     let tree = component.toJSON();

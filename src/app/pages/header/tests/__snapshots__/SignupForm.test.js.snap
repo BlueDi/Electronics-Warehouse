@@ -1,0 +1,265 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SignupForm /> Renders error message properly 1`] = `
+Array [
+  <div
+    className="ui large header"
+  >
+    <img
+      className="ui image"
+      src="test-file-stub"
+    />
+     Signup an account
+  </div>,
+  <form
+    className="ui large form"
+    onSubmit={[Function]}
+  >
+    <div
+      className="required field"
+    >
+      <label>
+        Name
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="name"
+          onChange={[Function]}
+          placeholder="User name"
+          required={true}
+          type="text"
+        />
+        <i
+          aria-hidden="true"
+          className="user icon"
+        />
+      </div>
+    </div>
+    <div
+      className="required field"
+    >
+      <label>
+        E-mail
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="email"
+          onChange={[Function]}
+          placeholder="E-mail address"
+          required={true}
+          type="email"
+        />
+        <i
+          aria-hidden="true"
+          className="at icon"
+        />
+      </div>
+    </div>
+    <div
+      className="required field"
+    >
+      <label>
+        Password
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="password"
+          onChange={[Function]}
+          placeholder="Password"
+          required={true}
+          type="password"
+        />
+        <i
+          aria-hidden="true"
+          className="lock icon"
+        />
+      </div>
+    </div>
+    <div
+      className="field"
+    >
+      <label>
+        Permission Key
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="permission"
+          onChange={[Function]}
+          placeholder="Permission key"
+          type="password"
+        />
+        <i
+          aria-hidden="true"
+          className="options icon"
+        />
+      </div>
+    </div>
+    <div
+      className="ui error message"
+    >
+      <div
+        className="content"
+      >
+        <div
+          className="header"
+        >
+          
+        </div>
+        <p>
+          
+        </p>
+      </div>
+    </div>
+    <div
+      className="field"
+    >
+      <button
+        className="ui fluid button"
+        onClick={[Function]}
+      >
+        Signup
+      </button>
+    </div>
+  </form>,
+]
+`;
+
+exports[`<SignupForm /> Renders properly 1`] = `
+Array [
+  <div
+    className="ui large header"
+  >
+    <img
+      className="ui image"
+      src="test-file-stub"
+    />
+     Signup an account
+  </div>,
+  <form
+    className="ui large form"
+    onSubmit={[Function]}
+  >
+    <div
+      className="required field"
+    >
+      <label>
+        Name
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="name"
+          onChange={[Function]}
+          placeholder="User name"
+          required={true}
+          type="text"
+        />
+        <i
+          aria-hidden="true"
+          className="user icon"
+        />
+      </div>
+    </div>
+    <div
+      className="required field"
+    >
+      <label>
+        E-mail
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="email"
+          onChange={[Function]}
+          placeholder="E-mail address"
+          required={true}
+          type="email"
+        />
+        <i
+          aria-hidden="true"
+          className="at icon"
+        />
+      </div>
+    </div>
+    <div
+      className="required field"
+    >
+      <label>
+        Password
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="password"
+          onChange={[Function]}
+          placeholder="Password"
+          required={true}
+          type="password"
+        />
+        <i
+          aria-hidden="true"
+          className="lock icon"
+        />
+      </div>
+    </div>
+    <div
+      className="field"
+    >
+      <label>
+        Permission Key
+      </label>
+      <div
+        className="ui fluid left icon input"
+      >
+        <input
+          name="permission"
+          onChange={[Function]}
+          placeholder="Permission key"
+          type="password"
+        />
+        <i
+          aria-hidden="true"
+          className="options icon"
+        />
+      </div>
+    </div>
+    <div
+      className="ui error message"
+    >
+      <div
+        className="content"
+      >
+        <div
+          className="header"
+        >
+          
+        </div>
+        <p>
+          
+        </p>
+      </div>
+    </div>
+    <div
+      className="field"
+    >
+      <button
+        className="ui fluid button"
+        onClick={[Function]}
+      >
+        Signup
+      </button>
+    </div>
+  </form>,
+]
+`;

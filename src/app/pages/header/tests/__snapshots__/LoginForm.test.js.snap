@@ -18,13 +18,16 @@ Array [
     <div
       className="required field"
     >
+      <label>
+        Name or E-mail
+      </label>
       <div
         className="ui fluid left icon input"
       >
         <input
           name="name"
           onChange={[Function]}
-          placeholder="E-mail address"
+          placeholder="Name or E-mail"
           required={true}
           type="text"
         />
@@ -37,6 +40,9 @@ Array [
     <div
       className="required field"
     >
+      <label>
+        Password
+      </label>
       <div
         className="ui fluid left icon input"
       >
@@ -65,7 +71,7 @@ Array [
           Failed Login
         </div>
         <p>
-          Please check again your user's info.
+          
         </p>
       </div>
     </div>
@@ -75,7 +81,6 @@ Array [
       <button
         className="ui fluid button"
         onClick={[Function]}
-        role="button"
       >
         Login
       </button>
@@ -102,13 +107,16 @@ Array [
     <div
       className="required field"
     >
+      <label>
+        Name or E-mail
+      </label>
       <div
         className="ui fluid left icon input"
       >
         <input
           name="name"
           onChange={[Function]}
-          placeholder="E-mail address"
+          placeholder="Name or E-mail"
           required={true}
           type="text"
         />
@@ -121,6 +129,9 @@ Array [
     <div
       className="required field"
     >
+      <label>
+        Password
+      </label>
       <div
         className="ui fluid left icon input"
       >
@@ -149,7 +160,7 @@ Array [
           Failed Login
         </div>
         <p>
-          Please check again your user's info.
+          
         </p>
       </div>
     </div>
@@ -159,7 +170,6 @@ Array [
       <button
         className="ui fluid button"
         onClick={[Function]}
-        role="button"
       >
         Login
       </button>

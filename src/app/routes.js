@@ -3,8 +3,9 @@ import Root, {
   Course,
   InDepthItem,
   NotFound,
+  RequestsCartList,
+  RequestsList,
   Request,
-  Requests,
   WHTable
 } from '@pages';
 
@@ -12,12 +13,10 @@ export const routes = [
   {
     path: '/',
     exact: true,
-    menu: 'Home',
     component: WHTable
   },
   {
     path: '/addNewItem/',
-    menu: 'AddItem',
     component: AddItem
   },
   {
@@ -26,7 +25,6 @@ export const routes = [
   },
   {
     path: '/course',
-    menu: 'Course',
     component: Course
   },
   {
@@ -34,12 +32,15 @@ export const routes = [
     component: Request
   },
   {
-    path: '/requests',
-    component: Requests
+    path: '/requests_cart',
+    component: RequestsCartList
+  },
+  {
+    path: '/requests_list',
+    component: RequestsList
   },
   {
     path: '/table/:id',
-    menu: 'Table',
     component: WHTable
   },
   {

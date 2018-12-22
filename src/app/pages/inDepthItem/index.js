@@ -4,11 +4,17 @@ import { service } from '@utils';
 import { InDepthItemField } from './InDepthItemField';
 import EditButton from './EditButton';
 import { withCookies } from 'react-cookie';
-import { Loader } from 'semantic-ui-react';
-import './styles/InDepthItem.scss';
+import { Loader } from '@common/components';
+import { Container, Grid } from 'semantic-ui-react';
 
+/**
+ * Number of functions responsible for fetching item information from database, which needs to be obtained before we can render the item page
+ */
 const loadingsForRender = 6;
 
+/**
+ * Component responsible for managing the item page rendering, both edit and non-edit mode
+ */
 class InDepthItem extends Component {
   constructor(props) {
     super(props);
@@ -20,8 +26,6 @@ class InDepthItem extends Component {
       free_stock: 'FREE STOCK',
       last_price: 'LAST PRICE',
       location: 'Block B',
-      user_comments: 'USER COMMENTS',
-      add_user_comment: '',
       details: 'DET',
       manufacturer: 'MANUFACTURER',
       reference: 'REF',
@@ -37,8 +41,11 @@ class InDepthItem extends Component {
       },
       properties: [],
       last_edit: 'EDIT_DATE',
+      user_comments: 'USER COMMENTS',
+      add_user_comment: '',
       edit: false,
-      loadedInfo: 0
+      loadedInfo: 0,
+      isFetching: true
     };
 
     //button handlers
@@ -59,7 +66,15 @@ class InDepthItem extends Component {
     this.handlePackagingChange = this.handlePackagingChange.bind(this);
   }
 
+  /**
+   * Called when the first page rendering occurs
+   * Fetches item information from database
+   */
   componentDidMount() {
+    this.setState({
+      isFetching: true
+    });
+
     this.getItemCharacteristics();
     this.getItemPackaging();
     this.getItemProperties();
@@ -68,6 +83,10 @@ class InDepthItem extends Component {
     this.getAllCategories();
   }
 
+  /**
+   * Fetches the following item information from database:
+   * - description, image, stock related counts, price, warehouse location, user comments, details, manufacturer, reference id and last edition date
+   */
   getItemCharacteristics() {
     //get item info present in database's item table
     const apiUrl = `/item_characteristics/${this.state.id}`;
@@ -83,6 +102,9 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Fetches item packaging from database
+   */
   getItemPackaging() {
     const apiUrl = `/item_packaging/${this.state.id}`;
 
@@ -106,6 +128,9 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Fetches all item properties from database
+   */
   getItemProperties() {
     const apiUrl = `/item_properties/${this.state.id}`;
 
@@ -133,6 +158,9 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Fetches important information related to item category, including information that allows creation of category dropdown and breadcrumb when editing category
+   */
   getItemCategory() {
     const apiUrl = `/item_category/${this.state.id}`;
 
@@ -163,6 +191,9 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Fetches all existing packings from database
+   */
   getAllPackages() {
     const apiUrl = `/all_packages`;
     service
@@ -189,6 +220,9 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Fetches all existing categories from database
+   */
   getAllCategories() {
     const apiUrl = `/all_categories`;
     service
@@ -215,6 +249,9 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Fetches item catergory's ancestor tree from database, used to create category breadcrumb
+   */
   getItemCategoryBreadcrumb() {
     const apiUrl = `/category_tree/${this.state.category.itemCategory.id}`;
 
@@ -241,6 +278,9 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Fetches item user comments from database
+   */
   getUserComments() {
     const apiUrl = `/item_characteristics/${this.state.id}`;
 
@@ -254,6 +294,9 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Fetches item catergory's descendants from database, which will be the ones present in the dropdown used for category edit
+   */
   getDropdownCategories() {
     if (!this.state.category.itemCategory.name) {
       // category breadcrumb was erased
@@ -295,12 +338,23 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * This function is called everytime one of the async functions in "componentDidMount" ends, so we can keep count of how many are left until we get all information required from database
+   * Only after all those async funtions end, we are able to render the item page
+   */
   loadedNewInfo() {
+    //reset loaded info count, when all info has been fetched
     this.setState(state => ({
-      loadedInfo: state.loadedInfo + 1
+      loadedInfo:
+        state.loadedInfo + 1 < loadingsForRender ? state.loadedInfo + 1 : 0,
+      isFetching: state.loadedInfo + 1 < loadingsForRender
     }));
   }
 
+  /**
+   * Sets a new category in state
+   * Also sets all properties from the new category
+   */
   setNewCategory(newCategoryId, newCategoryName) {
     let apiUrl = `/item_category_properties`;
     let parameters = { itemId: this.state.id, newCategoryId: newCategoryId };
@@ -345,6 +399,9 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Calls API to edit item information
+   */
   editItem() {
     const apiUrl = `/item_edit`;
     service
@@ -358,6 +415,10 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * "Request" button event handler
+   * Calls API responsible for sending request email notification
+   */
   handleRequest() {
     const apiUrl = `/send_mail/veronica.fradique@gmail.com`;
 
@@ -371,14 +432,29 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * "Edit" button event handler
+   * Sets "edit" state variable to true
+   */
   handleEdit() {
     this.setState({ edit: true });
   }
 
+  /**
+   * Event handler called when an input is received on an item characteristic field
+   * Updates the item characteristic to the new input
+   */
   handleItemFieldChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({
+      [event.target.name.replace(/ /g, '_')]: event.target.value
+    });
   }
 
+  /**
+   * Edit "Accept" button event handler
+   * Calls function responsible for item edition
+   * Sets "edit" state variable to false
+   */
   handleAcceptEdition() {
     if (this.state.category.itemCategory.name) {
       this.editItem();
@@ -386,14 +462,21 @@ class InDepthItem extends Component {
     }
   }
 
+  /**
+   * Edit "Cancel" button event handler
+   * Sets "edit" state variable to false
+   * Re-renders item page by calling "componentDidMount" function, so that if any edit input as been made, all item information gets back to normal
+   */
   handleCancelEdition() {
     this.setState({ edit: false });
     this.componentDidMount();
   }
 
+  /**
+   * User comment event handler
+   * Calls API responsible for adding a new user comment
+   */
   handleUserCommentAddition() {
-    //TODO: append current user comment to the aready existing user comments
-    //database and stuff related
     if (!this.state.add_user_comment.trim()) {
       //empty comment
       return;
@@ -419,6 +502,10 @@ class InDepthItem extends Component {
       });
   }
 
+  /**
+   * Event handler called when an input is received on an item property field
+   * Updates the item property to the new input
+   */
   handlePropertyChange(event) {
     let newProperties = this.state.properties;
 
@@ -433,6 +520,10 @@ class InDepthItem extends Component {
     }
   }
 
+  /**
+   * Event handler called when an item category's ancestor is clicked in the category breadcrumb
+   * Call "setNewCategory" function, updating the item category to the one clicked, and getting all category information required
+   */
   handleBreadcrumbClick(event, data) {
     let categoryId;
     let categoryName = data.content;
@@ -448,6 +539,10 @@ class InDepthItem extends Component {
     this.setNewCategory(categoryId, categoryName);
   }
 
+  /**
+   * Event handler called when the category breadcrumb delete button is clicked
+   * Erases current category, which results in showing all available categories in the category dropdown
+   */
   handleBreadcrumbDelete() {
     let emptyCategory = this.state.category;
     emptyCategory.itemCategory.name = null;
@@ -459,6 +554,10 @@ class InDepthItem extends Component {
     this.getDropdownCategories();
   }
 
+  /**
+   * Event handler called when a category is selected in the category dropdown
+   * Call "setNewCategory" function, updating the item category to the one selected, and getting all category information required
+   */
   handleCategoryChange(event, data) {
     let categoryId;
     let categoryName = data.value;
@@ -475,6 +574,10 @@ class InDepthItem extends Component {
     this.setNewCategory(categoryId, categoryName);
   }
 
+  /**
+   * Event handler called when a packaging is selected in the packagings dropdown
+   * Updates the item packaging to the one selected
+   */
   handlePackagingChange(event, data) {
     let packagingId;
     let packagingName = data.value;
@@ -496,12 +599,20 @@ class InDepthItem extends Component {
     });
   }
 
+  /**
+   * Event handler called when an input is received on an user comment html editor field, being in the add new comment section available to any user, or edit user comments section only available to managers
+   * Updates the respective user comment field to the new input
+   */
   handleUserCommentsChange(event, data) {
     this.setState({
       [event.target.className]: data.value
     });
   }
 
+  /**
+   * Event handler called when an image file is uploaded
+   * Updates the item image to the uploaded one
+   */
   handleNewImageFile(event) {
     let uploadedFile = event.target.files[0];
 
@@ -520,6 +631,9 @@ class InDepthItem extends Component {
     reader.readAsDataURL(uploadedFile);
   }
 
+  /**
+   * @returns true if the user is logged in, false otherwise
+   */
   isUserLogged() {
     const { cookies } = this.props;
     const emptyCookie =
@@ -529,12 +643,16 @@ class InDepthItem extends Component {
     return !emptyCookie && validSecurity;
   }
 
+  /**
+   * Renders all item fields, deciding if it's done in edit mode or not
+   * State variables are mapped to an object rendered on the item page
+   */
   renderItemFields() {
     let stateContents = Object.values(this.state);
-    stateContents = stateContents.slice(3, stateContents.length - 2); // id, description, image and edit are NOT to be accessed
+    stateContents = stateContents.slice(3, stateContents.length - 3); // id, description, image and edit, loadedInfo, isFetching are NOT to be accessed
 
     let stateFields = Object.keys(this.state);
-    stateFields = stateFields.slice(3, stateFields.length - 2); // id, description, image and edit are NOT to be accessed
+    stateFields = stateFields.slice(3, stateFields.length - 3); // id, description, image and edit, loadedInfo, isFetching are NOT to be accessed
 
     let itemCharacteristics = [];
 
@@ -604,37 +722,38 @@ class InDepthItem extends Component {
       );
     }
 
+    let leftColumnInformation = itemCharacteristics.slice(
+      0,
+      itemCharacteristics.length - 2
+    );
+    let rightColumnInformation = itemCharacteristics.slice(
+      itemCharacteristics.length - 2,
+      itemCharacteristics.length
+    );
+
     return (
-      <div>
+      <Container>
         <InDepthItemField
-          style={{ textAlign: 'left', float: 'left' }}
           fieldName="description"
           fieldContent={this.state.description}
           editable={this.state.edit}
           handleChange={this.handleItemFieldChange}
         />
 
-        <div className="Item" style={{ textAlign: 'left' }}>
-          <column style={{ columnWidth: '50%' }}>
-            <div
-              className="ComponentImage"
-              style={{ float: 'left', marginLeft: '5%' }}
-            >
+        <Grid>
+          <Grid.Column width={8}>
+            <Grid.Row>
               <InDepthItemField
                 fieldName="image"
                 fieldContent={this.state.image}
                 editable={this.state.edit}
                 handleChange={this.handleNewImageFile}
               />
-            </div>
-          </column>
+            </Grid.Row>
 
-          <column style={{ columnWidth: '50%' }}>
-            <div
-              className="Information"
-              style={{ float: 'left', textAlign: 'left', marginLeft: '5%' }}
-            >
-              {itemCharacteristics}
+            <Grid.Row>{leftColumnInformation}</Grid.Row>
+
+            <Grid.Row>
               <AddToCart items={[this.state]} />
               <EditButton
                 editing={this.state.edit}
@@ -643,18 +762,24 @@ class InDepthItem extends Component {
                 handleAccept={this.handleAcceptEdition}
                 handleCancel={this.handleCancelEdition}
               />
-            </div>
-          </column>
-        </div>
-      </div>
+            </Grid.Row>
+          </Grid.Column>
+
+          <Grid.Column width={8}>{rightColumnInformation}</Grid.Column>
+        </Grid>
+      </Container>
     );
   }
 
+  /**
+   * Renders the item information page, by calling "renderItemFields" function, once all the information has been fetched from database
+   * While item information is being fetched form database, a loading animation is rendered
+   */
   render() {
-    return this.state.loadedInfo < loadingsForRender ? (
+    return this.state.isFetching ? (
       <Loader text="Preparing Item" />
     ) : (
-      <PageTitle key={'InDepthItem'} title="InDepthItem">
+      <PageTitle key="InDepthItem" title="InDepthItem">
         {this.renderItemFields()}
       </PageTitle>
     );
